@@ -1,0 +1,5 @@
+eb_user:
+    resource: "@EBUserBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
