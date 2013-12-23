@@ -1,0 +1,19 @@
+# FOSUserBundle Configuration
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: EB\UserBundle\Entity\User
+    from_email:
+        address:        noreply@getaride.com
+        sender_name:    Get a Ride - No Reply
+    registration:
+        confirmation:
+            enabled: true
+            from_email:
+                address:        registration@getaride.com
+                sender_name:    Get a Ride - Registration
+    resetting:
+        email:
+            from_email:
+                address:        resetting@getaride.com
+                sender_name:    Get a Ride - Resetting
