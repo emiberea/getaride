@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
 
             // application bundles
+            new EB\RideBundle\EBRideBundle(),
             new EB\UserBundle\EBUserBundle(),
         );
 

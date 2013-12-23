@@ -1,3 +1,8 @@
+eb_ride:
+    resource: "@EBRideBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 eb_user:
     resource: "@EBUserBundle/Controller/"
     type:     annotation
