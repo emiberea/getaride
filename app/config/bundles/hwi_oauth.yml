@@ -1,0 +1,28 @@
+# HWIOAuthBundle Configuration
+hwi_oauth:
+    # name of the firewall the oauth bundle is active in
+    firewall_name: main
+
+    # optional FOSUserBundle integration
+    fosub:
+        # try 30 times to check if a username is available (foo, foo1, foo2 etc)
+        username_iterations: 30
+        # mapping between resource owners (see below) and properties
+        properties:
+            facebook: facebookId
+            google:   googleId
+
+    # configuration of oauth resource owners to use
+    resource_owners:
+        facebook:
+            type:                facebook
+            client_id:           386677228145366
+            client_secret:       e3692408a9dbe58144c4d4693c596862
+            scope:               "email"
+            options:
+                display: popup #dialog is optimized for popup window
+        google:
+            type:                google
+            client_id:           996750187540.apps.googleusercontent.com
+            client_secret:       R_lNROFZkltsbAoNwuoe3lZB
+            scope:               "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"

@@ -17,4 +17,19 @@
         </service>
     </services>
     -->
+
+    <parameters>
+        <parameter key="eb_user.user_provider.class">EB\UserBundle\Security\Core\User\EBUserProvider</parameter>
+        <parameter key="eb_user.user_provider.properties" type="collection">
+            <parameter key="facebook" type="string">facebookId</parameter>
+            <parameter key="google" type="string">googleId</parameter>
+        </parameter>
+    </parameters>
+
+    <services>
+        <service id="eb_user.user_provider" class="%eb_user.user_provider.class%">
+            <argument type="service" id="fos_user.user_manager" />
+            <argument>%eb_user.user_provider.properties%</argument>
+        </service>
+    </services>
 </container>
