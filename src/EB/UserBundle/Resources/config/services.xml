@@ -27,6 +27,17 @@
     </parameters>
 
     <services>
+        <!-- FOSUserBundle services - overridden forms -->
+        <service id="eb_user.registration.form.type" class="EB\UserBundle\Form\Type\RegistrationFormType">
+            <tag name="form.type" alias="eb_user_registration" />
+            <argument>%fos_user.model.user.class%</argument>
+        </service>
+        <service id="eb_user.profile.form.type" class="EB\UserBundle\Form\Type\ProfileFormType">
+            <tag name="form.type" alias="eb_user_profile" />
+            <argument>%fos_user.model.user.class%</argument>
+        </service>
+
+        <!-- HWIOAuthBundle services - user provider -->
         <service id="eb_user.user_provider" class="%eb_user.user_provider.class%">
             <argument type="service" id="fos_user.user_manager" />
             <argument>%eb_user.user_provider.properties%</argument>

@@ -1,0 +1,11 @@
+{% extends "EBUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            {% include "EBUserBundle:Profile:show_content.html.twig" %}
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock fos_user_content %}
