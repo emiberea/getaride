@@ -20,6 +20,22 @@
         {{ form_errors(form.email) }}
     </div>
     <div class="form-group">
+        {{ form_widget(form.city, {attr: {placeholder: 'City'}}) }}
+        {{ form_errors(form.city) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.address, {attr: {placeholder: 'Address'}}) }}
+        {{ form_errors(form.address) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.phone, {attr: {placeholder: 'Phone'}}) }}
+        {{ form_errors(form.phone) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.birthDate, {attr: {placeholder: 'Birth Date'}}) }}
+        {{ form_errors(form.birthDate) }}
+    </div>
+    <div class="form-group">
         {{ form_widget(form.plainPassword.first, {attr: {placeholder: 'Password'}}) }}
         {{ form_errors(form.plainPassword.first) }}
     </div>
@@ -33,7 +49,7 @@
         {{ form_errors(form.terms) }}
     </div>
     {{ form_rest(form) }}
-    <div>
+    <div class="form-group">
         <input type="submit" class="btn btn-default" value="{{ 'registration.submit'|trans }}" />
     </div>
 </form>

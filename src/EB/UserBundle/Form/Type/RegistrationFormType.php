@@ -16,6 +16,12 @@ class RegistrationFormType extends BaseType
         $builder
             ->add('firstname')
             ->add('lastname')
+            ->add('city')
+            ->add('address')
+            ->add('phone')
+            ->add('birthDate', 'birthday', array(
+                'widget' => 'single_text',
+            ))
             ->add('terms', 'checkbox', array(
                 'mapped' => false,
                 'label' => 'Terms of Service',

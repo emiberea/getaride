@@ -14,7 +14,22 @@ class ProfileFormType extends BaseType
         // custom fields
         $builder
             ->add('firstname')
-            ->add('lastname');
+            ->add('lastname')
+            ->add('city')
+            ->add('address')
+            ->add('phone')
+            ->add('birthDate', 'birthday', array(
+                'widget' => 'single_text',
+            ))
+            ->add('work')
+            ->add('isSmoker')
+            ->add('favoriteMusic')
+            ->add('hobbies')
+            ->add('personalDescription', 'textarea', array())
+            ->add('isDriver')
+            ->add('drivingLicenceDate', 'date', array(
+                'widget' => 'single_text',
+            ));
     }
 
     public function getName()
