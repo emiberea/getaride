@@ -12,8 +12,13 @@ fos_user:
             from_email:
                 address:        registration@getaride.com
                 sender_name:    Get a Ride - Registration
+        form:
+            type: eb_user_registration
     resetting:
         email:
             from_email:
                 address:        resetting@getaride.com
                 sender_name:    Get a Ride - Resetting
+    profile:
+        form:
+            type: eb_user_profile

@@ -1,0 +1,30 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% form_theme form 'EBUserBundle:Form:fields.html.twig' %}
+
+<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" role="form">
+    <div class="form-group">
+        {{ form_widget(form.firstname, {attr: {placeholder: 'Firstname'}}) }}
+        {{ form_errors(form.firstname) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.lastname, {attr: {placeholder: 'Lastname'}}) }}
+        {{ form_errors(form.lastname) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.username, {attr: {placeholder: 'Username'}}) }}
+        {{ form_errors(form.username) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.email, {attr: {placeholder: 'Email'}}) }}
+        {{ form_errors(form.email) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.current_password, {attr: {placeholder: 'Current Password'}}) }}
+        {{ form_errors(form.current_password) }}
+    </div>
+    {{ form_rest(form) }}
+    <div>
+        <input type="submit" class="btn btn-default" value="{{ 'profile.edit.submit'|trans }}" />
+    </div>
+</form>
