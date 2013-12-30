@@ -53,16 +53,93 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=255, nullable=true)
+     * @ORM\Column(name="firstname", type="string", length=255)
      */
     private $firstname;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="lastname", type="string", length=255, nullable=true)
+     * @ORM\Column(name="lastname", type="string", length=255)
      */
     private $lastname;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="city", type="string", length=255)
+     */
+    private $city;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address", type="string", length=255, nullable=true)
+     */
+    private $address;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone", type="string", length=255)
+     */
+    private $phone;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="birth_date", type="date")
+     */
+    private $birthDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="work", type="string", length=255, nullable=true)
+     */
+    private $work;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_smoker", type="boolean", nullable=true)
+     */
+    private $isSmoker;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="favorite_music", type="string", length=255, nullable=true)
+     */
+    private $favoriteMusic;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="hobbies", type="string", length=255, nullable=true)
+     */
+    private $hobbies;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="personalDescription", type="string", length=255, nullable=true)
+     */
+    private $personalDescription;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_driver", type="boolean", nullable=true)
+     */
+    private $isDriver;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="driving_licence_date", type="date", nullable=true)
+     */
+    private $drivingLicenceDate;
 
 
     public function __construct()
@@ -81,8 +158,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set firstname
-     *
      * @param string $firstname
      * @return User
      */
@@ -94,8 +169,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get firstname
-     *
      * @return string 
      */
     public function getFirstname()
@@ -104,8 +177,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set lastname
-     *
      * @param string $lastname
      * @return User
      */
@@ -117,8 +188,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get lastname
-     *
      * @return string 
      */
     public function getLastname()
@@ -127,8 +196,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set facebookId
-     *
      * @param string $facebookId
      * @return User
      */
@@ -140,8 +207,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get facebookId
-     *
      * @return string
      */
     public function getFacebookId()
@@ -150,8 +215,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set facebookAccessToken
-     *
      * @param string $facebookAccessToken
      * @return User
      */
@@ -163,8 +226,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get facebookAccessToken
-     *
      * @return string
      */
     public function getFacebookAccessToken()
@@ -173,8 +234,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set googleId
-     *
      * @param string $googleId
      * @return User
      */
@@ -186,8 +245,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get googleId
-     *
      * @return string
      */
     public function getGoogleId()
@@ -196,8 +253,6 @@ class User extends BaseUser
     }
 
     /**
-     * Set googleAccessToken
-     *
      * @param string $googleAccessToken
      * @return User
      */
@@ -209,12 +264,219 @@ class User extends BaseUser
     }
 
     /**
-     * Get googleAccessToken
-     *
      * @return string
      */
     public function getGoogleAccessToken()
     {
         return $this->googleAccessToken;
+    }
+
+    /**
+     * @param string $city
+     * @return $this
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $address
+     * @return $this
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param string $phone
+     * @return $this
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param \DateTime $birthDate
+     * @return $this
+     */
+    public function setBirthDate($birthDate)
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
+
+    /**
+     * @param string $work
+     * @return $this
+     */
+    public function setWork($work)
+    {
+        $this->work = $work;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWork()
+    {
+        return $this->work;
+    }
+
+    /**
+     * @param boolean $isSmoker
+     * @return $this
+     */
+    public function setIsSmoker($isSmoker)
+    {
+        $this->isSmoker = $isSmoker;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsSmoker()
+    {
+        return $this->isSmoker;
+    }
+
+    /**
+     * @param string $favoriteMusic
+     * @return $this
+     */
+    public function setFavoriteMusic($favoriteMusic)
+    {
+        $this->favoriteMusic = $favoriteMusic;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFavoriteMusic()
+    {
+        return $this->favoriteMusic;
+    }
+
+    /**
+     * @param string $hobbies
+     * @return $this
+     */
+    public function setHobbies($hobbies)
+    {
+        $this->hobbies = $hobbies;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHobbies()
+    {
+        return $this->hobbies;
+    }
+
+    /**
+     * @param string $personalDescription
+     * @return $this
+     */
+    public function setPersonalDescription($personalDescription)
+    {
+        $this->personalDescription = $personalDescription;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPersonalDescription()
+    {
+        return $this->personalDescription;
+    }
+
+    /**
+     * @param boolean $isDriver
+     * @return $this
+     */
+    public function setIsDriver($isDriver)
+    {
+        $this->isDriver = $isDriver;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsDriver()
+    {
+        return $this->isDriver;
+    }
+
+    /**
+     * @param \DateTime $drivingLicenceDate
+     * @return $this
+     */
+    public function setDrivingLicenceDate($drivingLicenceDate)
+    {
+        $this->drivingLicenceDate = $drivingLicenceDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDrivingLicenceDate()
+    {
+        return $this->drivingLicenceDate;
     }
 }

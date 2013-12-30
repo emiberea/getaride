@@ -20,11 +20,57 @@
         {{ form_errors(form.email) }}
     </div>
     <div class="form-group">
+        {{ form_widget(form.city, {attr: {placeholder: 'City'}}) }}
+        {{ form_errors(form.city) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.address, {attr: {placeholder: 'Address'}}) }}
+        {{ form_errors(form.address) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.phone, {attr: {placeholder: 'Phone'}}) }}
+        {{ form_errors(form.phone) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.birthDate, {attr: {placeholder: 'Birth Date'}}) }}
+        {{ form_errors(form.birthDate) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.work, {attr: {placeholder: 'Work / Occupation'}}) }}
+        {{ form_errors(form.work) }}
+    </div>
+    <div class="checkbox">
+        {{ form_label(form.isSmoker) }}
+        {{ form_widget(form.isSmoker, {attr: {placeholder: 'Email'}}) }}
+        {{ form_errors(form.isSmoker) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.favoriteMusic, {attr: {placeholder: 'Favorite Music'}}) }}
+        {{ form_errors(form.favoriteMusic) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.hobbies, {attr: {placeholder: 'Hobbies'}}) }}
+        {{ form_errors(form.hobbies) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.personalDescription, {attr: {placeholder: 'Personal Description'}}) }}
+        {{ form_errors(form.personalDescription) }}
+    </div>
+    <div class="checkbox">
+        {{ form_label(form.isDriver) }}
+        {{ form_widget(form.isDriver, {attr: {placeholder: 'Email'}}) }}
+        {{ form_errors(form.isDriver) }}
+    </div>
+    <div class="form-group">
+        {{ form_widget(form.drivingLicenceDate, {attr: {placeholder: 'Driving Licence Date'}}) }}
+        {{ form_errors(form.drivingLicenceDate) }}
+    </div>
+    <div class="form-group">
         {{ form_widget(form.current_password, {attr: {placeholder: 'Current Password'}}) }}
         {{ form_errors(form.current_password) }}
     </div>
     {{ form_rest(form) }}
-    <div>
+    <div class="form-group">
         <input type="submit" class="btn btn-default" value="{{ 'profile.edit.submit'|trans }}" />
     </div>
 </form>
