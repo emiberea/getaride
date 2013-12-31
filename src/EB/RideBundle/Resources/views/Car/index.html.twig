@@ -1,0 +1,51 @@
+{% extends '::base.html.twig' %}
+
+{% block content -%}
+    <h1>Car list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Buildyear</th>
+                <th>Numberplate</th>
+                <th>Color</th>
+                <th>Hasairconditioning</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('car_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.brand }}</td>
+                <td>{{ entity.model }}</td>
+                <td>{% if entity.buildYear %}{{ entity.buildYear|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.numberPlate }}</td>
+                <td>{{ entity.color }}</td>
+                <td>{{ entity.hasAirConditioning }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('car_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('car_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('car_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+{% endblock %}
