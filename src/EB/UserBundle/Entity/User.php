@@ -3,7 +3,9 @@
 namespace EB\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
+use EB\RideBundle\Entity\Car;
 
 /**
  * User
@@ -141,10 +143,18 @@ class User extends BaseUser
      */
     private $drivingLicenceDate;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\RideBundle\Entity\Car", mappedBy="user")
+     */
+    private $cars;
+
 
     public function __construct()
     {
         parent::__construct();
+        $this->cars = new ArrayCollection();
     }
 
     /**
@@ -478,5 +488,35 @@ class User extends BaseUser
     public function getDrivingLicenceDate()
     {
         return $this->drivingLicenceDate;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCars()
+    {
+        return $this->cars;
+    }
+
+    /**
+     * @param Car $car
+     * @return $this
+     */
+    public function addCar(Car $car)
+    {
+        $this->cars->add($car);
+
+        return $this;
+    }
+
+    /**
+     * @param Car $car
+     * @return $this
+     */
+    public function removeCar(Car $car)
+    {
+        $this->cars->removeElement($car);
+
+        return $this;
     }
 }
