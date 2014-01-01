@@ -1,0 +1,49 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'EBRideBundle:Form:fields.html.twig' %}
+
+{% block content -%}
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h1>Car creation</h1>
+
+            <form action="{{ path('car_create') }}" {{ form_enctype(form) }} method="POST" role="form">
+                <div class="form-group">
+                    {{ form_widget(form.brand, {attr: {placeholder: 'Brand'}}) }}
+                    {{ form_errors(form.brand) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.model, {attr: {placeholder: 'Model'}}) }}
+                    {{ form_errors(form.model) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.buildYear, {attr: {placeholder: 'Build Year'}}) }}
+                    {{ form_errors(form.buildYear) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.numberPlate, {attr: {placeholder: 'Number Plate'}}) }}
+                    {{ form_errors(form.numberPlate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.color, {attr: {placeholder: 'Color'}}) }}
+                    {{ form_errors(form.color) }}
+                </div>
+                <div class="checkbox">
+                    {{ form_label(form.hasAirConditioning) }}
+                    {{ form_widget(form.hasAirConditioning) }}
+                    {{ form_errors(form.hasAirConditioning) }}
+                </div>
+                {{ form_rest(form) }}
+                <div class="form-group">
+                    {{ form_widget(form.submit) }}
+                </div>
+            </form>
+
+            <a href="{{ path('car') }}">
+                Back to the list
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}
