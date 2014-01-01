@@ -1,16 +1,52 @@
 {% extends '::base.html.twig' %}
 
+{% form_theme edit_form 'EBRideBundle:Form:fields.html.twig' %}
+
 {% block content -%}
-    <h1>Car edit</h1>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h1>Car edit</h1>
 
-    {{ form(edit_form) }}
+            <form action="{{ path('car_update', {'id': entity.id}) }}" {{ form_enctype(edit_form) }} method="POST" role="form">
+                <input type="hidden" name="_method" value="PUT">
+                <div class="form-group">
+                    {{ form_widget(edit_form.brand, {attr: {placeholder: 'Brand'}}) }}
+                    {{ form_errors(edit_form.brand) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.model, {attr: {placeholder: 'Model'}}) }}
+                    {{ form_errors(edit_form.model) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.buildYear, {attr: {placeholder: 'Build Year'}}) }}
+                    {{ form_errors(edit_form.buildYear) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.numberPlate, {attr: {placeholder: 'Number Plate'}}) }}
+                    {{ form_errors(edit_form.numberPlate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.color, {attr: {placeholder: 'Color'}}) }}
+                    {{ form_errors(edit_form.color) }}
+                </div>
+                <div class="checkbox">
+                    {{ form_label(edit_form.hasAirConditioning) }}
+                    {{ form_widget(edit_form.hasAirConditioning) }}
+                    {{ form_errors(edit_form.hasAirConditioning) }}
+                </div>
+                {{ form_rest(edit_form) }}
+                <div class="form-group">
+                    {{ form_widget(edit_form.submit) }}
+                </div>
+            </form>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('car') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+            {{ form(delete_form) }}
+
+            <a href="{{ path('car') }}">
+                Back to the list
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
 {% endblock %}

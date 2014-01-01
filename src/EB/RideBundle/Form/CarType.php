@@ -17,11 +17,12 @@ class CarType extends AbstractType
         $builder
             ->add('brand')
             ->add('model')
-            ->add('buildYear')
+            ->add('buildYear', 'date', array(
+                'widget' => 'single_text',
+            ))
             ->add('numberPlate')
             ->add('color')
             ->add('hasAirConditioning')
-//            ->add('user')
         ;
     }
     

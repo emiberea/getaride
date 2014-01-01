@@ -3,7 +3,7 @@
 {% block content -%}
     <h1>Car</h1>
 
-    <table class="record_properties">
+    <table class="table table-hover">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -18,11 +18,11 @@
                 <td>{{ entity.model }}</td>
             </tr>
             <tr>
-                <th>Buildyear</th>
+                <th>Build Year</th>
                 <td>{{ entity.buildYear|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
-                <th>Numberplate</th>
+                <th>Number Plate</th>
                 <td>{{ entity.numberPlate }}</td>
             </tr>
             <tr>
@@ -30,23 +30,19 @@
                 <td>{{ entity.color }}</td>
             </tr>
             <tr>
-                <th>Hasairconditioning</th>
+                <th>AC</th>
                 <td>{{ entity.hasAirConditioning }}</td>
             </tr>
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('car') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('car_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <a href="{{ path('car') }}">
+        Back to the list
+    </a>
+    <br />
+    <a href="{{ path('car_edit', { 'id': entity.id }) }}" class="btn btn-warning">
+        Edit
+    </a>
+
+    {{ form(delete_form) }}
 {% endblock %}
