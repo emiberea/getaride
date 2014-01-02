@@ -41,6 +41,20 @@ class User extends BaseUser
     /**
      * @var string
      *
+     * @ORM\Column(name="facebook_profile_link", type="string", length=255, nullable=true)
+     */
+    protected $facebookProfileLink;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="facebook_picture_link", type="string", length=255, nullable=true)
+     */
+    protected $facebookPictureLink;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="google_id", type="string", length=255, nullable=true)
      */
     protected $googleId;
@@ -51,6 +65,20 @@ class User extends BaseUser
      * @ORM\Column(name="google_access_token", type="string", length=255, nullable=true)
      */
     protected $googleAccessToken;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="google_profile_link", type="string", length=255, nullable=true)
+     */
+    protected $googleProfileLink;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="google_picture_link", type="string", length=255, nullable=true)
+     */
+    protected $googlePictureLink;
 
     /**
      * @var string
@@ -69,7 +97,7 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="city", type="string", length=255)
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
 
@@ -83,16 +111,23 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="phone", type="string", length=255)
+     * @ORM\Column(name="phone", type="string", length=255, nullable=true)
      */
     private $phone;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="birth_date", type="date")
+     * @ORM\Column(name="birth_date", type="date", nullable=true)
      */
     private $birthDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gender", type="string", length=255, nullable=true)
+     */
+    private $gender;
 
     /**
      * @var string
@@ -244,6 +279,44 @@ class User extends BaseUser
     }
 
     /**
+     * @param string $facebookProfileLink
+     * @return $this
+     */
+    public function setFacebookProfileLink($facebookProfileLink)
+    {
+        $this->facebookProfileLink = $facebookProfileLink;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFacebookProfileLink()
+    {
+        return $this->facebookProfileLink;
+    }
+
+    /**
+     * @param string $facebookPictureLink
+     * @return $this
+     */
+    public function setFacebookPictureLink($facebookPictureLink)
+    {
+        $this->facebookPictureLink = $facebookPictureLink;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFacebookPictureLink()
+    {
+        return $this->facebookPictureLink;
+    }
+
+    /**
      * @param string $googleId
      * @return User
      */
@@ -279,6 +352,44 @@ class User extends BaseUser
     public function getGoogleAccessToken()
     {
         return $this->googleAccessToken;
+    }
+
+    /**
+     * @param string $googleProfileLink
+     * @return $this
+     */
+    public function setGoogleProfileLink($googleProfileLink)
+    {
+        $this->googleProfileLink = $googleProfileLink;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGoogleProfileLink()
+    {
+        return $this->googleProfileLink;
+    }
+
+    /**
+     * @param string $googlePictureLink
+     * @return $this
+     */
+    public function setGooglePictureLink($googlePictureLink)
+    {
+        $this->googlePictureLink = $googlePictureLink;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGooglePictureLink()
+    {
+        return $this->googlePictureLink;
     }
 
     /**
@@ -355,6 +466,25 @@ class User extends BaseUser
     public function getBirthDate()
     {
         return $this->birthDate;
+    }
+
+    /**
+     * @param string $gender
+     * @return $this
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace EB\UserBundle\Security\Core\User;
 
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use EB\UserBundle\Entity\User;
 
@@ -50,24 +51,17 @@ class EBUserProvider extends BaseClass
         //when the user is registrating
         if (null === $user) {
             $service = $response->getResourceOwner()->getName();
-            $setter = 'set'.ucfirst($service);
-            $setter_id = $setter.'Id';
-            $setter_token = $setter.'AccessToken';
-
-            // create new user here
-            $user = $this->userManager->createUser();
-            $user->$setter_id($username);
-            $user->$setter_token($response->getAccessToken());
-
-            //I have set all requested data with the user's username
-            //modify here with relevant data
-            $user->setUsername($response->getUsername());
-            $user->setEmail($response->getEmail());
-            $user->setPassword($username);
-            $user->setEnabled(true);
-            $user->setFirstname($response->getResponse()['first_name']);
-            $user->setLastname($response->getResponse()['last_name']);
-            $this->userManager->updateUser($user);
+            switch ($service) {
+                case 'facebook':
+                    $user = $this->createFacebookUser($response);
+                    break;
+                case 'google':
+                    $user = $this->createGoogleUser($response);
+                    break;
+                default:
+                    throw new NotFoundHttpException();
+                    break;
+            }
 
             return $user;
         }
@@ -80,6 +74,80 @@ class EBUserProvider extends BaseClass
 
         //update access token
         $user->$setter($response->getAccessToken());
+
+        return $user;
+    }
+
+    /**
+     * @param UserResponseInterface $response
+     * @return User
+     */
+    private function createFacebookUser(UserResponseInterface $response)
+    {
+        $service = $response->getResourceOwner()->getName();
+        $username = $response->getUsername();
+
+        $setter = 'set'.ucfirst($service);
+        $setter_id = $setter.'Id';
+        $setter_token = $setter.'AccessToken';
+
+        // create new user
+        /** @var User $user */
+        $user = $this->userManager->createUser();
+        $user->$setter_id($username);
+        $user->$setter_token($response->getAccessToken());
+
+        //I have set all requested data with the user's username
+        //modify here with relevant data
+        $user->setUsername($response->getUsername());
+        $user->setEmail($response->getEmail());
+        $user->setFirstname($response->getResponse()['first_name']);
+        $user->setLastname($response->getResponse()['last_name']);
+        $user->setGender($response->getResponse()['gender']);
+        $user->setFacebookProfileLink($response->getResponse()['link']);
+        $user->setFacebookPictureLink('https://graph.facebook.com/' . $response->getResponse()['username'] . '/picture?type=large');
+
+        $user->setPassword($username);
+        $user->setEnabled(true);
+
+        $this->userManager->updateUser($user);
+
+        return $user;
+    }
+
+    /**
+     * @param UserResponseInterface $response
+     * @return User
+     */
+    private function createGoogleUser(UserResponseInterface $response)
+    {
+        $service = $response->getResourceOwner()->getName();
+        $username = $response->getUsername();
+
+        $setter = 'set'.ucfirst($service);
+        $setter_id = $setter.'Id';
+        $setter_token = $setter.'AccessToken';
+
+        // create new user
+        /** @var User $user */
+        $user = $this->userManager->createUser();
+        $user->$setter_id($username);
+        $user->$setter_token($response->getAccessToken());
+
+        //I have set all requested data with the user's username
+        //modify here with relevant data
+        $user->setUsername($response->getUsername());
+        $user->setEmail($response->getEmail());
+        $user->setFirstname($response->getResponse()['given_name']);
+        $user->setLastname($response->getResponse()['family_name']);
+        $user->setGender($response->getResponse()['gender']);
+        $user->setGoogleProfileLink($response->getResponse()['link']);
+        $user->setGooglePictureLink($response->getResponse()['picture']);
+
+        $user->setPassword($username);
+        $user->setEnabled(true);
+
+        $this->userManager->updateUser($user);
 
         return $user;
     }
