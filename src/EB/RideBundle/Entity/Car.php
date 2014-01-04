@@ -4,6 +4,7 @@ namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use EB\UserBundle\Entity\User;
+use EB\RideBundle\Entity\Ride;
 
 /**
  * Car
@@ -68,6 +69,17 @@ class Car
      * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="cars")
      */
     private $user;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Ride", mappedBy="car")
+     */
+    private $ride;
+
+
+    public function __toString()
+    {
+        return (string)$this->brand . ' ' . $this->model;
+    }
 
 
     /**
@@ -211,5 +223,24 @@ class Car
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param Ride $ride
+     * @return $this
+     */
+    public function setRide(Ride $ride)
+    {
+        $this->ride = $ride;
+
+        return $this;
+    }
+
+    /**
+     * @return Ride
+     */
+    public function getRide()
+    {
+        return $this->ride;
     }
 }

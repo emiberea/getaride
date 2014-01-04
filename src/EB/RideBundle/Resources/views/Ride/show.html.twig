@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Ride</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Startdate</th>
+                <td>{{ entity.startDate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Stopdate</th>
+                <td>{{ entity.stopDate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Startlocation</th>
+                <td>{{ entity.startLocation }}</td>
+            </tr>
+            <tr>
+                <th>Stoplocation</th>
+                <td>{{ entity.stopLocation }}</td>
+            </tr>
+            <tr>
+                <th>Emptyseatsno</th>
+                <td>{{ entity.emptySeatsNo }}</td>
+            </tr>
+            <tr>
+                <th>Baggageperseat</th>
+                <td>{{ entity.baggagePerSeat }}</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{ entity.comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('ride') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('ride_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
