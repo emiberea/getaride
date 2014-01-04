@@ -23,6 +23,6 @@ hwi_oauth:
                 display: popup #dialog is optimized for popup window
         google:
             type:                google
-            client_id:           996750187540.apps.googleusercontent.com
-            client_secret:       R_lNROFZkltsbAoNwuoe3lZB
-            scope:               "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"
+            client_id:           996750187540-ti2gul9rb6msma9caeu5vsh5j3856lrg.apps.googleusercontent.com
+            client_secret:       kmFsQRc97h_GHCCyesS6f0MS
+            scope:               "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/plus.login"
