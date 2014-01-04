@@ -29,7 +29,9 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('EBRideBundle:Ride')->findAll();
+        $entities = $em->getRepository('EBRideBundle:Ride')->findBy(array(
+            'user' => $this->getUser(),
+        ));
 
         return array(
             'entities' => $entities,
@@ -45,6 +47,8 @@ class RideController extends Controller
     public function createAction(Request $request)
     {
         $entity = new Ride();
+        $entity->setUser($this->getUser());
+
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -74,9 +78,15 @@ class RideController extends Controller
         $form = $this->createForm(new RideType(), $entity, array(
             'action' => $this->generateUrl('ride_create'),
             'method' => 'POST',
+            'user' => $this->getUser(),
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array(
+            'label' => 'Create',
+            'attr' => array(
+                'class' => 'btn btn-success'
+            ),
+        ));
 
         return $form;
     }
@@ -110,7 +120,10 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Ride')->find($id);
+        $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+            'id' => $id,
+            'user' => $this->getUser(),
+        ));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
@@ -135,7 +148,10 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Ride')->find($id);
+        $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+            'id' => $id,
+            'user' => $this->getUser(),
+        ));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
@@ -163,9 +179,15 @@ class RideController extends Controller
         $form = $this->createForm(new RideType(), $entity, array(
             'action' => $this->generateUrl('ride_update', array('id' => $entity->getId())),
             'method' => 'PUT',
+            'user' => $this->getUser(),
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array(
+            'label' => 'Update',
+            'attr' => array(
+                'class' => 'btn btn-warning'
+            ),
+        ));
 
         return $form;
     }
@@ -180,7 +202,10 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Ride')->find($id);
+        $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+            'id' => $id,
+            'user' => $this->getUser(),
+        ));
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
@@ -215,7 +240,10 @@ class RideController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('EBRideBundle:Ride')->find($id);
+            $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+                'id' => $id,
+                'user' => $this->getUser(),
+            ));
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Ride entity.');
@@ -240,7 +268,12 @@ class RideController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('ride_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array(
+                'label' => 'Delete',
+                'attr' => array(
+                    'class' => 'btn btn-danger'
+                ),
+            ))
             ->getForm()
         ;
     }

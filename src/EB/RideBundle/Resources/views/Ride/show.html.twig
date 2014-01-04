@@ -1,36 +1,36 @@
 {% extends '::base.html.twig' %}
 
-{% block body -%}
+{% block content -%}
     <h1>Ride</h1>
 
-    <table class="record_properties">
+    <table class="table table-hover">
         <tbody>
             <tr>
                 <th>Id</th>
                 <td>{{ entity.id }}</td>
             </tr>
             <tr>
-                <th>Startdate</th>
+                <th>Start Date</th>
                 <td>{{ entity.startDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
-                <th>Stopdate</th>
+                <th>Stop Date</th>
                 <td>{{ entity.stopDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
-                <th>Startlocation</th>
+                <th>Start Location</th>
                 <td>{{ entity.startLocation }}</td>
             </tr>
             <tr>
-                <th>Stoplocation</th>
+                <th>Stop Location</th>
                 <td>{{ entity.stopLocation }}</td>
             </tr>
             <tr>
-                <th>Emptyseatsno</th>
+                <th>Empty Seats No</th>
                 <td>{{ entity.emptySeatsNo }}</td>
             </tr>
             <tr>
-                <th>Baggageperseat</th>
+                <th>Baggage Per Seat</th>
                 <td>{{ entity.baggagePerSeat }}</td>
             </tr>
             <tr>
@@ -40,17 +40,13 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('ride') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('ride_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <a href="{{ path('ride') }}">
+        Back to the list
+    </a>
+    <br />
+    <a href="{{ path('ride_edit', { 'id': entity.id }) }}" class="btn btn-warning">
+        Edit
+    </a>
+
+    {{ form(delete_form) }}
 {% endblock %}
