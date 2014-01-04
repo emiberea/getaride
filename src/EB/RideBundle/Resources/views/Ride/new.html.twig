@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'EBRideBundle:Form:fields.html.twig' %}
+
+{% block content -%}
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Ride creation</h1>
+
+            <form action="{{ path('ride_create') }}" {{ form_enctype(form) }} method="POST" role="form">
+                <div class="form-group">
+                    {{ form_widget(form.startDate, {attr: {placeholder: 'Start Date'}}) }}
+                    {{ form_errors(form.startDate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.stopDate, {attr: {placeholder: 'Stop Date'}}) }}
+                    {{ form_errors(form.stopDate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.startLocation, {attr: {placeholder: 'Start Location'}}) }}
+                    {{ form_errors(form.startLocation) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.stopLocation, {attr: {placeholder: 'Stop Location'}}) }}
+                    {{ form_errors(form.stopLocation) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.emptySeatsNo, {attr: {placeholder: 'Empty Seats No'}}) }}
+                    {{ form_errors(form.emptySeatsNo) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.baggagePerSeat, {attr: {placeholder: 'Baggage Per Seat'}}) }}
+                    {{ form_errors(form.baggagePerSeat) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.comment, {attr: {placeholder: 'Comment'}}) }}
+                    {{ form_errors(form.comment) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.car, {attr: {placeholder: 'Car'}}) }}
+                    {{ form_errors(form.car) }}
+                </div>
+                {{ form_rest(form) }}
+                <div class="form-group">
+                    {{ form_widget(form.submit) }}
+                </div>
+            </form>
+
+            <a href="{{ path('ride') }}">
+                Back to the list
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}

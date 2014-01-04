@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use EB\RideBundle\Entity\Car;
+use EB\RideBundle\Entity\Ride;
 
 /**
  * User
@@ -185,11 +186,19 @@ class User extends BaseUser
      */
     private $cars;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\RideBundle\Entity\Ride", mappedBy="user")
+     */
+    private $rides;
+
 
     public function __construct()
     {
         parent::__construct();
         $this->cars = new ArrayCollection();
+        $this->rides = new ArrayCollection();
     }
 
     /**
@@ -646,6 +655,36 @@ class User extends BaseUser
     public function removeCar(Car $car)
     {
         $this->cars->removeElement($car);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRides()
+    {
+        return $this->rides;
+    }
+
+    /**
+     * @param Ride $ride
+     * @return $this
+     */
+    public function addRide(Ride $ride)
+    {
+        $this->rides->add($ride);
+
+        return $this;
+    }
+
+    /**
+     * @param Ride $ride
+     * @return $this
+     */
+    public function removeRide(Ride $ride)
+    {
+        $this->rides->removeElement($ride);
 
         return $this;
     }

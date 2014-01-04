@@ -1,0 +1,59 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme edit_form 'EBRideBundle:Form:fields.html.twig' %}
+
+{% block content -%}
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Ride edit</h1>
+
+            <form action="{{ path('ride_update', {'id': entity.id}) }}" {{ form_enctype(edit_form) }} method="POST" role="form">
+                <input type="hidden" name="_method" value="PUT">
+                <div class="form-group">
+                    {{ form_widget(edit_form.startDate, {attr: {placeholder: 'Start Date'}}) }}
+                    {{ form_errors(edit_form.startDate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.stopDate, {attr: {placeholder: 'Stop Date'}}) }}
+                    {{ form_errors(edit_form.stopDate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.startLocation, {attr: {placeholder: 'Start Location'}}) }}
+                    {{ form_errors(edit_form.startLocation) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.stopLocation, {attr: {placeholder: 'Stop Location'}}) }}
+                    {{ form_errors(edit_form.stopLocation) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.emptySeatsNo, {attr: {placeholder: 'Empty Seats No'}}) }}
+                    {{ form_errors(edit_form.emptySeatsNo) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.baggagePerSeat, {attr: {placeholder: 'Baggage Per Seat'}}) }}
+                    {{ form_errors(edit_form.baggagePerSeat) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.comment, {attr: {placeholder: 'Comment'}}) }}
+                    {{ form_errors(edit_form.comment) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(edit_form.car, {attr: {placeholder: 'Car'}}) }}
+                    {{ form_errors(edit_form.car) }}
+                </div>
+                {{ form_rest(edit_form) }}
+                <div class="form-group">
+                    {{ form_widget(edit_form.submit) }}
+                </div>
+            </form>
+
+            {{ form(delete_form) }}
+
+            <a href="{{ path('ride') }}">
+                Back to the list
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}
