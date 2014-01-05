@@ -29,12 +29,12 @@ class CarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('EBRideBundle:Car')->findBy(array(
+        $cars = $em->getRepository('EBRideBundle:Car')->findBy(array(
             'user' => $this->getUser(),
         ));
 
         return array(
-            'entities' => $entities,
+            'cars' => $cars,
         );
     }
 
@@ -47,36 +47,36 @@ class CarController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new Car();
-        $entity->setUser($this->getUser());
+        $car = new Car();
+        $car->setUser($this->getUser());
 
-        $form = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($car);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            $em->persist($car);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('car_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('car_show', array('id' => $car->getId())));
         }
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'car'  => $car,
+            'form' => $form->createView(),
         );
     }
 
     /**
     * Creates a form to create a Car entity.
     *
-    * @param Car $entity The entity
+    * @param Car $car The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm(Car $entity)
+    private function createCreateForm(Car $car)
     {
-        $form = $this->createForm(new CarType(), $entity, array(
+        $form = $this->createForm(new CarType(), $car, array(
             'action' => $this->generateUrl('car_create'),
             'method' => 'POST',
         ));
@@ -100,12 +100,12 @@ class CarController extends Controller
      */
     public function newAction()
     {
-        $entity = new Car();
-        $form   = $this->createCreateForm($entity);
+        $car = new Car();
+        $form = $this->createCreateForm($car);
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'car'  => $car,
+            'form' => $form->createView(),
         );
     }
 
@@ -120,19 +120,19 @@ class CarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
+        $car = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
         ));
 
-        if (!$entity) {
+        if (!$car) {
             throw $this->createNotFoundException('Unable to find Car entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'car'         => $car,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -148,20 +148,20 @@ class CarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
+        $car = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
         ));
 
-        if (!$entity) {
+        if (!$car) {
             throw $this->createNotFoundException('Unable to find Car entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($car);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'car'         => $car,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -170,14 +170,14 @@ class CarController extends Controller
     /**
     * Creates a form to edit a Car entity.
     *
-    * @param Car $entity The entity
+    * @param Car $car The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(Car $entity)
+    private function createEditForm(Car $car)
     {
-        $form = $this->createForm(new CarType(), $entity, array(
-            'action' => $this->generateUrl('car_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new CarType(), $car, array(
+            'action' => $this->generateUrl('car_update', array('id' => $car->getId())),
             'method' => 'PUT',
         ));
 
@@ -202,17 +202,17 @@ class CarController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
+        $car = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
         ));
 
-        if (!$entity) {
+        if (!$car) {
             throw $this->createNotFoundException('Unable to find Car entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($car);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
@@ -222,7 +222,7 @@ class CarController extends Controller
         }
 
         return array(
-            'entity'      => $entity,
+            'car'         => $car,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -241,16 +241,16 @@ class CarController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
+            $car = $em->getRepository('EBRideBundle:Car')->findOneBy(array(
                 'id' => $id,
                 'user' => $this->getUser(),
             ));
 
-            if (!$entity) {
+            if (!$car) {
                 throw $this->createNotFoundException('Unable to find Car entity.');
             }
 
-            $em->remove($entity);
+            $em->remove($car);
             $em->flush();
         }
 

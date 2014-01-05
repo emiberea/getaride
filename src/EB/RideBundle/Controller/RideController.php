@@ -29,14 +29,15 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('EBRideBundle:Ride')->findBy(array(
+        $rides = $em->getRepository('EBRideBundle:Ride')->findBy(array(
             'user' => $this->getUser(),
         ));
 
         return array(
-            'entities' => $entities,
+            'rides' => $rides,
         );
     }
+
     /**
      * Creates a new Ride entity.
      *
@@ -46,36 +47,36 @@ class RideController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new Ride();
-        $entity->setUser($this->getUser());
+        $ride = new Ride();
+        $ride->setUser($this->getUser());
 
-        $form = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($ride);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            $em->persist($ride);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('ride_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('ride_show', array('id' => $ride->getId())));
         }
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'ride' => $ride,
+            'form' => $form->createView(),
         );
     }
 
     /**
     * Creates a form to create a Ride entity.
     *
-    * @param Ride $entity The entity
+    * @param Ride $ride The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createCreateForm(Ride $entity)
+    private function createCreateForm(Ride $ride)
     {
-        $form = $this->createForm(new RideType(), $entity, array(
+        $form = $this->createForm(new RideType(), $ride, array(
             'action' => $this->generateUrl('ride_create'),
             'method' => 'POST',
             'user' => $this->getUser(),
@@ -100,12 +101,12 @@ class RideController extends Controller
      */
     public function newAction()
     {
-        $entity = new Ride();
-        $form   = $this->createCreateForm($entity);
+        $ride = new Ride();
+        $form   = $this->createCreateForm($ride);
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'ride' => $ride,
+            'form' => $form->createView(),
         );
     }
 
@@ -120,19 +121,19 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+        $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
         ));
 
-        if (!$entity) {
+        if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'ride'        => $ride,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -148,36 +149,36 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+        $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
         ));
 
-        if (!$entity) {
+        if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($ride);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'ride'        => $ride,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
 
     /**
-    * Creates a form to edit a Ride entity.
-    *
-    * @param Ride $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Ride $entity)
+     * Creates a form to edit a Ride entity.
+     *
+     * @param Ride $ride The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Ride $ride)
     {
-        $form = $this->createForm(new RideType(), $entity, array(
-            'action' => $this->generateUrl('ride_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new RideType(), $ride, array(
+            'action' => $this->generateUrl('ride_update', array('id' => $ride->getId())),
             'method' => 'PUT',
             'user' => $this->getUser(),
         ));
@@ -191,6 +192,7 @@ class RideController extends Controller
 
         return $form;
     }
+
     /**
      * Edits an existing Ride entity.
      *
@@ -202,17 +204,17 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+        $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
         ));
 
-        if (!$entity) {
+        if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
+        $editForm = $this->createEditForm($ride);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
@@ -222,11 +224,12 @@ class RideController extends Controller
         }
 
         return array(
-            'entity'      => $entity,
+            'ride'        => $ride,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }
+
     /**
      * Deletes a Ride entity.
      *
@@ -240,16 +243,16 @@ class RideController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+            $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
                 'id' => $id,
                 'user' => $this->getUser(),
             ));
 
-            if (!$entity) {
+            if (!$ride) {
                 throw $this->createNotFoundException('Unable to find Ride entity.');
             }
 
-            $em->remove($entity);
+            $em->remove($ride);
             $em->flush();
         }
 

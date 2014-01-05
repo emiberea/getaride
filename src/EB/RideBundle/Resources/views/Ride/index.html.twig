@@ -23,19 +23,19 @@
                 </tr>
             </thead>
             <tbody>
-                {% for entity in entities %}
+                {% for ride in rides %}
                     <tr>
-                        <td><a href="{{ path('ride_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                        <td>{% if entity.startDate %}{{ entity.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                        <td>{% if entity.stopDate %}{{ entity.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                        <td>{{ entity.startLocation }}</td>
-                        <td>{{ entity.stopLocation }}</td>
-                        <td>{{ entity.emptySeatsNo }}</td>
-                        <td>{{ entity.baggagePerSeat }}</td>
-                        <td>{{ entity.comment }}</td>
+                        <td><a href="{{ path('ride_show', { 'id': ride.id }) }}">{{ ride.id }}</a></td>
+                        <td>{% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{% if ride.stopDate %}{{ ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{{ ride.startLocation }}</td>
+                        <td>{{ ride.stopLocation }}</td>
+                        <td>{{ ride.emptySeatsNo }}</td>
+                        <td>{{ ride.baggagePerSeat }}</td>
+                        <td>{{ ride.comment }}</td>
                         <td>
-                            <a href="{{ path('ride_show', { 'id': entity.id }) }}">show</a>
-                            <a href="{{ path('ride_edit', { 'id': entity.id }) }}">edit</a>
+                            <a href="{{ path('ride_show', { 'id': ride.id }) }}">show</a>
+                            <a href="{{ path('ride_edit', { 'id': ride.id }) }}">edit</a>
                         </td>
                     </tr>
                 {% endfor %}

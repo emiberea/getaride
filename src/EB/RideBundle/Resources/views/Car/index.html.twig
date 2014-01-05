@@ -22,18 +22,18 @@
                 </tr>
             </thead>
             <tbody>
-                {% for entity in entities %}
+                {% for car in cars %}
                     <tr>
-                        <td><a href="{{ path('car_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                        <td>{{ entity.brand }}</td>
-                        <td>{{ entity.model }}</td>
-                        <td>{% if entity.buildYear %}{{ entity.buildYear|date('Y-m-d H:i:s') }}{% endif %}</td>
-                        <td>{{ entity.numberPlate }}</td>
-                        <td>{{ entity.color }}</td>
-                        <td>{{ entity.hasAirConditioning }}</td>
+                        <td><a href="{{ path('car_show', { 'id': car.id }) }}">{{ car.id }}</a></td>
+                        <td>{{ car.brand }}</td>
+                        <td>{{ car.model }}</td>
+                        <td>{% if car.buildYear %}{{ car.buildYear|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{{ car.numberPlate }}</td>
+                        <td>{{ car.color }}</td>
+                        <td>{{ car.hasAirConditioning }}</td>
                         <td>
-                            <a href="{{ path('car_show', { 'id': entity.id }) }}">show</a>
-                            <a href="{{ path('car_edit', { 'id': entity.id }) }}">edit</a>
+                            <a href="{{ path('car_show', { 'id': car.id }) }}">show</a>
+                            <a href="{{ path('car_edit', { 'id': car.id }) }}">edit</a>
                         </td>
                     </tr>
                 {% endfor %}

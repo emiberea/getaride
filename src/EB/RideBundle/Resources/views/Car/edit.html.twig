@@ -8,7 +8,7 @@
         <div class="col-md-4">
             <h1>Car edit</h1>
 
-            <form action="{{ path('car_update', {'id': entity.id}) }}" {{ form_enctype(edit_form) }} method="POST" role="form">
+            <form action="{{ path('car_update', {'id': car.id}) }}" {{ form_enctype(edit_form) }} method="POST" role="form">
                 <input type="hidden" name="_method" value="PUT">
                 <div class="form-group">
                     {{ form_widget(edit_form.brand, {attr: {placeholder: 'Brand'}}) }}
