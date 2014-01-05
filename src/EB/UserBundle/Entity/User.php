@@ -5,6 +5,7 @@ namespace EB\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
+use FOS\MessageBundle\Model\ParticipantInterface;
 use EB\RideBundle\Entity\Car;
 use EB\RideBundle\Entity\Ride;
 
@@ -14,7 +15,7 @@ use EB\RideBundle\Entity\Ride;
  * @ORM\Table(name="fos_user")
  * @ORM\Entity(repositoryClass="EB\UserBundle\Entity\UserRepository")
  */
-class User extends BaseUser
+class User extends BaseUser implements ParticipantInterface
 {
     /**
      * @var integer

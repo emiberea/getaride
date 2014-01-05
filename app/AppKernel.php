@@ -19,11 +19,13 @@ class AppKernel extends Kernel
 
             // third-party bundles
             new FOS\UserBundle\FOSUserBundle(),
+            new FOS\MessageBundle\FOSMessageBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
 
             // application bundles
             new EB\RideBundle\EBRideBundle(),
             new EB\UserBundle\EBUserBundle(),
+            new EB\MessageBundle\EBMessageBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
