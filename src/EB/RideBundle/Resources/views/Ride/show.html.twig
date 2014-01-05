@@ -7,35 +7,35 @@
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ entity.id }}</td>
+                <td>{{ ride.id }}</td>
             </tr>
             <tr>
                 <th>Start Date</th>
-                <td>{{ entity.startDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ ride.startDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Stop Date</th>
-                <td>{{ entity.stopDate|date('Y-m-d H:i:s') }}</td>
+                <td>{{ ride.stopDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Start Location</th>
-                <td>{{ entity.startLocation }}</td>
+                <td>{{ ride.startLocation }}</td>
             </tr>
             <tr>
                 <th>Stop Location</th>
-                <td>{{ entity.stopLocation }}</td>
+                <td>{{ ride.stopLocation }}</td>
             </tr>
             <tr>
                 <th>Empty Seats No</th>
-                <td>{{ entity.emptySeatsNo }}</td>
+                <td>{{ ride.emptySeatsNo }}</td>
             </tr>
             <tr>
                 <th>Baggage Per Seat</th>
-                <td>{{ entity.baggagePerSeat }}</td>
+                <td>{{ ride.baggagePerSeat }}</td>
             </tr>
             <tr>
                 <th>Comment</th>
-                <td>{{ entity.comment }}</td>
+                <td>{{ ride.comment }}</td>
             </tr>
         </tbody>
     </table>
@@ -44,7 +44,7 @@
         Back to the list
     </a>
     <br />
-    <a href="{{ path('ride_edit', { 'id': entity.id }) }}" class="btn btn-warning">
+    <a href="{{ path('ride_edit', { 'id': ride.id }) }}" class="btn btn-warning">
         Edit
     </a>
 
