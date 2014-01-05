@@ -42,17 +42,16 @@
                     {% if app.user %}
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="#">Link</a></li>
-                            <li><a href="#">Link</a></li>
+                            <li><a href="{{ path('ride') }}">Rides</a></li>
+                            <li><a href="{{ path('car') }}">My Cars</a></li>
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                                <a href="{{ path('fos_message_inbox') }}" class="dropdown-toggle" data-toggle="dropdown">Messages <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
+                                    <li><a href="{{ url('fos_message_thread_new' )}}">New Message</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">One more separated link</a></li>
+                                    <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
+                                    <li><a href="{{ path('fos_message_sent') }}">Sent</a></li>
+                                    <li><a href="{{ path('fos_message_deleted') }}">Deleted</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -63,8 +62,7 @@
                             <button type="submit" class="btn btn-default">Submit</button>
                         </form>
                         <ul class="nav navbar-nav navbar-right">
-                            <li><a href="{{ path('ride') }}">Rides</a></li>
-                            <li><a href="{{ path('car') }}">My Cars</a></li>
+                            <li><a href="#">Link</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ app.user.username }} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">

@@ -36,7 +36,7 @@ fos_user_change_password:
 # FOSMessageBundle routes
 fos_message:
     resource: "@FOSMessageBundle/Resources/config/routing.xml"
-    prefix: /message
+    prefix: /message-thread
 
 # HWIOAuthBundle routes
 hwi_oauth_security:
