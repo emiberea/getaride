@@ -1,3 +1,8 @@
+eb_message:
+    resource: "@EBMessageBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 eb_ride:
     resource: "@EBRideBundle/Controller/"
     type:     annotation
@@ -27,6 +32,11 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+
+# FOSMessageBundle routes
+fos_message:
+    resource: "@FOSMessageBundle/Resources/config/routing.xml"
+    prefix: /message
 
 # HWIOAuthBundle routes
 hwi_oauth_security:
