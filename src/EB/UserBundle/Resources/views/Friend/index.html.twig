@@ -1,0 +1,19 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="nav nav-tabs nav-justified">
+                {% set route = app.request.attributes.get('_route') %}
+                <li class="{{ route == 'friend_index' ? 'active' }}">
+                    <a href="{{ path('friend_index') }}">Friends</a>
+                </li>
+                <li class="{{ route == 'friend_search' or route == 'friend_search_results' ? 'active' }}">
+                    <a href="{{ path('friend_search') }}">Search Friends</a>
+                </li>
+            </ul>
+            <h2>Friends List</h2>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}

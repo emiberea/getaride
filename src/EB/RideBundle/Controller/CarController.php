@@ -68,12 +68,12 @@ class CarController extends Controller
     }
 
     /**
-    * Creates a form to create a Car entity.
-    *
-    * @param Car $car The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * Creates a form to create a Car entity.
+     *
+     * @param Car $car The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
     private function createCreateForm(Car $car)
     {
         $form = $this->createForm(new CarType(), $car, array(
