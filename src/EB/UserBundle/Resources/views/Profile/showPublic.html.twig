@@ -1,0 +1,21 @@
+{% extends "EBUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+    <div class="row">
+        <div class="col-md-4">
+            {% if user.googlePictureLink %}
+                <img src="{{ user.googlePictureLink }}" height="300" width="300" />
+            {% elseif user.facebookPictureLink %}
+                <img src="{{ user.facebookPictureLink }}" />
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <h4>Public Profile</h4>
+            <p>Username: {{ user.username }}</p>
+            <p>First Name: {{ user.firstname }}</p>
+            <p>Last Name: {{ user.lastname }}</p>
+            <p>Email: {{ user.email }}</p>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock fos_user_content %}

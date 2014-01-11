@@ -1,0 +1,69 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'EBUserBundle:Form:fields.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="nav nav-tabs nav-justified">
+                {% set route = app.request.attributes.get('_route') %}
+                <li class="{{ route == 'friend_index' ? 'active' }}">
+                    <a href="{{ path('friend_index') }}">Friends</a>
+                </li>
+                <li class="{{ route == 'friend_search' or route == 'friend_search_results' ? 'active' }}">
+                    <a href="{{ path('friend_search') }}">Search Friends</a>
+                </li>
+            </ul>
+            <h2>Search for Friends</h2>
+            <form action="{{ path('friend_search_results') }}" {{ form_enctype(form) }} method="POST" role="form">
+                <div class="form-group">
+                    {{ form_widget(form.user, {attr: {placeholder: 'Enter username'}}) }}
+                    {{ form_errors(form.user) }}
+                </div>
+                {{ form_rest(form) }}
+                {{ form_errors(form) }}
+                <div class="form-group">
+                    {{ form_widget(form.submit) }}
+                </div>
+            </form>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Town/City</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if users is defined %}
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>
+                                    <a href="{{ path('eb_user_public_profile', {'username': user.username}) }}">{{ user.username }}</a>
+                                </td>
+                                <td>{{ user.firstname }}</td>
+                                <td>{{ user.lastname }}</td>
+                                <td>{{ user.city }}</td>
+                                <td>{{ 'Friend/Unfriend' }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6">{{ 'No results for this search' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6">{{ 'No users to show' }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}

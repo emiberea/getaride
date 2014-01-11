@@ -41,7 +41,7 @@
                 <div class="collapse navbar-collapse" id="eb-navbar-collapse-1">
                     {% if app.user %}
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Link</a></li>
+                            <li class="active"><a href="{{ path('friend_index') }}">Friends</a></li>
                             <li><a href="{{ path('ride') }}">Rides</a></li>
                             <li><a href="{{ path('car') }}">My Cars</a></li>
                             <li class="dropdown">
