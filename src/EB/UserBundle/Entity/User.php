@@ -194,13 +194,30 @@ class User extends BaseUser implements ParticipantInterface
      */
     private $rides;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\UserBundle\Entity\FriendRequest", mappedBy="sender")
+     */
+    private $friendRequests;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\UserBundle\Entity\FriendRequest", mappedBy="receiver")
+     */
+    private $friendConfirms;
+
 
     public function __construct()
     {
         parent::__construct();
         $this->cars = new ArrayCollection();
         $this->rides = new ArrayCollection();
+        $this->friendRequests = new ArrayCollection();
+        $this->friendConfirms = new ArrayCollection();
     }
+
 
     /**
      * Get id
@@ -686,6 +703,66 @@ class User extends BaseUser implements ParticipantInterface
     public function removeRide(Ride $ride)
     {
         $this->rides->removeElement($ride);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFriendRequests()
+    {
+        return $this->friendRequests;
+    }
+
+    /**
+     * @param FriendRequest $friendRequest
+     * @return $this
+     */
+    public function addFriendRequest(FriendRequest $friendRequest)
+    {
+        $this->friendRequests->add($friendRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param FriendRequest $friendRequest
+     * @return $this
+     */
+    public function removeFriendRequest(FriendRequest $friendRequest)
+    {
+        $this->friendRequests->removeElement($friendRequest);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFriendConfirms()
+    {
+        return $this->friendConfirms;
+    }
+
+    /**
+     * @param FriendRequest $friendConfirm
+     * @return $this
+     */
+    public function addFriendConfirm(FriendRequest $friendConfirm)
+    {
+        $this->friendConfirms->add($friendConfirm);
+
+        return $this;
+    }
+
+    /**
+     * @param FriendRequest $friendConfirm
+     * @return $this
+     */
+    public function removeFriendConfirm(FriendRequest $friendConfirm)
+    {
+        $this->friendConfirms->removeElement($friendConfirm);
 
         return $this;
     }
