@@ -16,6 +16,57 @@
             <p>Last Name: {{ user.lastname }}</p>
             <p>Email: {{ user.email }}</p>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            EU: {{ app.user }}<br /><br />
+            {% if app.user != user %}
+                {% set friend_action = get_friend_action(app.user, user) %}
+                <a href="{{ friend_action.route }}" id="friend-action" class="btn {{ friend_action.btn_style }}">
+                    {{ friend_action.text }}
+                </a>
+            {% endif %}
+        </div>
     </div>
 {% endblock fos_user_content %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function() {
+            $("#friend-action").click(function(e) {
+                e.preventDefault();
+                var that = $(this);
+
+                $.get($(this).attr('href'), function(data) {
+                    if (data == "sent-ok" || data == "resend-ok") {
+                        that.removeClass("btn-default");
+                        that.addClass("btn-warning");
+                        that.text("+1 Friend Request Sent");
+                        that.attr("href", "#");
+                    } else if (data == "accept-ok") {
+                        that.removeClass("btn-warning");
+                        that.addClass("btn-success");
+                        that.text("Friends");
+                        that.attr("href", "#");
+                    } else if (data == "reject-ok") {
+                        that.unbind("mouseenter");
+                        that.unbind("mouseleave");
+                        that.removeClass("btn-danger");
+                        that.removeClass("friend-remove");
+                        that.addClass("btn-info");
+                        that.text("Unfriended");
+                        that.attr("href", "#");
+                    }
+                });
+            });
+            $(".friend-remove").hover(function() {
+                $(this).removeClass("btn-success");
+                $(this).addClass("btn-danger");
+                $(this).text("Unfriend");
+            }, function() {
+                $(this).removeClass("btn-danger");
+                $(this).addClass("btn-success");
+                $(this).text("Friends");
+            });
+        });
+    </script>
+{% endblock %}
