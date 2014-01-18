@@ -206,7 +206,7 @@ class User extends BaseUser implements ParticipantInterface
      *
      * @ORM\OneToMany(targetEntity="EB\UserBundle\Entity\FriendRequest", mappedBy="receiver")
      */
-    private $friendConfirms;
+    private $friendResponses;
 
 
     public function __construct()
@@ -215,7 +215,7 @@ class User extends BaseUser implements ParticipantInterface
         $this->cars = new ArrayCollection();
         $this->rides = new ArrayCollection();
         $this->friendRequests = new ArrayCollection();
-        $this->friendConfirms = new ArrayCollection();
+        $this->friendResponses = new ArrayCollection();
     }
 
 
@@ -740,29 +740,29 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @return ArrayCollection
      */
-    public function getFriendConfirms()
+    public function getFriendResponses()
     {
-        return $this->friendConfirms;
+        return $this->friendResponses;
     }
 
     /**
-     * @param FriendRequest $friendConfirm
+     * @param FriendRequest $friendResponse
      * @return $this
      */
-    public function addFriendConfirm(FriendRequest $friendConfirm)
+    public function addFriendResponse(FriendRequest $friendResponse)
     {
-        $this->friendConfirms->add($friendConfirm);
+        $this->friendResponses->add($friendResponse);
 
         return $this;
     }
 
     /**
-     * @param FriendRequest $friendConfirm
+     * @param FriendRequest $friendResponse
      * @return $this
      */
-    public function removeFriendConfirm(FriendRequest $friendConfirm)
+    public function removeFriendResponse(FriendRequest $friendResponse)
     {
-        $this->friendConfirms->removeElement($friendConfirm);
+        $this->friendResponses->removeElement($friendResponse);
 
         return $this;
     }

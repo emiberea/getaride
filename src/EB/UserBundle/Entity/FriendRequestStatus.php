@@ -14,11 +14,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 class FriendRequestStatus
 {
     const REQUESTED = 1;
-    const CONFIRMED = 2;
+    const ACCEPTED = 2;
+    const REJECTED = 3;
 
     public static $validStatuses = array(
         self::REQUESTED => 'Requested',
-        self::CONFIRMED => 'Confirmed',
+        self::ACCEPTED => 'Accepted',
+        self::REJECTED => 'Rejected',
     );
 
     /**

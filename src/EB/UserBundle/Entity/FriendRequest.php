@@ -31,9 +31,16 @@ class FriendRequest
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="confirm_date", type="datetime", nullable=true)
+     * @ORM\Column(name="accept_date", type="datetime", nullable=true)
      */
-    private $confirmDate;
+    private $acceptDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="reject_date", type="datetime", nullable=true)
+     */
+    private $rejectDate;
 
     /**
      * @var User
@@ -45,7 +52,7 @@ class FriendRequest
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="friendConfirms")
+     * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="friendResponses")
      */
     private $receiver;
 
@@ -87,12 +94,12 @@ class FriendRequest
     }
 
     /**
-     * @param \DateTime $confirmDate
+     * @param \DateTime $acceptDate
      * @return $this
      */
-    public function setConfirmDate($confirmDate)
+    public function setAcceptDate($acceptDate)
     {
-        $this->confirmDate = $confirmDate;
+        $this->acceptDate = $acceptDate;
 
         return $this;
     }
@@ -100,9 +107,28 @@ class FriendRequest
     /**
      * @return \DateTime
      */
-    public function getConfirmDate()
+    public function getAcceptDate()
     {
-        return $this->confirmDate;
+        return $this->acceptDate;
+    }
+
+    /**
+     * @param \DateTime $rejectDate
+     * @return $this
+     */
+    public function setRejectDate($rejectDate)
+    {
+        $this->rejectDate = $rejectDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRejectDate()
+    {
+        return $this->rejectDate;
     }
 
     /**
