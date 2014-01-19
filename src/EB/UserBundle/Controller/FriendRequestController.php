@@ -24,20 +24,25 @@ class FriendRequestController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        // sender - logged user, receiver - the user that has the profile viewed by the logged user
         $sender = $em->getRepository('EBUserBundle:User')->find($senderId);
         $receiver = $em->getRepository('EBUserBundle:User')->find($receiverId);
 
-        $friendRequest = new FriendRequest();
-        $friendRequest->setSender($sender);
-        $friendRequest->setReceiver($receiver);
-        $friendRequest->setRequestDate(new \DateTime());
-        $requestedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::REQUESTED);
-        $friendRequest->setStatus($requestedStatus);
+        if ($this->getUser() == $sender) {
+            $friendRequest = new FriendRequest();
+            $friendRequest->setSender($sender);
+            $friendRequest->setReceiver($receiver);
+            $friendRequest->setRequestDate(new \DateTime());
+            $requestedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::REQUESTED);
+            $friendRequest->setStatus($requestedStatus);
 
-        $em->persist($friendRequest);
-        $em->flush();
+            $em->persist($friendRequest);
+            $em->flush();
 
-        return new Response('sent-ok');
+            return new Response('sent-ok');
+        }
+
+        throw $this->createNotFoundException('Not Found. Wrong URL.');
     }
 
     /**
@@ -48,14 +53,19 @@ class FriendRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $friendRequest = $em->getRepository('EBUserBundle:FriendRequest')->find($id);
-        $friendRequest->setAcceptDate(new \DateTime());
-        $acceptedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::ACCEPTED);
-        $friendRequest->setStatus($acceptedStatus);
 
-        $em->persist($friendRequest);
-        $em->flush();
+        if ($this->getUser() == $friendRequest->getReceiver()) {
+            $friendRequest->setAcceptDate(new \DateTime());
+            $acceptedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::ACCEPTED);
+            $friendRequest->setStatus($acceptedStatus);
 
-        return new Response('accept-ok');
+            $em->persist($friendRequest);
+            $em->flush();
+
+            return new Response('accept-ok');
+        }
+
+        throw $this->createNotFoundException('Not Found. Wrong URL.');
     }
 
     /**
@@ -66,14 +76,19 @@ class FriendRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $friendRequest = $em->getRepository('EBUserBundle:FriendRequest')->find($id);
-        $friendRequest->setRejectDate(new \DateTime());
-        $rejectedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::REJECTED);
-        $friendRequest->setStatus($rejectedStatus);
 
-        $em->persist($friendRequest);
-        $em->flush();
+        if ($this->getUser() == $friendRequest->getSender() || $this->getUser() == $friendRequest->getReceiver()) {
+            $friendRequest->setRejectDate(new \DateTime());
+            $rejectedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::REJECTED);
+            $friendRequest->setStatus($rejectedStatus);
 
-        return new Response('reject-ok');
+            $em->persist($friendRequest);
+            $em->flush();
+
+            return new Response('reject-ok');
+        }
+
+        throw $this->createNotFoundException('Not Found. Wrong URL.');
     }
 
     /**
@@ -83,21 +98,27 @@ class FriendRequestController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
+        // sender - logged user, receiver - the user that has the profile viewed by the logged user
         $sender = $em->getRepository('EBUserBundle:User')->find($senderId);
         $receiver = $em->getRepository('EBUserBundle:User')->find($receiverId);
 
         $friendRequest = $em->getRepository('EBUserBundle:FriendRequest')->find($id);
-        $friendRequest->setSender($sender);
-        $friendRequest->setReceiver($receiver);
-        $friendRequest->setRequestDate(new \DateTime());
-        $friendRequest->setAcceptDate(null);
-        $friendRequest->setRejectDate(null);
-        $requestedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::REQUESTED);
-        $friendRequest->setStatus($requestedStatus);
 
-        $em->persist($friendRequest);
-        $em->flush();
+        if ($this->getUser() == $sender) {
+            $friendRequest->setSender($sender);
+            $friendRequest->setReceiver($receiver);
+            $friendRequest->setRequestDate(new \DateTime());
+            $friendRequest->setAcceptDate(null);
+            $friendRequest->setRejectDate(null);
+            $requestedStatus = $em->getRepository('EBUserBundle:FriendRequestStatus')->find(FriendRequestStatus::REQUESTED);
+            $friendRequest->setStatus($requestedStatus);
 
-        return new Response('resend-ok');
+            $em->persist($friendRequest);
+            $em->flush();
+
+            return new Response('resend-ok');
+        }
+
+        throw $this->createNotFoundException('Not Found. Wrong URL.');
     }
 }
