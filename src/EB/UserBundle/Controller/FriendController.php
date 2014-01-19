@@ -7,6 +7,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use EB\UserBundle\Entity\User;
+use EB\UserBundle\Entity\FriendRequest;
+use EB\UserBundle\Entity\FriendRequestStatus;
 use EB\UserBundle\Form\UserSearchType;
 
 /**
@@ -22,7 +25,31 @@ class FriendController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var User[] $friends */
+        $friends = array();
+
+        /** @var FriendRequest[] $friendRequests */
+        $friendRequests = $user->getFriendRequests();
+        foreach ($friendRequests as $friendRequest) {
+            if ($friendRequest->getStatus()->getId() == FriendRequestStatus::ACCEPTED) {
+                $friends[] = $friendRequest->getReceiver();
+            }
+        }
+
+        /** @var FriendRequest[] $friendResponses */
+        $friendResponses = $user->getFriendResponses();
+        foreach ($friendResponses as $friendResponse) {
+            if ($friendResponse->getStatus()->getId() == FriendRequestStatus::ACCEPTED) {
+                $friends[] = $friendResponse->getSender();
+            }
+        }
+
+        return array(
+            'friends' => $friends,
+        );
     }
 
     /**

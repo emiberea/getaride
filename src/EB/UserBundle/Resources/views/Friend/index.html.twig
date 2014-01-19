@@ -13,6 +13,38 @@
                 </li>
             </ul>
             <h2>Friends List</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for friend in friends %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('eb_user_public_profile', {'username': friend.username}) }}">{{ friend.username }}</a>
+                            </td>
+                            <td>
+                                {{ friend.firstname }}
+                            </td>
+                            <td>
+                                {{ friend.lastname }}
+                            </td>
+                            <td>
+                                {{ 'Unfriend' }}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">You have no friends yet.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         <div class="col-md-4"></div>
     </div>
