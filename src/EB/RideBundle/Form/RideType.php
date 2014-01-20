@@ -32,8 +32,8 @@ class RideType extends AbstractType
             ->add('car', 'entity', array(
                 'class' => 'EBRideBundle:Car',
                 'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('r')
-                        ->where('r.user = :user')
+                    return $er->createQueryBuilder('c')
+                        ->where('c.user = :user')
                         ->setParameter('user', $this->user);
                 },
                 'empty_value' => 'Choose an option',

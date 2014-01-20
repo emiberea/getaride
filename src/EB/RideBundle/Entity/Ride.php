@@ -3,8 +3,9 @@
 namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use EB\UserBundle\Entity\User;
 use EB\RideBundle\Entity\Car;
+use EB\UserBundle\Entity\User;
+use EB\MessageBundle\Entity\Thread;
 
 /**
  * Ride
@@ -73,14 +74,31 @@ class Ride
     private $comment;
 
     /**
+     * @var User
+     *
      * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="rides")
      */
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="Car", inversedBy="ride", cascade={"persist"})
+     * @var Car
+     *
+     * @ORM\ManyToOne(targetEntity="Car", inversedBy="rides")
      */
     private $car;
+
+    /**
+     * @var Thread
+     *
+     * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="ride", cascade={"persist"})
+     */
+    private $thread;
+
+
+    public function __construct()
+    {
+        $this->thread = new Thread();
+    }
 
 
     /**
@@ -290,5 +308,24 @@ class Ride
     public function getCar()
     {
         return $this->car;
+    }
+
+    /**
+     * @param Thread $thread
+     * @return $this
+     */
+    public function setThread(Thread $thread)
+    {
+        $this->thread = $thread;
+
+        return $this;
+    }
+
+    /**
+     * @return Thread
+     */
+    public function getThread()
+    {
+        return $this->thread;
     }
 }
