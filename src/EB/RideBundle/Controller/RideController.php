@@ -48,12 +48,16 @@ class RideController extends Controller
     public function createAction(Request $request)
     {
         $ride = new Ride();
-        $ride->setUser($this->getUser());
 
         $form = $this->createCreateForm($ride);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $ride->setUser($this->getUser());
+            $ride->getThread()->setSubject('Ride: from ' . $ride->getStartLocation());
+            $ride->getThread()->setCreatedAt(new \DateTime());
+            $ride->getThread()->setCreatedBy($this->getUser());
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($ride);
             $em->flush();

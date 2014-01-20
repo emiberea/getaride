@@ -4,6 +4,7 @@ namespace EB\MessageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\MessageBundle\Entity\Thread as BaseThread;
+use EB\RideBundle\Entity\Ride;
 
 /**
  * @ORM\Table(name="fos_thread")
@@ -36,4 +37,31 @@ class Thread extends BaseThread
      * @ORM\OneToMany(targetEntity="EB\MessageBundle\Entity\ThreadMetadata", mappedBy="thread", cascade={"all"})
      */
     protected $metadata;
+
+    /**
+     * @var Ride
+     *
+     * @ORM\OneToOne(targetEntity="EB\RideBundle\Entity\Ride", mappedBy="thread")
+     */
+    private $ride;
+
+
+    /**
+     * @param Ride $ride
+     * @return $this
+     */
+    public function setRide(Ride $ride)
+    {
+        $this->ride = $ride;
+
+        return $this;
+    }
+
+    /**
+     * @return Ride
+     */
+    public function getRide()
+    {
+        return $this->ride;
+    }
 }

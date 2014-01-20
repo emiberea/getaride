@@ -3,6 +3,7 @@
 namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use EB\UserBundle\Entity\User;
 use EB\RideBundle\Entity\Ride;
 
@@ -71,14 +72,16 @@ class Car
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="Ride", mappedBy="car")
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Ride", mappedBy="car")
      */
-    private $ride;
+    private $rides;
 
 
     public function __toString()
     {
-        return (string)$this->brand . ' ' . $this->model;
+        return (string) $this->brand . ' ' . $this->model;
     }
 
 
@@ -226,21 +229,32 @@ class Car
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getRides()
+    {
+        return $this->rides;
+    }
+
+    /**
      * @param Ride $ride
      * @return $this
      */
-    public function setRide(Ride $ride)
+    public function addRide(Ride $ride)
     {
-        $this->ride = $ride;
+        $this->rides->add($ride);
 
         return $this;
     }
 
     /**
-     * @return Ride
+     * @param Ride $ride
+     * @return $this
      */
-    public function getRide()
+    public function removeRide(Ride $ride)
     {
-        return $this->ride;
+        $this->rides->removeElement($ride);
+
+        return $this;
     }
 }
