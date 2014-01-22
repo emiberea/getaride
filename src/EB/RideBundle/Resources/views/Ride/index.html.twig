@@ -1,50 +1,68 @@
 {% extends '::base.html.twig' %}
 
 {% block content -%}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Ride list - title</h3>
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="nav nav-tabs nav-justified">
+                {% set route = app.request.attributes.get('_route') %}
+                <li class="{{ route == 'ride' ? 'active' }}">
+                    <a href="{{ path('ride') }}">My Rides</a>
+                </li>
+                <li class="{{ route == 'ride_search' or route == 'ride_search_results' ? 'active' }}">
+                    <a href="{{ path('ride_search') }}">Search Rides</a>
+                </li>
+            </ul>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ride list - title</h3>
+                </div>
+                <div class="panel-body">
+                    <h3 class="panel-title">Details about the rides</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Start Date</th>
+                            <th>Stop Date</th>
+                            <th>Start Location</th>
+                            <th>Stop Location</th>
+                            <th>Empty Seats No</th>
+                            <th>Baggage Per Seat</th>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ride in rides %}
+                            <tr>
+                                <td><a href="{{ path('ride_show', { 'id': ride.id }) }}">{{ ride.id }}</a></td>
+                                <td>{% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{% if ride.stopDate %}{{ ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{{ ride.startLocation }}</td>
+                                <td>{{ ride.stopLocation }}</td>
+                                <td>{{ ride.emptySeatsNo }}</td>
+                                <td>{{ ride.baggagePerSeat }}</td>
+                                <td>{{ ride.comment }}</td>
+                                <td>
+                                    <a href="{{ path('ride_show', { 'id': ride.id }) }}">show</a>
+                                    <a href="{{ path('ride_edit', { 'id': ride.id }) }}">edit</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="9">You have no rides yet.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="panel-footer">
+                    <a href="{{ path('ride_new') }}">
+                        Create a new entry
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="panel-body">
-            <h3 class="panel-title">Details about the rides</h3>
-        </div>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Start Date</th>
-                    <th>Stop Date</th>
-                    <th>Start Location</th>
-                    <th>Stop Location</th>
-                    <th>Empty Seats No</th>
-                    <th>Baggage Per Seat</th>
-                    <th>Comment</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ride in rides %}
-                    <tr>
-                        <td><a href="{{ path('ride_show', { 'id': ride.id }) }}">{{ ride.id }}</a></td>
-                        <td>{% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                        <td>{% if ride.stopDate %}{{ ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                        <td>{{ ride.startLocation }}</td>
-                        <td>{{ ride.stopLocation }}</td>
-                        <td>{{ ride.emptySeatsNo }}</td>
-                        <td>{{ ride.baggagePerSeat }}</td>
-                        <td>{{ ride.comment }}</td>
-                        <td>
-                            <a href="{{ path('ride_show', { 'id': ride.id }) }}">show</a>
-                            <a href="{{ path('ride_edit', { 'id': ride.id }) }}">edit</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="panel-footer">
-            <a href="{{ path('ride_new') }}">
-                Create a new entry
-            </a>
-        </div>
+        <div class="col-md-4"></div>
     </div>
 {% endblock %}
