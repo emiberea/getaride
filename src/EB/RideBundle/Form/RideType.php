@@ -6,9 +6,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use EB\UserBundle\Entity\User;
 
 class RideType extends AbstractType
 {
+    /** @var User $user  */
+    private $user;
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -31,17 +35,20 @@ class RideType extends AbstractType
             ->add('comment', 'textarea', array())
             ->add('car', 'entity', array(
                 'class' => 'EBRideBundle:Car',
-                'query_builder' => function(EntityRepository $er) {
+                'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('c')
                         ->where('c.user = :user')
                         ->setParameter('user', $this->user);
                 },
-                'empty_value' => 'Choose an option',
-                'required' => false,
+                'empty_value' => 'Choose a car',
+            ))
+            ->add('rideStatus', 'entity', array(
+                'class' => 'EBRideBundle:RideStatus',
+                'empty_value' => 'Select a status',
             ))
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

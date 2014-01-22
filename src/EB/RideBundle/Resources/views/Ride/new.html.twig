@@ -37,8 +37,12 @@
                     {{ form_errors(form.comment) }}
                 </div>
                 <div class="form-group">
-                    {{ form_widget(form.car, {attr: {placeholder: 'Car'}}) }}
+                    {{ form_widget(form.car) }}
                     {{ form_errors(form.car) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.rideStatus) }}
+                    {{ form_errors(form.rideStatus) }}
                 </div>
                 {{ form_rest(form) }}
                 <div class="form-group">

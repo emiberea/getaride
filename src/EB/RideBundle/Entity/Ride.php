@@ -88,6 +88,13 @@ class Ride
     private $car;
 
     /**
+     * @var RideStatus
+     *
+     * @ORM\ManyToOne(targetEntity="RideStatus", inversedBy="rides")
+     */
+    private $rideStatus;
+
+    /**
      * @var Thread
      *
      * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="ride", cascade={"persist"})
@@ -308,6 +315,25 @@ class Ride
     public function getCar()
     {
         return $this->car;
+    }
+
+    /**
+     * @param RideStatus $rideStatus
+     * @return $this
+     */
+    public function setRideStatus(RideStatus $rideStatus)
+    {
+        $this->rideStatus = $rideStatus;
+
+        return $this;
+    }
+
+    /**
+     * @return RideStatus
+     */
+    public function getRideStatus()
+    {
+        return $this->rideStatus;
     }
 
     /**
