@@ -1,0 +1,95 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'EBRideBundle:Form:fields.html.twig' %}
+
+{% block content -%}
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="nav nav-tabs nav-justified">
+                {% set route = app.request.attributes.get('_route') %}
+                <li class="{{ route == 'ride' ? 'active' }}">
+                    <a href="{{ path('ride') }}">My Rides</a>
+                </li>
+                <li class="{{ route == 'ride_search' or route == 'ride_search_results' ? 'active' }}">
+                    <a href="{{ path('ride_search') }}">Search Rides</a>
+                </li>
+            </ul>
+            <h2>Search for Rides</h2>
+            <form action="{{ path('ride_search_results') }}" {{ form_enctype(form) }} method="POST" role="form">
+                <div class="form-group">
+                    {{ form_widget(form.startDate, {attr: {placeholder: 'Start Date'}}) }}
+                    {{ form_errors(form.startDate) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.startLocation, {attr: {placeholder: 'Start Location'}}) }}
+                    {{ form_errors(form.startLocation) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.stopLocation, {attr: {placeholder: 'Stop Location'}}) }}
+                    {{ form_errors(form.stopLocation) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.emptySeatsNo, {attr: {placeholder: 'Empty Seats No'}}) }}
+                    {{ form_errors(form.emptySeatsNo) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.baggagePerSeat, {attr: {placeholder: 'Baggage Per Seat'}}) }}
+                    {{ form_errors(form.baggagePerSeat) }}
+                </div>
+                <div class="checkbox">
+                    {{ form_label(form.matchExactly) }}
+                    {{ form_widget(form.matchExactly) }}
+                    {{ form_errors(form.matchExactly) }}
+                </div>
+                {{ form_rest(form) }}
+                <div class="form-group">
+                    {{ form_widget(form.submit) }}
+                </div>
+            </form>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Start Date</th>
+                        <th>Stop Date</th>
+                        <th>Start Location</th>
+                        <th>Stop Location</th>
+                        <th>Empty Seats No</th>
+                        <th>Baggage Per Seat</th>
+                        <th>Comment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if rides is defined %}
+                        {% for ride in rides %}
+                            <tr>
+                                <td><a href="{{ path('ride_show', { 'id': ride.id }) }}">{{ ride.id }}</a></td>
+                                <td>{% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{% if ride.stopDate %}{{ ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{{ ride.startLocation }}</td>
+                                <td>{{ ride.stopLocation }}</td>
+                                <td>{{ ride.emptySeatsNo }}</td>
+                                <td>{{ ride.baggagePerSeat }}</td>
+                                <td>{{ ride.comment }}</td>
+                                <td>
+                                    <a href="{{ path('ride_show', { 'id': ride.id }) }}">show</a>
+                                    <a href="{{ path('ride_edit', { 'id': ride.id }) }}">edit</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="9">No results for this search.</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9">No rides to show.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}

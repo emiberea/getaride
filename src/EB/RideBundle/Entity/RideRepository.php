@@ -12,4 +12,55 @@ use Doctrine\ORM\EntityRepository;
  */
 class RideRepository extends EntityRepository
 {
+    /**
+     * @param array $searchParams
+     * @return array
+     */
+    public function getRidesByDateLocationAndSeatsNo(array $searchParams = array())
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->where(
+            $qb->expr()->andX(
+                isset($searchParams['startDate']) ? $qb->expr()->eq('r.startDate', ':startDate') : null,
+                isset($searchParams['startLocation']) ? $qb->expr()->eq('r.startLocation', ':startLocation') : null,
+                isset($searchParams['stopLocation']) ? $qb->expr()->eq('r.stopLocation', ':stopLocation') : null,
+                isset($searchParams['emptySeatsNo']) ? $qb->expr()->eq('r.emptySeatsNo', ':emptySeatsNo') : null,
+                isset($searchParams['baggagePerSeat']) ? $qb->expr()->eq('r.baggagePerSeat', ':baggagePerSeat') : null
+            )
+        );
+        isset($searchParams['startDate']) ? $qb->setParameter('startDate', $searchParams['startDate']) : null;
+        isset($searchParams['startLocation']) ? $qb->setParameter('startLocation', $searchParams['startLocation']) : null;
+        isset($searchParams['stopLocation']) ? $qb->setParameter('stopLocation', $searchParams['stopLocation']) : null;
+        isset($searchParams['emptySeatsNo']) ? $qb->setParameter('emptySeatsNo', $searchParams['emptySeatsNo']) : null;
+        isset($searchParams['baggagePerSeat']) ? $qb->setParameter('baggagePerSeat', $searchParams['baggagePerSeat']) : null;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param array $searchParams
+     * @return array
+     */
+    public function getRidesByDateLocationOrSeatsNo(array $searchParams = array())
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->where(
+            $qb->expr()->orX(
+                $qb->expr()->eq('r.startDate', ':startDate'),
+                $qb->expr()->eq('r.startLocation', ':startLocation'),
+                $qb->expr()->eq('r.stopLocation', ':stopLocation'),
+                $qb->expr()->eq('r.emptySeatsNo', ':emptySeatsNo'),
+                $qb->expr()->eq('r.baggagePerSeat', ':baggagePerSeat')
+            )
+        );
+        $qb->setParameters(array(
+            'startDate' => $searchParams['startDate'],
+            'startLocation' => $searchParams['startLocation'],
+            'stopLocation' => $searchParams['stopLocation'],
+            'emptySeatsNo' => $searchParams['emptySeatsNo'],
+            'baggagePerSeat' => $searchParams['baggagePerSeat'],
+        ));
+
+        return $qb->getQuery()->getResult();
+    }
 }

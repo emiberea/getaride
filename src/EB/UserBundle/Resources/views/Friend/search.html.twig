@@ -21,7 +21,6 @@
                     {{ form_errors(form.user) }}
                 </div>
                 {{ form_rest(form) }}
-                {{ form_errors(form) }}
                 <div class="form-group">
                     {{ form_widget(form.submit) }}
                 </div>
@@ -53,12 +52,12 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="6">{{ 'No results for this search' }}</td>
+                                <td colspan="6">No results for this search.</td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="6">{{ 'No users to show' }}</td>
+                            <td colspan="6">No users to show.</td>
                         </tr>
                     {% endif %}
                 </tbody>

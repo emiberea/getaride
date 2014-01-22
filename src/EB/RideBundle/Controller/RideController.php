@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Form\RideType;
+use EB\RideBundle\Form\RideSearchType;
 
 /**
  * Ride controller.
@@ -110,6 +111,60 @@ class RideController extends Controller
 
         return array(
             'ride' => $ride,
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * @Route("/search", name="ride_search")
+     * @Template()
+     */
+    public function searchAction()
+    {
+        $form = $this->createForm(new RideSearchType());
+
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * @Route("/search-results", name="ride_search_results")
+     * @Method("POST")
+     * @Template("EBRideBundle:Ride:search.html.twig")
+     */
+    public function getSearchResultAction(Request $request)
+    {
+        $form = $this->createForm(new RideSearchType());
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $matchExactly = $form->get('matchExactly')->getData();
+            $searchParams = array(
+                'startDate' => $form->get('startDate')->getData(),
+                'startLocation' => $form->get('startLocation')->getData(),
+                'stopLocation' => $form->get('stopLocation')->getData(),
+                'emptySeatsNo' => $form->get('emptySeatsNo')->getData(),
+                'baggagePerSeat' => $form->get('baggagePerSeat')->getData(),
+            );
+
+            $em = $this->getDoctrine()->getManager();
+
+            if ($matchExactly) {
+                $rides = $em->getRepository('EBRideBundle:Ride')
+                    ->getRidesByDateLocationAndSeatsNo($searchParams);
+            } else {
+                $rides = $em->getRepository('EBRideBundle:Ride')
+                    ->getRidesByDateLocationOrSeatsNo($searchParams);
+            }
+
+            return array(
+                'form' => $form->createView(),
+                'rides' => $rides,
+            );
+        }
+
+        return array(
             'form' => $form->createView(),
         );
     }
