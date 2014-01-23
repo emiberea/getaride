@@ -37,6 +37,11 @@
                     {{ form_widget(edit_form.comment, {attr: {placeholder: 'Comment'}}) }}
                     {{ form_errors(edit_form.comment) }}
                 </div>
+                <div class="checkbox">
+                    {{ form_label(edit_form.isPublic) }}
+                    {{ form_widget(edit_form.isPublic) }}
+                    {{ form_errors(edit_form.isPublic) }}
+                </div>
                 <div class="form-group">
                     {{ form_widget(edit_form.car) }}
                     {{ form_errors(edit_form.car) }}

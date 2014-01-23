@@ -33,6 +33,9 @@ class RideType extends AbstractType
             ->add('emptySeatsNo')
             ->add('baggagePerSeat')
             ->add('comment', 'textarea', array())
+            ->add('isPublic', 'checkbox', array(
+                'required' => false,
+            ))
             ->add('car', 'entity', array(
                 'class' => 'EBRideBundle:Car',
                 'query_builder' => function (EntityRepository $er) {

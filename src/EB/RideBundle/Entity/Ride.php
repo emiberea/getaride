@@ -74,6 +74,13 @@ class Ride
     private $comment;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_public", type="boolean")
+     */
+    private $isPublic;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="rides")
@@ -277,6 +284,25 @@ class Ride
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * @param boolean $isPublic
+     * @return $this
+     */
+    public function setIsPublic($isPublic)
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsPublic()
+    {
+        return $this->isPublic;
     }
 
     /**
