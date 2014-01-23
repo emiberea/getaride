@@ -19,8 +19,11 @@ class RideRepository extends EntityRepository
     public function getRidesByDateLocationAndSeatsNo(array $searchParams = array())
     {
         $qb = $this->createQueryBuilder('r');
+        $qb->innerJoin('r.rideStatus', 'rs');
         $qb->where(
             $qb->expr()->andX(
+                $qb->expr()->eq('r.isPublic', true),
+                $qb->expr()->eq('rs.id', RideStatus::AVAILABLE),
                 isset($searchParams['startDate']) ? $qb->expr()->eq('r.startDate', ':startDate') : null,
                 isset($searchParams['startLocation']) ? $qb->expr()->eq('r.startLocation', ':startLocation') : null,
                 isset($searchParams['stopLocation']) ? $qb->expr()->eq('r.stopLocation', ':stopLocation') : null,
@@ -44,13 +47,18 @@ class RideRepository extends EntityRepository
     public function getRidesByDateLocationOrSeatsNo(array $searchParams = array())
     {
         $qb = $this->createQueryBuilder('r');
+        $qb->innerJoin('r.rideStatus', 'rs');
         $qb->where(
-            $qb->expr()->orX(
-                $qb->expr()->eq('r.startDate', ':startDate'),
-                $qb->expr()->eq('r.startLocation', ':startLocation'),
-                $qb->expr()->eq('r.stopLocation', ':stopLocation'),
-                $qb->expr()->eq('r.emptySeatsNo', ':emptySeatsNo'),
-                $qb->expr()->eq('r.baggagePerSeat', ':baggagePerSeat')
+            $qb->expr()->andX(
+                $qb->expr()->eq('r.isPublic', true),
+                $qb->expr()->eq('rs.id', RideStatus::AVAILABLE),
+                $qb->expr()->orX(
+                    $qb->expr()->eq('r.startDate', ':startDate'),
+                    $qb->expr()->eq('r.startLocation', ':startLocation'),
+                    $qb->expr()->eq('r.stopLocation', ':stopLocation'),
+                    $qb->expr()->eq('r.emptySeatsNo', ':emptySeatsNo'),
+                    $qb->expr()->eq('r.baggagePerSeat', ':baggagePerSeat')
+                )
             )
         );
         $qb->setParameters(array(

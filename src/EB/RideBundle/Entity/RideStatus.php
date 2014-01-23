@@ -16,13 +16,15 @@ class RideStatus
     const DRAFT          = 1;
     const AVAILABLE      = 2;
     const CANCELED       = 3;
-    const FINISH_FAIL    = 4;
-    const FINISH_SUCCESS = 5;
+    const CLOSED         = 4;
+    const FINISH_FAIL    = 5;
+    const FINISH_SUCCESS = 6;
 
     public static $validStatuses = array(
         self::DRAFT          => 'Draft',
         self::AVAILABLE      => 'Available',
         self::CANCELED       => 'Canceled',
+        self::CLOSED         => 'Closed',
         self::FINISH_FAIL    => 'Finish Fail',
         self::FINISH_SUCCESS => 'Finish Success',
     );

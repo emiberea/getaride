@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use EB\RideBundle\Entity\Ride;
+use EB\RideBundle\Entity\RideStatus;
 use EB\RideBundle\Form\RideType;
 use EB\RideBundle\Form\RideSearchType;
 
@@ -85,6 +86,10 @@ class RideController extends Controller
             'action' => $this->generateUrl('ride_create'),
             'method' => 'POST',
             'user' => $this->getUser(),
+            'rideStatuses' => array(
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::DRAFT),
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::AVAILABLE),
+            ),
         ));
 
         $form->add('submit', 'submit', array(
@@ -236,10 +241,32 @@ class RideController extends Controller
      */
     private function createEditForm(Ride $ride)
     {
+        if ($ride->getRideStatus()->getId() == RideStatus::DRAFT) {
+            $rideStatuses = array(
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::DRAFT),
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::AVAILABLE),
+            );
+        } elseif ($ride->getRideStatus()->getId() == RideStatus::AVAILABLE || $ride->getRideStatus()->getId() == RideStatus::CANCELED) {
+            $rideStatuses = array(
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::AVAILABLE),
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::CANCELED),
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::CLOSED),
+            );
+        } elseif ($ride->getRideStatus()->getId() == RideStatus::CLOSED || $ride->getRideStatus()->getId() == RideStatus::FINISH_FAIL || $ride->getRideStatus()->getId() == RideStatus::FINISH_SUCCESS) {
+            $rideStatuses = array(
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::CLOSED),
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::FINISH_FAIL),
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::FINISH_SUCCESS),
+            );
+        } else {
+            $rideStatuses = $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->findAll();
+        }
+
         $form = $this->createForm(new RideType(), $ride, array(
             'action' => $this->generateUrl('ride_update', array('id' => $ride->getId())),
             'method' => 'PUT',
             'user' => $this->getUser(),
+            'rideStatuses' => $rideStatuses,
         ));
 
         $form->add('submit', 'submit', array(
