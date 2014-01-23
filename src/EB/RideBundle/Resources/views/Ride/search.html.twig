@@ -49,7 +49,6 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Id</th>
                         <th>Start Date</th>
                         <th>Stop Date</th>
                         <th>Start Location</th>
@@ -64,7 +63,6 @@
                     {% if rides is defined %}
                         {% for ride in rides %}
                             <tr>
-                                <td><a href="{{ path('ride_show', { 'id': ride.id }) }}">{{ ride.id }}</a></td>
                                 <td>{% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                                 <td>{% if ride.stopDate %}{{ ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                                 <td>{{ ride.startLocation }}</td>
@@ -73,18 +71,17 @@
                                 <td>{{ ride.baggagePerSeat }}</td>
                                 <td>{{ ride.comment }}</td>
                                 <td>
-                                    <a href="{{ path('ride_show', { 'id': ride.id }) }}">show</a>
-                                    <a href="{{ path('ride_edit', { 'id': ride.id }) }}">edit</a>
+                                    <a href="{{ path('ride_show_public', { 'id': ride.id }) }}">show</a>
                                 </td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="9">No results for this search.</td>
+                                <td colspan="8">No results for this search.</td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="9">No rides to show.</td>
+                            <td colspan="8">No rides to show.</td>
                         </tr>
                     {% endif %}
                 </tbody>
