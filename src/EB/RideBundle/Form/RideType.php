@@ -6,12 +6,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use EB\RideBundle\Entity\RideStatus;
 use EB\UserBundle\Entity\User;
 
 class RideType extends AbstractType
 {
     /** @var User $user  */
     private $user;
+
+    /** @var RideStatus[] $rideStatuses */
+    private $rideStatuses;
 
     /**
      * @param FormBuilderInterface $builder
@@ -20,6 +24,7 @@ class RideType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->user = $options['user'];
+        $this->rideStatuses = $options['rideStatuses'];
 
         $builder
             ->add('startDate', 'date', array(
@@ -47,6 +52,7 @@ class RideType extends AbstractType
             ))
             ->add('rideStatus', 'entity', array(
                 'class' => 'EBRideBundle:RideStatus',
+                'choices' => $this->rideStatuses,
                 'empty_value' => 'Select a status',
             ))
         ;
@@ -60,6 +66,7 @@ class RideType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'EB\RideBundle\Entity\Ride',
             'user' => null,
+            'rideStatuses' => null,
         ));
     }
 
