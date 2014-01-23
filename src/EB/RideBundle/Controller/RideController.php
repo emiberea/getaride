@@ -203,6 +203,31 @@ class RideController extends Controller
     }
 
     /**
+     * @Route("/{id}/public", name="ride_show_public")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showPublicAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+            'id' => $id,
+        ));
+
+        if (!$ride) {
+            throw $this->createNotFoundException('Unable to find Ride entity.');
+        }
+        if ($ride->getIsPublic() == false || $ride->getRideStatus()->getId() != RideStatus::AVAILABLE) {
+            throw $this->createNotFoundException('Unable to find Ride entity.');
+        }
+
+        return array(
+            'ride' => $ride,
+        );
+    }
+
+    /**
      * Displays a form to edit an existing Ride entity.
      *
      * @Route("/{id}/edit", name="ride_edit")

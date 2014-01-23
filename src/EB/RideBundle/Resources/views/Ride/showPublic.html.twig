@@ -1,0 +1,42 @@
+{% extends '::base.html.twig' %}
+
+{% block content -%}
+    <h1>Ride - show public</h1>
+
+    <table class="table table-hover">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ride.id }}</td>
+            </tr>
+            <tr>
+                <th>Start Date</th>
+                <td>{{ ride.startDate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Stop Date</th>
+                <td>{{ ride.stopDate|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Start Location</th>
+                <td>{{ ride.startLocation }}</td>
+            </tr>
+            <tr>
+                <th>Stop Location</th>
+                <td>{{ ride.stopLocation }}</td>
+            </tr>
+            <tr>
+                <th>Empty Seats No</th>
+                <td>{{ ride.emptySeatsNo }}</td>
+            </tr>
+            <tr>
+                <th>Baggage Per Seat</th>
+                <td>{{ ride.baggagePerSeat }}</td>
+            </tr>
+            <tr>
+                <th>Comment</th>
+                <td>{{ ride.comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
