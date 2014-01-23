@@ -3,6 +3,7 @@
 namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use EB\UserBundle\Entity\User;
 
 /**
  * RideRepository
@@ -14,15 +15,17 @@ class RideRepository extends EntityRepository
 {
     /**
      * @param array $searchParams
+     * @param User $user
      * @return array
      */
-    public function getRidesByDateLocationAndSeatsNo(array $searchParams = array())
+    public function getRidesByDateLocationAndSeatsNo(array $searchParams = array(), User $user)
     {
         $qb = $this->createQueryBuilder('r');
         $qb->innerJoin('r.rideStatus', 'rs');
         $qb->where(
             $qb->expr()->andX(
                 $qb->expr()->eq('r.isPublic', true),
+                $qb->expr()->neq('r.user', ':user'),
                 $qb->expr()->eq('rs.id', RideStatus::AVAILABLE),
                 isset($searchParams['startDate']) ? $qb->expr()->eq('r.startDate', ':startDate') : null,
                 isset($searchParams['startLocation']) ? $qb->expr()->eq('r.startLocation', ':startLocation') : null,
@@ -31,6 +34,7 @@ class RideRepository extends EntityRepository
                 isset($searchParams['baggagePerSeat']) ? $qb->expr()->eq('r.baggagePerSeat', ':baggagePerSeat') : null
             )
         );
+        $qb->setParameter('user', $user);
         isset($searchParams['startDate']) ? $qb->setParameter('startDate', $searchParams['startDate']) : null;
         isset($searchParams['startLocation']) ? $qb->setParameter('startLocation', $searchParams['startLocation']) : null;
         isset($searchParams['stopLocation']) ? $qb->setParameter('stopLocation', $searchParams['stopLocation']) : null;
@@ -42,15 +46,17 @@ class RideRepository extends EntityRepository
 
     /**
      * @param array $searchParams
+     * @param User $user
      * @return array
      */
-    public function getRidesByDateLocationOrSeatsNo(array $searchParams = array())
+    public function getRidesByDateLocationOrSeatsNo(array $searchParams = array(), User $user)
     {
         $qb = $this->createQueryBuilder('r');
         $qb->innerJoin('r.rideStatus', 'rs');
         $qb->where(
             $qb->expr()->andX(
                 $qb->expr()->eq('r.isPublic', true),
+                $qb->expr()->neq('r.user', ':user'),
                 $qb->expr()->eq('rs.id', RideStatus::AVAILABLE),
                 $qb->expr()->orX(
                     $qb->expr()->eq('r.startDate', ':startDate'),
@@ -62,10 +68,11 @@ class RideRepository extends EntityRepository
             )
         );
         $qb->setParameters(array(
-            'startDate' => $searchParams['startDate'],
-            'startLocation' => $searchParams['startLocation'],
-            'stopLocation' => $searchParams['stopLocation'],
-            'emptySeatsNo' => $searchParams['emptySeatsNo'],
+            'user'           => $user,
+            'startDate'      => $searchParams['startDate'],
+            'startLocation'  => $searchParams['startLocation'],
+            'stopLocation'   => $searchParams['stopLocation'],
+            'emptySeatsNo'   => $searchParams['emptySeatsNo'],
             'baggagePerSeat' => $searchParams['baggagePerSeat'],
         ));
 

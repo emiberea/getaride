@@ -157,10 +157,10 @@ class RideController extends Controller
 
             if ($matchExactly) {
                 $rides = $em->getRepository('EBRideBundle:Ride')
-                    ->getRidesByDateLocationAndSeatsNo($searchParams);
+                    ->getRidesByDateLocationAndSeatsNo($searchParams, $this->getUser());
             } else {
                 $rides = $em->getRepository('EBRideBundle:Ride')
-                    ->getRidesByDateLocationOrSeatsNo($searchParams);
+                    ->getRidesByDateLocationOrSeatsNo($searchParams, $this->getUser());
             }
 
             return array(
