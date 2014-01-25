@@ -12,7 +12,7 @@ use EB\MessageBundle\Entity\Thread;
  * Ride
  *
  * @ORM\Table(name="rides")
- * @ORM\Entity(repositoryClass="EB\RideBundle\Entity\RideRepository")
+ * @ORM\Entity(repositoryClass="EB\RideBundle\Repository\RideRepository")
  */
 class Ride
 {

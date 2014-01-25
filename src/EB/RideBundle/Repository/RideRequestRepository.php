@@ -1,6 +1,6 @@
 <?php
 
-namespace EB\RideBundle\Entity;
+namespace EB\RideBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

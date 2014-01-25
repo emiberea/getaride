@@ -1,8 +1,9 @@
 <?php
 
-namespace EB\RideBundle\Entity;
+namespace EB\RideBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use EB\RideBundle\Entity\RideStatus;
 use EB\UserBundle\Entity\User;
 
 /**

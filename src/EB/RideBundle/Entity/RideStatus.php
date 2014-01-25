@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * RideStatus
  *
  * @ORM\Table(name="ride_statuses")
- * @ORM\Entity(repositoryClass="EB\RideBundle\Entity\RideStatusRepository")
+ * @ORM\Entity(repositoryClass="EB\RideBundle\Repository\RideStatusRepository")
  */
 class RideStatus
 {
