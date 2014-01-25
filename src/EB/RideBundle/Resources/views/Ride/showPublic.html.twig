@@ -2,6 +2,7 @@
 
 {% block content -%}
     <h1>Ride - show public</h1>
+    <h4>Ride offered by <a href="{{ path('eb_user_public_profile', {'username': ride.user.username}) }}">{{ ride.user.username }}</a></h4>
 
     <table class="table table-hover">
         <tbody>
@@ -39,4 +40,9 @@
             </tr>
         </tbody>
     </table>
+
+    {% set ride_action = get_ride_action(app.user, ride) %}
+    <a href="{{ ride_action.route }}" class="btn {{ ride_action.btn_style }}">
+        {{ ride_action.text }}
+    </a>
 {% endblock %}

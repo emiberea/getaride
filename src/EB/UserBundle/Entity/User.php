@@ -8,6 +8,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\MessageBundle\Model\ParticipantInterface;
 use EB\RideBundle\Entity\Car;
 use EB\RideBundle\Entity\Ride;
+use EB\RideBundle\Entity\RideRequest;
 
 /**
  * User
@@ -197,6 +198,13 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="EB\RideBundle\Entity\RideRequest", mappedBy="user")
+     */
+    private $rideRequests;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="EB\UserBundle\Entity\FriendRequest", mappedBy="sender")
      */
     private $friendRequests;
@@ -214,6 +222,7 @@ class User extends BaseUser implements ParticipantInterface
         parent::__construct();
         $this->cars = new ArrayCollection();
         $this->rides = new ArrayCollection();
+        $this->rideRequests = new ArrayCollection();
         $this->friendRequests = new ArrayCollection();
         $this->friendResponses = new ArrayCollection();
     }
@@ -703,6 +712,36 @@ class User extends BaseUser implements ParticipantInterface
     public function removeRide(Ride $ride)
     {
         $this->rides->removeElement($ride);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRideRequests()
+    {
+        return $this->rideRequests;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function addRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->add($rideRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function removeRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->removeElement($rideRequest);
 
         return $this;
     }

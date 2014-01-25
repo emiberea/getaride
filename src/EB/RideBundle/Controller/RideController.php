@@ -218,7 +218,29 @@ class RideController extends Controller
         if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
-        if ($ride->getIsPublic() == false || $ride->getRideStatus()->getId() != RideStatus::AVAILABLE) {
+        if ($ride->getIsPublic() == false || $ride->getRideStatus()->getId() == RideStatus::DRAFT) {
+            throw $this->createNotFoundException('Unable to find Ride entity.');
+        }
+
+        return array(
+            'ride' => $ride,
+        );
+    }
+
+    /**
+     * @Route("/{id}/requesting-users", name="ride_show_requesting_users")
+     * @Template()
+     */
+    public function showRequestingUsersAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+            'id' => $id,
+            'user' => $this->getUser(),
+        ));
+
+        if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 

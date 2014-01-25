@@ -5,7 +5,6 @@ namespace EB\UserBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 use EB\UserBundle\Entity\FriendRequest;
 use EB\UserBundle\Entity\FriendRequestStatus;
@@ -48,7 +47,7 @@ class FriendRequestController extends Controller
     /**
      * @Route("/accept/{id}", name="friend_request_accept")
      */
-    public function acceptFriendRequest($id)
+    public function acceptFriendRequestAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -71,7 +70,7 @@ class FriendRequestController extends Controller
     /**
      * @Route("/reject/{id}", name="friend_request_reject")
      */
-    public function rejectFriendRequest($id)
+    public function rejectFriendRequestAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -94,7 +93,7 @@ class FriendRequestController extends Controller
     /**
      * @Route("/resend/{id}/{senderId}/{receiverId}", name="friend_request_resend")
      */
-    public function resendFriendRequest($id, $senderId, $receiverId)
+    public function resendFriendRequestAction($id, $senderId, $receiverId)
     {
         $em = $this->getDoctrine()->getManager();
 
