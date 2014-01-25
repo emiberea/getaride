@@ -9,7 +9,7 @@ use EB\UserBundle\Entity\User;
  * RideRequest
  *
  * @ORM\Table(name="ride_requests")
- * @ORM\Entity(repositoryClass="EB\RideBundle\Entity\RideRequestRepository")
+ * @ORM\Entity(repositoryClass="EB\RideBundle\Repository\RideRequestRepository")
  */
 class RideRequest
 {

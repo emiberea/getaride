@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * FriendRequestStatus
  *
  * @ORM\Table(name="friend_request_statuses")
- * @ORM\Entity(repositoryClass="EB\UserBundle\Entity\FriendRequestStatusRepository")
+ * @ORM\Entity(repositoryClass="EB\UserBundle\Repository\FriendRequestStatusRepository")
  */
 class FriendRequestStatus
 {

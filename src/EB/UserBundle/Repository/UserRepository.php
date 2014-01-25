@@ -1,8 +1,9 @@
 <?php
 
-namespace EB\UserBundle\Entity;
+namespace EB\UserBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use EB\UserBundle\Entity\User;
 
 /**
  * UserRepository
@@ -17,7 +18,7 @@ class UserRepository extends EntityRepository
      * @param string $searchTerm
      * @return array
      */
-    public function findUsersByUsername($user, $searchTerm)
+    public function findUsersByUsername(User $user, $searchTerm)
     {
         $qb = $this->createQueryBuilder('u');
         $qb->where('u.username != :user')

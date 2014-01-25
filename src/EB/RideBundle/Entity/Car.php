@@ -11,7 +11,7 @@ use EB\RideBundle\Entity\Ride;
  * Car
  *
  * @ORM\Table(name="cars")
- * @ORM\Entity(repositoryClass="EB\RideBundle\Entity\CarRepository")
+ * @ORM\Entity(repositoryClass="EB\RideBundle\Repository\CarRepository")
  */
 class Car
 {

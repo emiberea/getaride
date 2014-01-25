@@ -14,7 +14,7 @@ use EB\RideBundle\Entity\RideRequest;
  * User
  *
  * @ORM\Table(name="fos_user")
- * @ORM\Entity(repositoryClass="EB\UserBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="EB\UserBundle\Repository\UserRepository")
  */
 class User extends BaseUser implements ParticipantInterface
 {
