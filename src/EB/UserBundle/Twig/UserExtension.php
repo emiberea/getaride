@@ -6,6 +6,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use EB\UserBundle\Entity\User;
 use EB\UserBundle\Entity\FriendRequest;
 use EB\UserBundle\Entity\FriendRequestStatus;
+use EB\RideBundle\Entity\Ride;
+use EB\RideBundle\Entity\RideRequest;
+use EB\RideBundle\Entity\RideRequestStatus;
 
 class UserExtension extends \Twig_Extension
 {
@@ -21,6 +24,8 @@ class UserExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('get_friend_action', array($this, 'getFriendAction')),
+            new \Twig_SimpleFunction('get_ride_action', array($this, 'getRideAction')),
+            new \Twig_SimpleFunction('get_accept_user_action', array($this, 'getAcceptUserAction')),
         );
     }
 
@@ -32,7 +37,7 @@ class UserExtension extends \Twig_Extension
     /**
      * @param User $loggedUser
      * @param User $viewedUser
-     * @return array $result
+     * @return array
      */
     public function getFriendAction(User $loggedUser, User $viewedUser)
     {
@@ -107,6 +112,80 @@ class UserExtension extends \Twig_Extension
                 'senderId' => $loggedUser->getId(),
                 'receiverId' => $viewedUser->getId(),
             ));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param User $loggedUser
+     * @param Ride $ride
+     * @return array
+     */
+    public function getRideAction(User $loggedUser, Ride $ride)
+    {
+        $result = array();
+        $existRelation = false;
+
+        /** @var RideRequest[] $rideRequests */
+        $rideRequests = $ride->getRideRequests();
+        foreach ($rideRequests as $rideRequest) {
+            if ($loggedUser == $rideRequest->getUser()) {
+                if ($rideRequest->getStatus()->getId() == RideRequestStatus::REQUESTED) {
+                    $result['text'] = 'Join Request Sent';
+                    $result['btn_style'] = 'btn-warning';
+                    $result['route'] = '#';
+                    $existRelation = true;
+                    break;
+                } elseif ($rideRequest->getStatus()->getId() == RideRequestStatus::ACCEPTED) {
+                    $result['text'] = 'Join Request Accepted';
+                    $result['btn_style'] = 'btn-success';
+                    $result['route'] = '#';
+                    $existRelation = true;
+                    break;
+                }
+            }
+        }
+
+        if ($existRelation == false) {
+            $result['text'] = 'Send Join Request';
+            $result['btn_style'] = 'btn-default';
+            $result['route'] = $this->container->get('router')->generate('ride_request_send', array(
+                'rideId' => $ride->getId(),
+                'userId' => $loggedUser->getId(),
+            ));
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param User $requesterUser
+     * @param Ride $ride
+     * @return array
+     */
+    public function getAcceptUserAction(User $requesterUser, Ride $ride)
+    {
+        $result = array();
+
+        /** @var RideRequest[] $rideRequests */
+        $rideRequests = $ride->getRideRequests();
+        foreach ($rideRequests as $rideRequest) {
+            if ($requesterUser == $rideRequest->getUser()) {
+                if ($rideRequest->getStatus()->getId() == RideRequestStatus::REQUESTED) {
+                    $result['text'] = 'Accept User';
+                    $result['btn_style'] = 'btn-default';
+                    $result['route'] = $this->container->get('router')->generate('ride_request_accept', array(
+                        'id' => $rideRequest->getId(),
+                    ));
+                    break;
+                } elseif ($rideRequest->getStatus()->getId() == RideRequestStatus::ACCEPTED) {
+                    $result['text'] = 'User Accepted';
+                    $result['btn_style'] = 'btn-success';
+                    $result['route'] = '#';
+                    break;
+                }
+            }
         }
 
         return $result;

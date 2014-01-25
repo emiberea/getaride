@@ -47,6 +47,7 @@
                                 <td>
                                     <a href="{{ path('ride_show', { 'id': ride.id }) }}">show</a>
                                     <a href="{{ path('ride_edit', { 'id': ride.id }) }}">edit</a>
+                                    <a href="{{ path('ride_show_requesting_users', { 'id': ride.id }) }}">show_req_users</a>
                                 </td>
                             </tr>
                         {% else %}

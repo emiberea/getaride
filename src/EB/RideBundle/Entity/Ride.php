@@ -3,6 +3,7 @@
 namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use EB\RideBundle\Entity\Car;
 use EB\UserBundle\Entity\User;
 use EB\MessageBundle\Entity\Thread;
@@ -88,6 +89,13 @@ class Ride
     private $user;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="RideRequest", mappedBy="ride")
+     */
+    private $rideRequests;
+
+    /**
      * @var Car
      *
      * @ORM\ManyToOne(targetEntity="Car", inversedBy="rides")
@@ -111,6 +119,7 @@ class Ride
 
     public function __construct()
     {
+        $this->rideRequests = new ArrayCollection();
         $this->thread = new Thread();
     }
 
@@ -322,6 +331,36 @@ class Ride
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRideRequests()
+    {
+        return $this->rideRequests;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function addRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->add($rideRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function removeRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->removeElement($rideRequest);
+
+        return $this;
     }
 
     /**

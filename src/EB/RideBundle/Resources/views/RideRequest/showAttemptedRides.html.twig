@@ -1,0 +1,49 @@
+{% extends '::base.html.twig' %}
+
+{% block content -%}
+    <h1>Ride - show attempted</h1>
+    <h4>Rides attempted by <a href="{{ path('eb_user_public_profile', {'username': app.user.username}) }}">{{ app.user.username }} (me)</a></h4>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Offered By</th>
+            <th>Id</th>
+            <th>Start Date</th>
+            <th>Stop Date</th>
+            <th>Start Location</th>
+            <th>Stop Location</th>
+            <th>Empty Seats No</th>
+            <th>Baggage Per Seat</th>
+            <th>Comment</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rideRequest in app.user.rideRequests %}
+            <tr>
+                <td>{{ rideRequest.ride.user.username }}</td>
+                <td><a href="{{ path('ride_show', { 'id': rideRequest.ride.id }) }}">{{ rideRequest.ride.id }}</a></td>
+                <td>{% if rideRequest.ride.startDate %}{{ rideRequest.ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if rideRequest.ride.stopDate %}{{ rideRequest.ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ rideRequest.ride.startLocation }}</td>
+                <td>{{ rideRequest.ride.stopLocation }}</td>
+                <td>{{ rideRequest.ride.emptySeatsNo }}</td>
+                <td>{{ rideRequest.ride.baggagePerSeat }}</td>
+                <td>{{ rideRequest.ride.comment }}</td>
+                <td>
+                    <a href="{{ path('ride_show_public', { 'id': rideRequest.ride.id }) }}">show_public</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">You have no rides which you attempted to join.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('ride') }}">
+        Back to the list
+    </a>
+{% endblock %}

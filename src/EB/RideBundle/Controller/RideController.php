@@ -228,6 +228,28 @@ class RideController extends Controller
     }
 
     /**
+     * @Route("/{id}/requesting-users", name="ride_show_requesting_users")
+     * @Template()
+     */
+    public function showRequestingUsersAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
+            'id' => $id,
+            'user' => $this->getUser(),
+        ));
+
+        if (!$ride) {
+            throw $this->createNotFoundException('Unable to find Ride entity.');
+        }
+
+        return array(
+            'ride' => $ride,
+        );
+    }
+
+    /**
      * Displays a form to edit an existing Ride entity.
      *
      * @Route("/{id}/edit", name="ride_edit")

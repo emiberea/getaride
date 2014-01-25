@@ -1,26 +1,24 @@
 <?php
 
-namespace EB\UserBundle\Entity;
+namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * FriendRequestStatus
+ * RideRequestStatus
  *
- * @ORM\Table(name="friend_request_statuses")
- * @ORM\Entity(repositoryClass="EB\UserBundle\Entity\FriendRequestStatusRepository")
+ * @ORM\Table(name="ride_request_statuses")
+ * @ORM\Entity(repositoryClass="EB\RideBundle\Entity\RideRequestStatusRepository")
  */
-class FriendRequestStatus
+class RideRequestStatus
 {
     const REQUESTED = 1;
     const ACCEPTED = 2;
-    const REJECTED = 3;
 
     public static $validStatuses = array(
         self::REQUESTED => 'Requested',
         self::ACCEPTED => 'Accepted',
-        self::REJECTED => 'Rejected',
     );
 
     /**
@@ -42,9 +40,9 @@ class FriendRequestStatus
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EB\UserBundle\Entity\FriendRequest", mappedBy="status")
+     * @ORM\OneToMany(targetEntity="RideRequest", mappedBy="status")
      */
-    private $friendRequests;
+    private $rideRequests;
 
 
     public function __toString()
@@ -85,29 +83,29 @@ class FriendRequestStatus
     /**
      * @return ArrayCollection
      */
-    public function getFriendRequests()
+    public function getRideRequests()
     {
-        return $this->friendRequests;
+        return $this->rideRequests;
     }
 
     /**
-     * @param FriendRequest $friendRequest
+     * @param RideRequest $rideRequest
      * @return $this
      */
-    public function addRide(FriendRequest $friendRequest)
+    public function addRideRequest(RideRequest $rideRequest)
     {
-        $this->friendRequests->add($friendRequest);
+        $this->rideRequests->add($rideRequest);
 
         return $this;
     }
 
     /**
-     * @param FriendRequest $friendRequest
+     * @param RideRequest $rideRequest
      * @return $this
      */
-    public function removeRide(FriendRequest $friendRequest)
+    public function removeRideRequest(RideRequest $rideRequest)
     {
-        $this->friendRequests->removeElement($friendRequest);
+        $this->rideRequests->removeElement($rideRequest);
 
         return $this;
     }

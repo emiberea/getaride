@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+
+{% block content -%}
+    <h1>Ride #{{ ride.id }} - show requesting users</h1>
+    <h4>Ride offered by <a href="{{ path('eb_user_public_profile', {'username': ride.user.username}) }}">{{ ride.user.username }} (me)</a></h4>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>City/Town</th>
+                <th>Request Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for rideRequest in ride.rideRequests %}
+            <tr>
+                <td>
+                    <a href="{{ path('eb_user_public_profile', {'username': rideRequest.user.username}) }}">{{ rideRequest.user.username }}</a>
+                </td>
+                <td>
+                    {{ rideRequest.user.firstname }}
+                </td>
+                <td>
+                    {{ rideRequest.user.lastname }}
+                </td>
+                <td>
+                    {{ rideRequest.user.city }}
+                </td>
+                <td>
+                    {% if rideRequest.requestDate %}
+                        {{ rideRequest.requestDate|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% set accept_user_action = get_accept_user_action(rideRequest.user, ride) %}
+                    <a href="{{ accept_user_action.route }}" class="btn {{ accept_user_action.btn_style }}">
+                        {{ accept_user_action.text }}
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">You have no requesting user that want to join this ride.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('ride') }}">
+        Back to the list
+    </a>
+{% endblock %}
