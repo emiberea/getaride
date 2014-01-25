@@ -13,6 +13,9 @@
                 <li class="{{ route == 'ride_search' or route == 'ride_search_results' ? 'active' }}">
                     <a href="{{ path('ride_search') }}">Search Rides</a>
                 </li>
+                <li class="{{ route == 'ride_attempted' ? 'active' }}">
+                    <a href="{{ path('ride_attempted') }}">Join Requested Rides</a>
+                </li>
             </ul>
             <h2>Search for Rides</h2>
             <form action="{{ path('ride_search_results') }}" {{ form_enctype(form) }} method="POST" role="form">

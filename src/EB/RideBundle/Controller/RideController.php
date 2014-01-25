@@ -218,7 +218,7 @@ class RideController extends Controller
         if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
-        if ($ride->getIsPublic() == false || $ride->getRideStatus()->getId() != RideStatus::AVAILABLE) {
+        if ($ride->getIsPublic() == false || $ride->getRideStatus()->getId() == RideStatus::DRAFT) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 

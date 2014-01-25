@@ -11,6 +11,9 @@
                 <li class="{{ route == 'ride_search' or route == 'ride_search_results' ? 'active' }}">
                     <a href="{{ path('ride_search') }}">Search Rides</a>
                 </li>
+                <li class="{{ route == 'ride_attempted' ? 'active' }}">
+                    <a href="{{ path('ride_attempted') }}">Join Requested Rides</a>
+                </li>
             </ul>
             <div class="panel panel-default">
                 <div class="panel-heading">
