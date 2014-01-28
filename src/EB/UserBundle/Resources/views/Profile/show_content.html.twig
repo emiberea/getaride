@@ -1,6 +1,102 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-<div>
-    <p>{{ 'profile.show.username'|trans }}: {{ user.username }}</p>
-    <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
+<div class="panel panel-default">
+    <div class="panel-heading">Account data</div>
+    <table class="table table-hover">
+        <thead></thead>
+        <tbody>
+            <tr>
+                <th>{{ 'profile.show.username'|trans }}</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'profile.show.email'|trans }}</th>
+                <td>{{ user.email }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Personal data</div>
+    <table class="table table-hover">
+        <thead></thead>
+        <tbody>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ user.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ user.lastname }}</td>
+            </tr>
+            <tr>
+                <th>City / Town</th>
+                <td>{{ user.city }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ user.address }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <th>Birth Date</th>
+                <td>{{ user.birthDate is empty ? "-" : user.birthDate|date('d-m-Y') }}</td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>{{ user.gender }}</td>
+            </tr>
+            <tr>
+                <th>Work / Occupation</th>
+                <td>{{ user.work }}</td>
+            </tr>
+            <tr>
+                <th>Is smoker</th>
+                <td>
+                    {% if user.isSmoker %}
+                        <span class="glyphicon glyphicon-ok"></span> Yes
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove"></span> No
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Favorite music</th>
+                <td>{{ user.favoriteMusic }}</td>
+            </tr>
+            <tr>
+                <th>Hobbies</th>
+                <td>{{ user.hobbies }}</td>
+            </tr>
+            <tr>
+                <th>Personal description</th>
+                <td>{{ user.personalDescription }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Driving skills</div>
+    <table class="table table-hover">
+        <thead></thead>
+        <tbody>
+            <tr>
+                <th>Is driver</th>
+                <td>
+                    {% if user.isDriver %}
+                        <span class="glyphicon glyphicon-ok"></span> Yes
+                    {% else %}
+                        <span class="glyphicon glyphicon-remove"></span> No
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Driving Licence Date</th>
+                <td>{{ user.drivingLicenceDate is empty ? "-" : user.drivingLicenceDate|date('d-m-Y') }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
