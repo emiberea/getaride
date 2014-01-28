@@ -2,16 +2,21 @@
 
 {% block fos_user_content %}
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             {% if user.googlePictureLink %}
-                <img src="{{ user.googlePictureLink }}" height="300" width="300" />
+                <img src="{{ user.googlePictureLink }}" alt="Google profile picture" class="img-responsive img-rounded" />
             {% elseif user.facebookPictureLink %}
-                <img src="{{ user.facebookPictureLink }}" />
+                <img src="{{ user.facebookPictureLink }}" alt="Facebook profile picture" class="img-responsive img-rounded" />
             {% endif %}
+            <h3>{{ user.firstname }} {{ user.lastname }}</h3>
+            <h5>
+                <a href="{{ path('eb_user_public_profile', {'username': user.username}) }}">
+                    {{ user.username }}
+                </a>
+            </h5>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
             {% include "EBUserBundle:Profile:show_content.html.twig" %}
         </div>
-        <div class="col-md-4"></div>
     </div>
 {% endblock fos_user_content %}
