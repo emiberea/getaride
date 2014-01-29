@@ -3,6 +3,7 @@
 namespace EB\RideBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use EB\UserBundle\Entity\User;
 
 /**
  * CarRepository
@@ -12,4 +13,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class CarRepository extends EntityRepository
 {
+    public function countByUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select(
+            $qb->expr()->count('c.id')
+        );
+        $qb->where(
+            $qb->expr()->eq('c.user', ':user')
+        );
+        $qb->setParameter('user', $user);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
