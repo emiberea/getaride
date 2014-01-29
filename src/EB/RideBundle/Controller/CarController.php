@@ -100,6 +100,17 @@ class CarController extends Controller
      */
     public function newAction()
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $carsNo = $em->getRepository('EBRideBundle:Car')->countByUser($this->getUser());
+        if ($carsNo >= 3) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'You can not own more than 3 cars!'
+            );
+            return $this->redirect($this->generateUrl('car'));
+        }
+
         $car = new Car();
         $form = $this->createCreateForm($car);
 
