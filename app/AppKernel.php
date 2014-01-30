@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new FOS\MessageBundle\FOSMessageBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
 
             // application bundles
             new EB\RideBundle\EBRideBundle(),
