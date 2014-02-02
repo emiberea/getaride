@@ -78,6 +78,23 @@ class RideRequestController extends Controller
      */
     public function showAttemptedRidesAction()
     {
-        return array();
+        $em = $this->getDoctrine()->getManager();
+
+        $userId = $this->getUser()->getId();
+
+        $dql = "SELECT rr FROM EBRideBundle:RideRequest rr
+                WHERE rr.user = '$userId'";
+        $query = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1),
+            10
+        );
+
+        return array(
+            'pagination' => $pagination,
+        );
     }
 }

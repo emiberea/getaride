@@ -1,9 +1,10 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: bundles/fos_user.yml }
     - { resource: bundles/fos_message.yml }
+    - { resource: bundles/fos_user.yml }
     - { resource: bundles/hwi_oauth.yml }
+    - { resource: bundles/knp_paginator.yml }
 
 framework:
     #esi:             ~

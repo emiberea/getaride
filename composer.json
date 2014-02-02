@@ -21,7 +21,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/user-bundle": "2.0.*@dev",
         "friendsofsymfony/message-bundle": "1.2.*@dev",
-        "hwi/oauth-bundle": "0.3.*@dev"
+        "hwi/oauth-bundle": "0.3.*@dev",
+        "knplabs/knp-paginator-bundle": "2.4.*@dev"
     },
     "scripts": {
         "post-install-cmd": [

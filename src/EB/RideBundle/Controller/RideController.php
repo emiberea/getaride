@@ -2,6 +2,7 @@
 
 namespace EB\RideBundle\Controller;
 
+use Knp\Bundle\PaginatorBundle\DependencyInjection\Compiler\PaginatorAwarePass;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -11,6 +12,7 @@ use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideStatus;
 use EB\RideBundle\Form\RideType;
 use EB\RideBundle\Form\RideSearchType;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Ride controller.
@@ -31,12 +33,21 @@ class RideController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $rides = $em->getRepository('EBRideBundle:Ride')->findBy(array(
-            'user' => $this->getUser(),
-        ));
+        $userId = $this->getUser()->getId();
+
+        $dql = "SELECT r FROM EBRideBundle:Ride r
+                WHERE r.user = '$userId'";
+        $query = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1),
+            10
+        );
 
         return array(
-            'rides' => $rides,
+            'pagination' => $pagination,
         );
     }
 

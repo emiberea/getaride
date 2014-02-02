@@ -1,0 +1,57 @@
+{# EBRideBundle Sliding pagination control implementation customized with Bootstrap3 #}
+
+{% if pageCount > 1 %}
+    <ul class="pagination">
+        {% if first is defined and current != first %}
+            <li>
+                <a href="{{ path(route, query|merge({(pageParameterName): first})) }}">&laquo;</a>
+            </li>
+        {% else %}
+            <li class="disabled">
+                <span>&laquo;</span>
+            </li>
+        {% endif %}
+
+        {% if previous is defined %}
+            <li>
+                <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}">&lsaquo;</a>
+            </li>
+        {% else %}
+            <li class="disabled">
+                <span>&lsaquo;</span>
+            </li>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <li>
+                    <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
+                </li>
+            {% else %}
+                <li class="active">
+                    <span>{{ page }} <span class="sr-only">(current)</span></span>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <li>
+                <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">&rsaquo;</a>
+            </li>
+        {% else %}
+            <li class="disabled">
+                <span>&rsaquo;</span>
+            </li>
+        {% endif %}
+
+        {% if last is defined and current != last %}
+            <li>
+                <a href="{{ path(route, query|merge({(pageParameterName): last})) }}">&raquo;</a>
+            </li>
+        {% else %}
+            <li class="disabled">
+                <span>&raquo;</span>
+            </li>
+        {% endif %}
+    </ul>
+{% endif %}
