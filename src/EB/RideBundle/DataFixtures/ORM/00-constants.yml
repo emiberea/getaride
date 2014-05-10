@@ -1,0 +1,11 @@
+EB\UserBundle\Entity\FriendRequestStatus:
+    friendRequestStatus{Requested, Accepted, Rejected}:
+        name: <current()>
+
+EB\RideBundle\Entity\RideStatus:
+    rideStatus{Draft, Available, Canceled, Closed, Finish Fail, Finish Success}:
+        name: <current()>
+
+EB\RideBundle\Entity\RideRequestStatus:
+    rideRequestStatus{Requested, Accepted}:
+        name: <current()>

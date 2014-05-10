@@ -100,6 +100,13 @@ class User extends BaseUser implements ParticipantInterface
     /**
      * @var string
      *
+     * @ORM\Column(name="county", type="string", length=255, nullable=true)
+     */
+    private $county;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="city", type="string", length=255, nullable=true)
      */
     private $city;
@@ -426,6 +433,25 @@ class User extends BaseUser implements ParticipantInterface
     public function getGooglePictureLink()
     {
         return $this->googlePictureLink;
+    }
+
+    /**
+     * @param string $county
+     * @return $this
+     */
+    public function setCounty($county)
+    {
+        $this->county = $county;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCounty()
+    {
+        return $this->county;
     }
 
     /**
