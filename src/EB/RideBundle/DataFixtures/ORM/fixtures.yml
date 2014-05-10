@@ -1,0 +1,46 @@
+EB\UserBundle\Entity\User:
+    user{1..20}:
+        username: user<current()>
+        salt: <generateSalt()>
+        password: <generatePassword('12345', $salt)>
+        email: emi.berea+test<current()>@gmail.com
+        enabled: 1
+        firstname: <ro_RO:firstNameMale()>
+        lastname: <ro_RO:lastName()>
+        county: <ro_RO:county()>
+        city: <ro_RO:city()>
+        address: <ro_RO:address()>
+        phone: <phoneNumber()>
+        birthDate: <dateTimeBetween('-60 years', '-18 years')>
+        gender: <getRandomGender()>
+        isSmoker: <boolean($chanceOfGettingTrue = 50)>
+        isDriver: <boolean($chanceOfGettingTrue = 50)>
+    emi.berea:
+        username: emi.berea
+        salt: <generateSalt()>
+        password: <generatePassword('12345', $salt)>
+        email: emi.berea@gmail.com
+        enabled: 1
+        firstname: Emi
+        lastname: Berea
+        facebookId: 100001870411391
+        facebookAccessToken: CAAFfrk7TitYBAOIOduKvitgzOqLvBUjBj9wjdgRojfqZB3EhFjoMEfKdaPYOiLP6OslE1R7kuYFAAZBLrvvbwKLGXYTZCzwZCDz9u2FGzdXfPiW4VNVA8pjiE7XJrT4Qgp6VZCSiv5K5XyAjkWqugTN1h0AwM9ZC9aAs9ZB7JCYhpIcLesPt7O1
+        facebookProfileLink: https://www.facebook.com/emi.berea
+        facebookPictureLink: https://graph.facebook.com/emi.berea/picture?type=large
+        county: Iasi
+        city: Iasi
+        address: str. Smardan, nr. 25
+        phone: 40748498693
+        gender: M
+        isSmoker: 0
+        isDriver: 1
+
+EB\RideBundle\Entity\Car:
+    car{1..40}:
+        brand: <getRandomCarBrand()>
+        model: model<current()>
+        buildYear: <dateTimeBetween('-30 years', '-1 years')>
+        numberPlate: <getRandomRomaniaCountyCode()>-<randomNumber(10, 99)>-<lexify($string = '???')>
+        color: <colorName()>
+        hasAirConditioning: <boolean($chanceOfGettingTrue = 50)>
+        user: @user*
