@@ -48,6 +48,7 @@
                             <td>{{ rideRequest.status.name }}</td>
                             <td>
                                 <a href="{{ path('ride_show_public', { 'id': rideRequest.ride.id }) }}">show_public</a>
+                                <a href="{{ path('ride_request_chat', { 'id': rideRequest.id }) }}">chat</a>
                             </td>
                         </tr>
                     {% else %}

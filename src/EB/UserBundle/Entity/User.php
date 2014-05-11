@@ -234,6 +234,11 @@ class User extends BaseUser implements ParticipantInterface
         $this->friendResponses = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->firstname . ' ' . $this->getLastname();
+    }
+
 
     /**
      * Get id

@@ -40,6 +40,9 @@
                     <a href="{{ accept_user_action.route }}" class="btn {{ accept_user_action.btn_style }}">
                         {{ accept_user_action.text }}
                     </a>
+                    <a href="{{ path('ride_request_chat', {'id': rideRequest.id}) }}" class="btn btn-default">
+                        Chat
+                    </a>
                 </td>
             </tr>
         {% else %}

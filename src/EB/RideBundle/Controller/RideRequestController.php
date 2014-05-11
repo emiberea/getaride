@@ -6,9 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManager;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideRequest;
 use EB\RideBundle\Entity\RideRequestStatus;
+use EB\UserBundle\Entity\User;
 
 /**
  * RideRequest controller.
@@ -25,7 +27,9 @@ class RideRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         // ride - ride that the user is willing to join, user - a user that want to join that ride
+        /** @var Ride $ride */
         $ride = $em->getRepository('EBRideBundle:Ride')->find($rideId);
+        /** @var User $user */
         $user = $em->getRepository('EBUserBundle:User')->find($userId);
 
         if ($this->getUser() == $user) {
@@ -35,6 +39,26 @@ class RideRequestController extends Controller
             $rideRequest->setRequestDate(new \DateTime());
             $requestedStatus = $em->getRepository('EBRideBundle:RideRequestStatus')->find(RideRequestStatus::REQUESTED);
             $rideRequest->setStatus($requestedStatus);
+
+            // creating the message Thread for this RideRequest
+            $msgComposer = $this->get('fos_message.composer');
+            $threadBuilder = $msgComposer->newThread();
+            $threadBuilder
+                ->addRecipient($ride->getUser())
+                ->setSender($this->getUser())
+                ->setSubject(sprintf('[Ride request]: %s -> %s (%s to %s, on %s)',
+                    $this->getUser(),
+                    $ride->getUser(),
+                    $rideRequest->getRide()->getStartLocation(),
+                    $rideRequest->getRide()->getStopLocation(),
+                    $rideRequest->getRide()->getStartDate()->format('d-m-Y')
+                ))
+                ->setBody(sprintf('Ride request sent by %s on %s', $this->getUser(), $rideRequest->getRequestDate()->format('d-m-Y H:i:s')));
+
+            $msgSender = $this->get('fos_message.sender');
+            $msgSender->send($threadBuilder->getMessage());
+
+            $rideRequest->setThread($threadBuilder->getMessage()->getThread());
 
             $em->persist($rideRequest);
             $em->flush();
@@ -52,8 +76,10 @@ class RideRequestController extends Controller
      */
     public function acceptFriendRequest($id)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var RideRequest $rideRequest */
         $rideRequest = $em->getRepository('EBRideBundle:RideRequest')->find($id);
 
         if ($this->getUser() == $rideRequest->getRide()->getUser()) {
@@ -96,5 +122,21 @@ class RideRequestController extends Controller
         return array(
             'pagination' => $pagination,
         );
+    }
+
+    /**
+     * @Route("/{id}/chat", name="ride_request_chat")
+     */
+    public function chatAction($id)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var RideRequest $rideRequest */
+        $rideRequest = $em->getRepository('EBRideBundle:RideRequest')->find($id);
+
+        return $this->redirect($this->generateUrl('fos_message_thread_view', array(
+            'threadId' => $rideRequest->getThread()->getId(),
+        )));
     }
 }

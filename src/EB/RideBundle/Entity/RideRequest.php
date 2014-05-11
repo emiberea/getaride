@@ -4,6 +4,7 @@ namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use EB\UserBundle\Entity\User;
+use FOS\MessageBundle\Model\Thread;
 
 /**
  * RideRequest
@@ -56,6 +57,13 @@ class RideRequest
      * @ORM\ManyToOne(targetEntity="RideRequestStatus", inversedBy="rideRequests")
      */
     private $status;
+
+    /**
+     * @var Thread
+     *
+     * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="rideRequest", cascade={"persist"})
+     */
+    private $thread;
 
 
     /**
@@ -161,5 +169,24 @@ class RideRequest
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @param Thread $thread
+     * @return $this
+     */
+    public function setThread(Thread $thread)
+    {
+        $this->thread = $thread;
+
+        return $this;
+    }
+
+    /**
+     * @return Thread
+     */
+    public function getThread()
+    {
+        return $this->thread;
     }
 }
