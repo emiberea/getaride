@@ -61,7 +61,7 @@ class RideRequest
     /**
      * @var Thread
      *
-     * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="rideRequest", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="rideRequest")
      */
     private $thread;
 

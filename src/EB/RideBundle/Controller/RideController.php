@@ -31,6 +31,7 @@ class RideController extends Controller
      */
     public function indexAction()
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         $userId = $this->getUser()->getId();
@@ -66,12 +67,11 @@ class RideController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $ride->setUser($this->getUser());
-            $ride->getThread()->setSubject('Ride: from ' . $ride->getStartLocation());
-            $ride->getThread()->setCreatedAt(new \DateTime());
-            $ride->getThread()->setCreatedBy($this->getUser());
-
+            /** @var EntityManager $em */
             $em = $this->getDoctrine()->getManager();
+
+            $ride->setUser($this->getUser());
+
             $em->persist($ride);
             $em->flush();
 
@@ -85,12 +85,12 @@ class RideController extends Controller
     }
 
     /**
-    * Creates a form to create a Ride entity.
-    *
-    * @param Ride $ride The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * Creates a form to create a Ride entity.
+     *
+     * @param Ride $ride The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
     private function createCreateForm(Ride $ride)
     {
         $form = $this->createForm(new RideType(), $ride, array(
