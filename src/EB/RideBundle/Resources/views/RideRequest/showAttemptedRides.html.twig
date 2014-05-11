@@ -25,7 +25,6 @@
                         <th>Offered By</th>
                         <th>Id</th>
                         <th>Start Date</th>
-                        <th>Stop Date</th>
                         <th>Start Location</th>
                         <th>Stop Location</th>
                         <th>Empty Seats No</th>
@@ -41,7 +40,6 @@
                             <td>{{ rideRequest.ride.user.username }}</td>
                             <td><a href="{{ path('ride_show', { 'id': rideRequest.ride.id }) }}">{{ rideRequest.ride.id }}</a></td>
                             <td>{% if rideRequest.ride.startDate %}{{ rideRequest.ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                            <td>{% if rideRequest.ride.stopDate %}{{ rideRequest.ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                             <td>{{ rideRequest.ride.startLocation }}</td>
                             <td>{{ rideRequest.ride.stopLocation }}</td>
                             <td>{{ rideRequest.ride.emptySeatsNo }}</td>

@@ -35,7 +35,7 @@ class Ride
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="stop_date", type="datetime")
+     * @ORM\Column(name="stop_date", type="datetime", nullable=true)
      */
     private $stopDate;
 
