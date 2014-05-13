@@ -1,0 +1,18 @@
+{% block subject %}
+    {{ rr_receiver.getFullnameAndUsername }} accepted you to join him on his {{ ride.startLocation }} - {{ ride.stopLocation }} ride
+{% endblock %}
+
+{% block html %}
+    Hello {{ rr_sender.getFullname }}!
+    <br />
+    <br />
+    Good news!
+    <br />
+    {{ rr_receiver.getFullnameAndUsername }} accepted you to join him on his
+    <a href="{{ public_ride_url }}">
+        {{ ride.startLocation }} - {{ ride.stopLocation }} ride
+    </a>
+    on {% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}
+    <br />
+    You can see his/her profile here: <a href="{{ rr_receiver_profile_url }}">{{ rr_receiver.username }}</a>
+{% endblock %}

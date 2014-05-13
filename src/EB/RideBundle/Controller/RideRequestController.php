@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
+use EB\RideBundle\Event\NotificationEvent;
+use EB\RideBundle\Event\NotificationEvents;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideRequest;
 use EB\RideBundle\Entity\RideRequestStatus;
@@ -77,6 +79,12 @@ class RideRequestController extends Controller
                 $em->persist($rideRequest);
                 $em->flush();
 
+                // dispatching the RIDE_REQUEST_SENT event, which triggers the listener to send also a mail to the user that created the ride
+                $dispatcher = $this->get('event_dispatcher');
+                $dispatcher->dispatch(NotificationEvents::RIDE_REQUEST_SENT, new NotificationEvent(array(
+                    'ride_request' => $rideRequest,
+                )));
+
                 return $this->redirect($this->generateUrl('ride_show_public', array(
                     'id' => $rideId,
                 )));
@@ -89,7 +97,7 @@ class RideRequestController extends Controller
     /**
      * @Route("/{id}/accept", name="ride_request_accept")
      */
-    public function acceptFriendRequest($id)
+    public function acceptRideRequestAction($id)
     {
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -104,6 +112,12 @@ class RideRequestController extends Controller
 
             $em->persist($rideRequest);
             $em->flush();
+
+            // dispatching the RIDE_REQUEST_ACCEPTED event, which triggers the listener to send also a mail to the user that created the rideRequest
+            $dispatcher = $this->get('event_dispatcher');
+            $dispatcher->dispatch(NotificationEvents::RIDE_REQUEST_ACCEPTED, new NotificationEvent(array(
+                'ride_request' => $rideRequest,
+            )));
 
             return $this->redirect($this->generateUrl('ride_show_requesting_users', array(
                 'id' => $rideRequest->getRide()->getId(),

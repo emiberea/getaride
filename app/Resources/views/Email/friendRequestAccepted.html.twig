@@ -1,0 +1,12 @@
+{% block subject %}
+    {{ fr_receiver.getFullnameAndUsername }} confirmed your Get-a-Ride.ro friend request
+{% endblock %}
+
+{% block html %}
+    Hello {{ fr_sender.getFullname }}!
+    <br />
+    <br />
+    {{ fr_receiver.getFullnameAndUsername }} has confirmed that you're friends on Get-a-Ride.ro
+    <br />
+    You can see his/her profile here: <a href="{{ fr_receiver_profile_url }}">{{ fr_receiver.username }}</a>
+{% endblock %}

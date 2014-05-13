@@ -1,0 +1,18 @@
+{% block subject %}
+    {{ rr_sender.getFullnameAndUsername }} wants to join you in one of your rides
+{% endblock %}
+
+{% block html %}
+    Hello {{ rr_receiver.getFullname }}!
+    <br />
+    <br />
+    {{ rr_sender.getFullnameAndUsername }} wants to join you in your
+    <a href="{{ public_ride_url }}">
+        {{ ride.startLocation }} - {{ ride.stopLocation }} ride
+    </a>
+    on {% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}
+    <br />
+    You can see his/her profile here: <a href="{{ rr_sender_profile_url }}">{{ rr_sender.username }}</a>
+    <br />
+    You can see the users that request to join your ride and accept them <a href="{{ requesting_users_url }}">here</a>.
+{% endblock %}

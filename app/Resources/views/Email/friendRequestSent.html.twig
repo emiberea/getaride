@@ -1,0 +1,12 @@
+{% block subject %}
+    {{ fr_sender.getFullnameAndUsername }} wants to be friends on Get-a-Ride.ro
+{% endblock %}
+
+{% block html %}
+    Hello {{ fr_receiver.getFullname }}!
+    <br />
+    <br />
+    {{ fr_sender.getFullnameAndUsername }} wants to be friends on Get-a-Ride.ro
+    <br />
+    You can see his/her profile and confirm the friend request here: <a href="{{ fr_sender_profile_url }}">{{ fr_sender.username }}</a>
+{% endblock %}

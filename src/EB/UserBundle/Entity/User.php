@@ -289,6 +289,22 @@ class User extends BaseUser implements ParticipantInterface
     }
 
     /**
+     * @return string
+     */
+    public function getFullname()
+    {
+        return $this->firstname . ' ' . $this->getLastname();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullnameAndUsername()
+    {
+        return $this->firstname . ' ' . $this->getLastname() . ' (' . $this->getUsername() . ')';
+    }
+
+    /**
      * @param string $facebookId
      * @return User
      */
