@@ -4,7 +4,7 @@ namespace EB\MessageBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\MessageBundle\Entity\Thread as BaseThread;
-use EB\RideBundle\Entity\Ride;
+use EB\RideBundle\Entity\RideRequest;
 
 /**
  * @ORM\Table(name="fos_thread")
@@ -39,29 +39,29 @@ class Thread extends BaseThread
     protected $metadata;
 
     /**
-     * @var Ride
+     * @var RideRequest
      *
-     * @ORM\OneToOne(targetEntity="EB\RideBundle\Entity\Ride", mappedBy="thread")
+     * @ORM\OneToOne(targetEntity="EB\RideBundle\Entity\RideRequest", mappedBy="thread")
      */
-    private $ride;
+    private $rideRequest;
 
 
     /**
-     * @param Ride $ride
+     * @param RideRequest $rideRequest
      * @return $this
      */
-    public function setRide(Ride $ride)
+    public function setRideRequest(RideRequest $rideRequest)
     {
-        $this->ride = $ride;
+        $this->rideRequest = $rideRequest;
 
         return $this;
     }
 
     /**
-     * @return Ride
+     * @return RideRequest
      */
-    public function getRide()
+    public function getRideRequest()
     {
-        return $this->ride;
+        return $this->rideRequest;
     }
 }

@@ -3,6 +3,8 @@
 namespace EB\RideBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use EB\RideBundle\Entity\Ride;
+use EB\UserBundle\Entity\User;
 
 /**
  * RideRequestRepository
@@ -12,4 +14,25 @@ use Doctrine\ORM\EntityRepository;
  */
 class RideRequestRepository extends EntityRepository
 {
+    /**
+     * @param Ride $ride
+     * @param User $user - the user that want to join the ride
+     * @return array
+     */
+    public function findByRideAndUser(Ride $ride, User $user)
+    {
+        $qb = $this->createQueryBuilder('rr');
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('rr.ride', ':ride'),
+                $qb->expr()->eq('rr.user', ':user')
+            )
+        );
+        $qb->setParameters(array(
+            'ride' => $ride,
+            'user' => $user,
+        ));
+
+        return $qb->getQuery()->getResult();
+    }
 }

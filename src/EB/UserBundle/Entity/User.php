@@ -234,6 +234,11 @@ class User extends BaseUser implements ParticipantInterface
         $this->friendResponses = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->firstname . ' ' . $this->getLastname();
+    }
+
 
     /**
      * Get id
@@ -281,6 +286,22 @@ class User extends BaseUser implements ParticipantInterface
     public function getLastname()
     {
         return $this->lastname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullname()
+    {
+        return $this->firstname . ' ' . $this->getLastname();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullnameAndUsername()
+    {
+        return $this->firstname . ' ' . $this->getLastname() . ' (' . $this->getUsername() . ')';
     }
 
     /**

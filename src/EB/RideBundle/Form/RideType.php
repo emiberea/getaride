@@ -30,9 +30,6 @@ class RideType extends AbstractType
             ->add('startDate', 'date', array(
                 'widget' => 'single_text',
             ))
-            ->add('stopDate', 'date', array(
-                'widget' => 'single_text',
-            ))
             ->add('startLocation')
             ->add('stopLocation')
             ->add('emptySeatsNo')

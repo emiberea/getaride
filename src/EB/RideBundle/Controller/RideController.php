@@ -2,17 +2,16 @@
 
 namespace EB\RideBundle\Controller;
 
-use Knp\Bundle\PaginatorBundle\DependencyInjection\Compiler\PaginatorAwarePass;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManager;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideStatus;
 use EB\RideBundle\Form\RideType;
 use EB\RideBundle\Form\RideSearchType;
-use Doctrine\ORM\EntityManager;
 
 /**
  * Ride controller.
@@ -31,6 +30,7 @@ class RideController extends Controller
      */
     public function indexAction()
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         $userId = $this->getUser()->getId();
@@ -66,12 +66,11 @@ class RideController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $ride->setUser($this->getUser());
-            $ride->getThread()->setSubject('Ride: from ' . $ride->getStartLocation());
-            $ride->getThread()->setCreatedAt(new \DateTime());
-            $ride->getThread()->setCreatedBy($this->getUser());
-
+            /** @var EntityManager $em */
             $em = $this->getDoctrine()->getManager();
+
+            $ride->setUser($this->getUser());
+
             $em->persist($ride);
             $em->flush();
 
@@ -85,12 +84,12 @@ class RideController extends Controller
     }
 
     /**
-    * Creates a form to create a Ride entity.
-    *
-    * @param Ride $ride The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * Creates a form to create a Ride entity.
+     *
+     * @param Ride $ride The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
     private function createCreateForm(Ride $ride)
     {
         $form = $this->createForm(new RideType(), $ride, array(
@@ -220,12 +219,15 @@ class RideController extends Controller
      */
     public function showPublicAction($id)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Ride $ride */
         $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
         ));
 
+        // check if the ride exists and if the user that it is viewing it has rights for that
         if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
@@ -233,8 +235,14 @@ class RideController extends Controller
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
+        // get the rideRequest that belong to this ride and this attmpting user
+        // added a security check in case there are more rideRequest for the same user, even if it is also checked at rideRequest creation
+        $rideRequests = $em->getRepository('EBRideBundle:RideRequest')->findByRideAndUser($ride, $this->getUser());
+        $rideRequest = end($rideRequests) ? end($rideRequests) : null;
+
         return array(
             'ride' => $ride,
+            'rideRequest' => $rideRequest,
         );
     }
 

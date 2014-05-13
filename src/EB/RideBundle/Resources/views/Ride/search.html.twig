@@ -53,7 +53,6 @@
                 <thead>
                     <tr>
                         <th>Start Date</th>
-                        <th>Stop Date</th>
                         <th>Start Location</th>
                         <th>Stop Location</th>
                         <th>Empty Seats No</th>
@@ -67,7 +66,6 @@
                         {% for ride in rides %}
                             <tr>
                                 <td>{% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                                <td>{% if ride.stopDate %}{{ ride.stopDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                                 <td>{{ ride.startLocation }}</td>
                                 <td>{{ ride.stopLocation }}</td>
                                 <td>{{ ride.emptySeatsNo }}</td>

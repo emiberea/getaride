@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use EB\RideBundle\Entity\Car;
 use EB\UserBundle\Entity\User;
-use EB\MessageBundle\Entity\Thread;
 
 /**
  * Ride
@@ -35,7 +34,7 @@ class Ride
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="stop_date", type="datetime")
+     * @ORM\Column(name="stop_date", type="datetime", nullable=true)
      */
     private $stopDate;
 
@@ -109,18 +108,10 @@ class Ride
      */
     private $rideStatus;
 
-    /**
-     * @var Thread
-     *
-     * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="ride", cascade={"persist"})
-     */
-    private $thread;
-
 
     public function __construct()
     {
         $this->rideRequests = new ArrayCollection();
-        $this->thread = new Thread();
     }
 
 
@@ -399,24 +390,5 @@ class Ride
     public function getRideStatus()
     {
         return $this->rideStatus;
-    }
-
-    /**
-     * @param Thread $thread
-     * @return $this
-     */
-    public function setThread(Thread $thread)
-    {
-        $this->thread = $thread;
-
-        return $this;
-    }
-
-    /**
-     * @return Thread
-     */
-    public function getThread()
-    {
-        return $this->thread;
     }
 }

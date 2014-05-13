@@ -15,10 +15,6 @@
                 <td>{{ ride.startDate|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
-                <th>Stop Date</th>
-                <td>{{ ride.stopDate|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
                 <th>Start Location</th>
                 <td>{{ ride.startLocation }}</td>
             </tr>
@@ -45,4 +41,9 @@
     <a href="{{ ride_action.route }}" class="btn {{ ride_action.btn_style }}">
         {{ ride_action.text }}
     </a>
+    {% if rideRequest is not null %}
+        <a href="{{ path('ride_request_chat', {'id': rideRequest.id}) }}" class="btn btn-default">
+            Chat
+        </a>
+    {% endif %}
 {% endblock %}
