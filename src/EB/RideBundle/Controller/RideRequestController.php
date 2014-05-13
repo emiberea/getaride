@@ -24,6 +24,7 @@ class RideRequestController extends Controller
      */
     public function sendRideRequestAction($rideId, $userId)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         // ride - ride that the user is willing to join, user - a user that want to join that ride
@@ -33,39 +34,53 @@ class RideRequestController extends Controller
         $user = $em->getRepository('EBUserBundle:User')->find($userId);
 
         if ($this->getUser() == $user) {
-            $rideRequest = new RideRequest();
-            $rideRequest->setRide($ride);
-            $rideRequest->setUser($user);
-            $rideRequest->setRequestDate(new \DateTime());
-            $requestedStatus = $em->getRepository('EBRideBundle:RideRequestStatus')->find(RideRequestStatus::REQUESTED);
-            $rideRequest->setStatus($requestedStatus);
+            // check if a ride request exists between the ride and the user
+            /** @var RideRequest $rideRequest */
+            $rideRequest = $em->getRepository('EBRideBundle:RideRequest')->findByRideAndUser($ride, $user);
+            if ($rideRequest) {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    'You already created a request for this ride!'
+                );
 
-            // creating the message Thread for this RideRequest
-            $msgComposer = $this->get('fos_message.composer');
-            $threadBuilder = $msgComposer->newThread();
-            $threadBuilder
-                ->addRecipient($ride->getUser())
-                ->setSender($this->getUser())
-                ->setSubject(sprintf('[Ride request]: %s -> %s (%s to %s, on %s)',
-                    $this->getUser(),
-                    $ride->getUser(),
-                    $rideRequest->getRide()->getStartLocation(),
-                    $rideRequest->getRide()->getStopLocation(),
-                    $rideRequest->getRide()->getStartDate()->format('d-m-Y')
-                ))
-                ->setBody(sprintf('Ride request sent by %s on %s', $this->getUser(), $rideRequest->getRequestDate()->format('d-m-Y H:i:s')));
+                return $this->redirect($this->generateUrl('ride_show_public', array(
+                    'id' => $rideId,
+                )));
+            } else {
+                $rideRequest = new RideRequest();
+                $rideRequest->setRide($ride);
+                $rideRequest->setUser($user);
+                $rideRequest->setRequestDate(new \DateTime());
+                $requestedStatus = $em->getRepository('EBRideBundle:RideRequestStatus')->find(RideRequestStatus::REQUESTED);
+                $rideRequest->setStatus($requestedStatus);
 
-            $msgSender = $this->get('fos_message.sender');
-            $msgSender->send($threadBuilder->getMessage());
+                // creating the message Thread for this RideRequest
+                $msgComposer = $this->get('fos_message.composer');
+                $threadBuilder = $msgComposer->newThread();
+                $threadBuilder
+                    ->addRecipient($ride->getUser())
+                    ->setSender($this->getUser())
+                    ->setSubject(sprintf('[Ride request]: %s -> %s (%s to %s, on %s)',
+                        $this->getUser(),
+                        $ride->getUser(),
+                        $rideRequest->getRide()->getStartLocation(),
+                        $rideRequest->getRide()->getStopLocation(),
+                        $rideRequest->getRide()->getStartDate()->format('d-m-Y')
+                    ))
+                    ->setBody(sprintf('Ride request sent by %s on %s', $this->getUser(), $rideRequest->getRequestDate()->format('d-m-Y H:i:s')));
 
-            $rideRequest->setThread($threadBuilder->getMessage()->getThread());
+                $msgSender = $this->get('fos_message.sender');
+                $msgSender->send($threadBuilder->getMessage());
 
-            $em->persist($rideRequest);
-            $em->flush();
+                $rideRequest->setThread($threadBuilder->getMessage()->getThread());
 
-            return $this->redirect($this->generateUrl('ride_show_public', array(
-                'id' => $rideId,
-            )));
+                $em->persist($rideRequest);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('ride_show_public', array(
+                    'id' => $rideId,
+                )));
+            }
         }
 
         throw $this->createNotFoundException('Not Found. Wrong URL.');
