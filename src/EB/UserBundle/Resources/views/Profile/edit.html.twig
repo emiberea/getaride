@@ -1,5 +1,10 @@
 {% extends "EBUserBundle::layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ebride/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block fos_user_content %}
     <div class="row">
         <div class="col-md-4"></div>
@@ -9,3 +14,24 @@
         <div class="col-md-4"></div>
     </div>
 {% endblock fos_user_content %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ebride/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript">
+        $("#fos_user_profile_form_birthDate").datetimepicker({
+            format: "dd-mm-yyyy",
+            weekStart: 1,
+            todayBtn: true,
+            minView: 2,
+            endDate: "{{ 'now'|date('Y-m-d H:i') }}"
+        });
+        $("#fos_user_profile_form_drivingLicenceDate").datetimepicker({
+            format: "dd-mm-yyyy",
+            weekStart: 1,
+            todayBtn: true,
+            minView: 2,
+            endDate: "{{ 'now'|date('Y-m-d H:i') }}"
+        });
+    </script>
+{% endblock %}

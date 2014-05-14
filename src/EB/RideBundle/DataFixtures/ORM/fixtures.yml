@@ -39,7 +39,7 @@ EB\RideBundle\Entity\Car:
     car{1..40}:
         brand: <getRandomCarBrand()>
         model: model<current()>
-        buildYear: <dateTimeBetween('-30 years', '-1 years')>
+        buildYear: <numberBetween(1950, 2014)>
         numberPlate: <getRandomRomaniaCountyCode()>-<randomNumber(10, 99)>-<lexify($string = '???')>
         color: <colorName()>
         hasAirConditioning: <boolean($chanceOfGettingTrue = 50)>

@@ -17,8 +17,8 @@ class CarType extends AbstractType
         $builder
             ->add('brand')
             ->add('model')
-            ->add('buildYear', 'date', array(
-                'widget' => 'single_text',
+            ->add('buildYear', 'text', array(
+                'read_only' => true,
             ))
             ->add('numberPlate')
             ->add('color')

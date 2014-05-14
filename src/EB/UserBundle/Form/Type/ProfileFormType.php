@@ -20,6 +20,8 @@ class ProfileFormType extends BaseType
             ->add('phone')
             ->add('birthDate', 'birthday', array(
                 'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy',
+                'read_only' => true,
             ))
             ->add('work')
             ->add('isSmoker')
@@ -29,6 +31,8 @@ class ProfileFormType extends BaseType
             ->add('isDriver')
             ->add('drivingLicenceDate', 'date', array(
                 'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy',
+                'read_only' => true,
             ));
     }
 

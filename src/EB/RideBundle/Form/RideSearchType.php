@@ -17,8 +17,10 @@ class RideSearchType extends AbstractType
         $builder
             ->add('startDate', 'date', array(
                 'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy',
                 'label' => 'Start Date',
                 'required'  => false,
+                'read_only' => true,
             ))
             ->add('startLocation', null, array(
                 'label' => 'Start Location',
@@ -28,13 +30,28 @@ class RideSearchType extends AbstractType
                 'label' => 'Stop Location',
                 'required'  => false,
             ))
-            ->add('emptySeatsNo', null, array(
+            ->add('emptySeatsNo', 'choice', array(
+                'choices' => array(
+                    '1' => '1',
+                    '2' => '2',
+                    '3' => '3',
+                    '4' => '4',
+                ),
                 'label' => 'Empty Seats No',
                 'required'  => false,
+                'empty_value' => 'Any number available',
             ))
-            ->add('baggagePerSeat', null, array(
+            ->add('baggagePerSeat', 'choice', array(
+                'choices' => array(
+                    '0' => 'Without baggage',
+                    '1' => 'Small',
+                    '2' => 'Medium',
+                    '3' => 'Large',
+                    '4' => 'Extra-large',
+                ),
                 'label' => 'Baggage Per Seat',
                 'required'  => false,
+                'empty_value' => 'All types of baggage',
             ))
             ->add('matchExactly', 'checkbox', array(
                 'label' => 'Match Exactly',

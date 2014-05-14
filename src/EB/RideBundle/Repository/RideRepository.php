@@ -21,6 +21,11 @@ class RideRepository extends EntityRepository
      */
     public function getRidesByDateLocationAndSeatsNo(array $searchParams = array(), User $user)
     {
+        // workaround for getting an entire day for the Doctrine QB
+        /** @var \DateTime $endOfStartDate */
+        $endOfStartDate = isset($searchParams['startDate']) ? clone $searchParams['startDate'] : null;
+        $endOfStartDate ? $endOfStartDate->add(new \DateInterval('PT24H')) : null;
+
         $qb = $this->createQueryBuilder('r');
         $qb->innerJoin('r.rideStatus', 'rs');
         $qb->where(
@@ -28,7 +33,7 @@ class RideRepository extends EntityRepository
                 $qb->expr()->eq('r.isPublic', true),
                 $qb->expr()->neq('r.user', ':user'),
                 $qb->expr()->eq('rs.id', RideStatus::AVAILABLE),
-                isset($searchParams['startDate']) ? $qb->expr()->eq('r.startDate', ':startDate') : null,
+                isset($searchParams['startDate']) ? $qb->expr()->between('r.startDate', ':startDate', ':endOfStartDate') : null,
                 isset($searchParams['startLocation']) ? $qb->expr()->eq('r.startLocation', ':startLocation') : null,
                 isset($searchParams['stopLocation']) ? $qb->expr()->eq('r.stopLocation', ':stopLocation') : null,
                 isset($searchParams['emptySeatsNo']) ? $qb->expr()->eq('r.emptySeatsNo', ':emptySeatsNo') : null,
@@ -37,6 +42,7 @@ class RideRepository extends EntityRepository
         );
         $qb->setParameter('user', $user);
         isset($searchParams['startDate']) ? $qb->setParameter('startDate', $searchParams['startDate']) : null;
+        isset($endOfStartDate) ? $qb->setParameter('endOfStartDate', $endOfStartDate) : null;
         isset($searchParams['startLocation']) ? $qb->setParameter('startLocation', $searchParams['startLocation']) : null;
         isset($searchParams['stopLocation']) ? $qb->setParameter('stopLocation', $searchParams['stopLocation']) : null;
         isset($searchParams['emptySeatsNo']) ? $qb->setParameter('emptySeatsNo', $searchParams['emptySeatsNo']) : null;
@@ -52,6 +58,11 @@ class RideRepository extends EntityRepository
      */
     public function getRidesByDateLocationOrSeatsNo(array $searchParams = array(), User $user)
     {
+        // workaround for getting an entire day for the Doctrine QB
+        /** @var \DateTime $endOfStartDate */
+        $endOfStartDate = isset($searchParams['startDate']) ? clone $searchParams['startDate'] : null;
+        $endOfStartDate ? $endOfStartDate->add(new \DateInterval('PT24H')) : null;
+
         $qb = $this->createQueryBuilder('r');
         $qb->innerJoin('r.rideStatus', 'rs');
         $qb->where(
@@ -60,7 +71,7 @@ class RideRepository extends EntityRepository
                 $qb->expr()->neq('r.user', ':user'),
                 $qb->expr()->eq('rs.id', RideStatus::AVAILABLE),
                 $qb->expr()->orX(
-                    $qb->expr()->eq('r.startDate', ':startDate'),
+                    $qb->expr()->between('r.startDate', ':startDate', ':endOfStartDate'),
                     $qb->expr()->eq('r.startLocation', ':startLocation'),
                     $qb->expr()->eq('r.stopLocation', ':stopLocation'),
                     $qb->expr()->eq('r.emptySeatsNo', ':emptySeatsNo'),
@@ -71,6 +82,7 @@ class RideRepository extends EntityRepository
         $qb->setParameters(array(
             'user'           => $user,
             'startDate'      => $searchParams['startDate'],
+            'endOfStartDate' => $endOfStartDate,
             'startLocation'  => $searchParams['startLocation'],
             'stopLocation'   => $searchParams['stopLocation'],
             'emptySeatsNo'   => $searchParams['emptySeatsNo'],

@@ -39,9 +39,9 @@ class Car
     private $model;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="build_year", type="date")
+     * @ORM\Column(name="build_year", type="string", length=255, nullable=true)
      */
     private $buildYear;
 

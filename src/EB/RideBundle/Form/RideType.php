@@ -27,13 +27,30 @@ class RideType extends AbstractType
         $this->rideStatuses = $options['rideStatuses'];
 
         $builder
-            ->add('startDate', 'date', array(
+            ->add('startDate', 'datetime', array(
                 'widget' => 'single_text',
+                'format' => 'dd-MM-yyyy HH:mm',
+                'read_only' => true,
             ))
             ->add('startLocation')
             ->add('stopLocation')
-            ->add('emptySeatsNo')
-            ->add('baggagePerSeat')
+            ->add('emptySeatsNo', 'choice', array(
+                'choices' => array(
+                    '1' => '1',
+                    '2' => '2',
+                    '3' => '3',
+                    '4' => '4',
+                ),
+            ))
+            ->add('baggagePerSeat', 'choice', array(
+                'choices' => array(
+                    '0' => 'Without baggage',
+                    '1' => 'Small',
+                    '2' => 'Medium',
+                    '3' => 'Large',
+                    '4' => 'Extra-large',
+                ),
+            ))
             ->add('comment', 'textarea', array())
             ->add('isPublic', 'checkbox', array(
                 'required' => false,
