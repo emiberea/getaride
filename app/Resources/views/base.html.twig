@@ -35,19 +35,114 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="{{ path('eb_ride_home_index') }}">Get a Ride</a>
+                        <a class="navbar-brand" href="{{ path('home_index') }}">Get a Ride</a>
                     </div>
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="eb-navbar-collapse-1">
                         {% if app.user %}
+                            {% set route = app.request.attributes.get('_route') %}
                             <ul class="nav navbar-nav">
-                                <li class="active"><a href="{{ path('friend_index') }}">Friends</a></li>
-                                <li><a href="{{ path('ride') }}">Rides</a></li>
-                                <li><a href="{{ path('car') }}">My Cars</a></li>
+                                <li class="{{ route ==  'home_index' ? 'active' }}">
+                                    <a href="{{ path('home_index') }}">
+                                        <span class="glyphicon glyphicon-home"></span>
+                                        Home
+                                    </a>
+                                </li>
+                                <li class="dropdown {{ 'ride' in route ? 'active' }}">
+                                    <a href="{{ path('ride') }}" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-road"></span>
+                                        Rides
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="{{ path('ride_new') }}">
+                                                <span class="glyphicon glyphicon-plus-sign"></span>
+                                                Create ride
+                                            </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <a href="{{ path('ride_search') }}">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                                Search rides
+                                            </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <a href="{{ path('ride' )}}">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                                My rides
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('ride_attempted') }}">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                                Requested rides
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown {{ 'car' in route ? 'active' }}">
+                                    <a href="{{ path('car') }}" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-dashboard"></span>
+                                        Cars
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="{{ path('car_new') }}">
+                                                <span class="glyphicon glyphicon-plus-sign"></span>
+                                                Add car
+                                            </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <a href="{{ path('car' )}}">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                                My cars
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="{{ route == 'home_contact' ? 'active' }}">
+                                    <a href="{{ path('home_contact') }}">
+                                        <span class="glyphicon glyphicon-globe"></span>
+                                        Contact
+                                    </a>
+                                </li>
+                                <li class="{{ route == 'home_about' ? 'active' }}">
+                                    <a href="{{ path('home_about') }}">
+                                        <span class="glyphicon glyphicon-info-sign"></span>
+                                        About
+                                    </a>
+                                </li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
-                                <li class="dropdown">
+                                <li class="dropdown {{ 'friend' in route ? 'active' }}">
+                                    <a href="{{ path('friend_index') }}" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-link"></span>
+                                        Friends
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="{{ path('friend_index') }}">
+                                                <span class="glyphicon glyphicon-user"></span>
+                                                My friends
+                                            </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li>
+                                            <a href="{{ path('friend_search' )}}">
+                                                <span class="glyphicon glyphicon-search"></span>
+                                                Search users
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown {{ 'fos_message' in route ? 'active' }}">
                                     <a href="{{ path('fos_message_inbox') }}" class="dropdown-toggle" data-toggle="dropdown">
                                         <span class="glyphicon glyphicon-envelope"></span>
                                         Messages
@@ -57,15 +152,35 @@
                                         <b class="caret"></b>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="{{ url('fos_message_thread_new' )}}">New Message</a></li>
+                                        <li>
+                                            <a href="{{ url('fos_message_thread_new' )}}">
+                                                <span class="glyphicon glyphicon-comment"></span>
+                                                New Message
+                                            </a>
+                                        </li>
                                         <li class="divider"></li>
-                                        <li><a href="{{ path('fos_message_inbox') }}">Inbox</a></li>
-                                        <li><a href="{{ path('fos_message_sent') }}">Sent</a></li>
-                                        <li><a href="{{ path('fos_message_deleted') }}">Deleted</a></li>
+                                        <li>
+                                            <a href="{{ path('fos_message_inbox') }}">
+                                                <span class="glyphicon glyphicon-inbox"></span>
+                                                Inbox
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('fos_message_sent') }}">
+                                                <span class="glyphicon glyphicon-send"></span>
+                                                Sent
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('fos_message_deleted') }}">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                                Deleted
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <li class="dropdown {{ 'fos_user' in route ? 'active' }}">
+                                    <a href="{{ path('fos_user_profile_show') }}" class="dropdown-toggle" data-toggle="dropdown">
                                         <span class="glyphicon glyphicon-user"></span>
                                         {{ app.user.username }}
                                         <b class="caret"></b>
@@ -75,7 +190,12 @@
                                         <li><a href="{{ path('fos_user_profile_edit') }}">Profile edit</a></li>
                                         <li><a href="{{ path('fos_user_change_password') }}">Change password</a></li>
                                         <li class="divider"></li>
-                                        <li><a href="{{ path('fos_user_security_logout') }}">Log out</a></li>
+                                        <li>
+                                            <a href="{{ path('fos_user_security_logout') }}">
+                                                <span class="glyphicon glyphicon-off"></span>
+                                                Log out
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
