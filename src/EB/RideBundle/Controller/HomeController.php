@@ -43,4 +43,13 @@ class HomeController extends Controller
     {
         return array();
     }
+
+    /**
+     * @Route("/terms", name="home_terms")
+     * @Template()
+     */
+    public function termsAction()
+    {
+        return array();
+    }
 }
