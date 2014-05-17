@@ -17,16 +17,11 @@ class RegistrationFormType extends BaseType
             ->add('firstname')
             ->add('lastname')
             ->add('city')
-            ->add('address')
-            ->add('phone')
-            ->add('birthDate', 'birthday', array(
-                'widget' => 'single_text',
-            ))
             ->add('terms', 'checkbox', array(
                 'mapped' => false,
-                'label' => 'Terms of Service',
+                'label' => 'Terms and Conditions',
                 'constraints' => array(
-                    new True(array('message' => 'In order to use our services, you must agree to our Terms of Service.'))
+                    new True(array('message' => 'In order to use our services, you must agree to our Terms and Conditions.'))
                 ),
             ));
     }

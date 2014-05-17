@@ -2,6 +2,11 @@
 
 {% form_theme form 'EBRideBundle:Form:fields.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ebride/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block content -%}
     <div class="row">
         <div class="col-md-8">
@@ -90,4 +95,18 @@
         </div>
         <div class="col-md-4"></div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ebride/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript">
+        $("#eb_ridebundle_ridesearch_startDate").datetimepicker({
+            format: "dd-mm-yyyy",
+            weekStart: 1,
+            todayBtn: true,
+            minView: 2,
+            startDate: "{{ 'now'|date('Y-m-d H:i') }}"
+        });
+    </script>
 {% endblock %}

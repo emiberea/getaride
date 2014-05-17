@@ -163,6 +163,7 @@ class RideController extends Controller
                 'baggagePerSeat' => $form->get('baggagePerSeat')->getData(),
             );
 
+            /** @var EntityManager $em */
             $em = $this->getDoctrine()->getManager();
 
             if ($matchExactly) {

@@ -45,6 +45,10 @@
                 {{ form_errors(form.birthDate) }}
             </div>
             <div class="form-group">
+                {{ form_widget(form.gender, {attr: {placeholder: 'Gender'}}) }}
+                {{ form_errors(form.gender) }}
+            </div>
+            <div class="form-group">
                 {{ form_widget(form.work, {attr: {placeholder: 'Work / Occupation'}}) }}
                 {{ form_errors(form.work) }}
             </div>

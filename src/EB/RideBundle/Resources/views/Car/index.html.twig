@@ -27,7 +27,7 @@
                         <td><a href="{{ path('car_show', { 'id': car.id }) }}">{{ car.id }}</a></td>
                         <td>{{ car.brand }}</td>
                         <td>{{ car.model }}</td>
-                        <td>{% if car.buildYear %}{{ car.buildYear|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{{ car.buildYear }}</td>
                         <td>{{ car.numberPlate }}</td>
                         <td>{{ car.color }}</td>
                         <td>{{ car.hasAirConditioning }}</td>

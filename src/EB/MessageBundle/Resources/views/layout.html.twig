@@ -11,13 +11,22 @@
     <ul class="nav nav-tabs">
         {% set route = app.request.attributes.get('_route') %}
         <li class="{{ route == 'fos_message_inbox' ? 'active' }}">
-            <a href="{{ url('fos_message_inbox') }}">{% trans from 'FOSMessageBundle' %}inbox{% endtrans %}</a>
+            <a href="{{ url('fos_message_inbox') }}">
+                <span class="glyphicon glyphicon-inbox"></span>
+                {% trans from 'FOSMessageBundle' %}inbox{% endtrans %}
+            </a>
         </li>
         <li class="{{ route == 'fos_message_sent' ? 'active' }}">
-            <a href="{{ url('fos_message_sent') }}">{% trans from 'FOSMessageBundle' %}sent{% endtrans %}</a>
+            <a href="{{ url('fos_message_sent') }}">
+                <span class="glyphicon glyphicon-send"></span>
+                {% trans from 'FOSMessageBundle' %}sent{% endtrans %}
+            </a>
         </li>
         <li class="{{ route == 'fos_message_deleted' ? 'active' }}">
-            <a href="{{ url('fos_message_deleted') }}">{% trans from 'FOSMessageBundle' %}deleted{% endtrans %}</a>
+            <a href="{{ url('fos_message_deleted') }}">
+                <span class="glyphicon glyphicon-trash"></span>
+                {% trans from 'FOSMessageBundle' %}deleted{% endtrans %}
+            </a>
         </li>
     </ul>
 
