@@ -51,7 +51,9 @@ class RideType extends AbstractType
                     '4' => 'Extra-large',
                 ),
             ))
-            ->add('comment', 'textarea', array())
+            ->add('comment', 'textarea', array(
+                'required' => false,
+            ))
             ->add('isPublic', 'checkbox', array(
                 'required' => false,
             ))

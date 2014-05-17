@@ -1,0 +1,32 @@
+EB\UserBundle\Entity\User:
+    properties:
+        firstname:
+            - NotBlank: { message: 'Insert your firstname' }
+        lastname:
+            - NotBlank: { message: 'Insert your lastname' }
+        city:
+            - NotBlank: { message: 'Insert your city' }
+
+EB\RideBundle\Entity\Car:
+    properties:
+        brand:
+            - NotBlank: { message: 'Insert your car brand' }
+        model:
+            - NotBlank: { message: 'Insert your car model' }
+
+EB\RideBundle\Entity\Ride:
+    properties:
+        startDate:
+            - NotBlank: { message: 'Select date and time for this ride' }
+        startLocation:
+            - NotBlank: { message: 'Insert the start location' }
+        stopLocation:
+            - NotBlank: { message: 'Insert the stop location' }
+        emptySeatsNo:
+            - NotBlank: { message: 'Select the number of empty seats' }
+        baggagePerSeat:
+            - NotBlank: { message: 'Select the quantity of baggage allowed per person' }
+        car:
+            - NotBlank: { message: 'Select a car' }
+        rideStatus:
+            - NotBlank: { message: 'Select a status for this ride' }

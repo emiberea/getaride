@@ -31,7 +31,7 @@ EB\UserBundle\Entity\User:
         city: Iasi
         address: str. Smardan, nr. 25
         phone: 40748498693
-        gender: M
+        gender: male
         isSmoker: 0
         isDriver: 1
 

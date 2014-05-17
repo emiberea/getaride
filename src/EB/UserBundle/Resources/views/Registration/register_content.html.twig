@@ -2,7 +2,7 @@
 
 {% form_theme form 'EBUserBundle:Form:fields.html.twig' %}
 
-<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" role="form">
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" role="form" novalidate>
     <div class="panel panel-default">
         <div class="panel-heading">Account data</div>
         <div class="panel-body">
@@ -38,18 +38,6 @@
             <div class="form-group">
                 {{ form_widget(form.city, {attr: {placeholder: 'City / Town'}}) }}
                 {{ form_errors(form.city) }}
-            </div>
-            <div class="form-group">
-                {{ form_widget(form.address, {attr: {placeholder: 'Address'}}) }}
-                {{ form_errors(form.address) }}
-            </div>
-            <div class="form-group">
-                {{ form_widget(form.phone, {attr: {placeholder: 'Phone'}}) }}
-                {{ form_errors(form.phone) }}
-            </div>
-            <div class="form-group">
-                {{ form_widget(form.birthDate, {attr: {placeholder: 'Birth Date'}}) }}
-                {{ form_errors(form.birthDate) }}
             </div>
         </div>
     </div>

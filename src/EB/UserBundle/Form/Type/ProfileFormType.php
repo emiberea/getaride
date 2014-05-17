@@ -23,11 +23,21 @@ class ProfileFormType extends BaseType
                 'format' => 'dd-MM-yyyy',
                 'read_only' => true,
             ))
+            ->add('gender', 'choice', array(
+                'choices' => array(
+                    'male' => 'male',
+                    'female' => 'female',
+                ),
+                'required' => false,
+                'empty_value' => 'Select gender',
+            ))
             ->add('work')
             ->add('isSmoker')
             ->add('favoriteMusic')
             ->add('hobbies')
-            ->add('personalDescription', 'textarea', array())
+            ->add('personalDescription', 'textarea', array(
+                'required' => false,
+            ))
             ->add('isDriver')
             ->add('drivingLicenceDate', 'date', array(
                 'widget' => 'single_text',
