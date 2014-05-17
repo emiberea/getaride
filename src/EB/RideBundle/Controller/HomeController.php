@@ -18,6 +18,15 @@ class HomeController extends Controller
     }
 
     /**
+     * @Route("/rules", name="home_rules")
+     * @Template()
+     */
+    public function rulesAction()
+    {
+        return array();
+    }
+
+    /**
      * @Route("/contact", name="home_contact")
      * @Template()
      */

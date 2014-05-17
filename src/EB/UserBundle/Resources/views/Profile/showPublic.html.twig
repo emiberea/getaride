@@ -9,6 +9,8 @@
                 <img src="{{ user.googlePictureLink }}" alt="Google profile picture" class="img-responsive img-rounded" />
             {% elseif user.facebookPictureLink %}
                 <img src="{{ user.facebookPictureLink }}" alt="Facebook profile picture" class="img-responsive img-rounded" />
+            {% else %}
+                <img src="{{ asset('bundles/ebride/images/profile_default.jpg') }}" alt="Facebook profile picture" class="img-responsive img-rounded" />
             {% endif %}
             <h3>{{ user.firstname }} {{ user.lastname }}</h3>
             <h5>
