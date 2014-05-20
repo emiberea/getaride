@@ -60,13 +60,13 @@
                 Back to the list
             </a>
         </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
+        <div class="col-md-8" id="map-canvas" style="height: 600px;"></div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <!-- smalot/bootstrap-datetimepicker => Bootstrap DateTime picker -->
     <script type="text/javascript" src="{{ asset('bundles/ebride/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         $("#eb_ridebundle_ride_startDate").datetimepicker({
@@ -75,5 +75,151 @@
             todayBtn: true,
             startDate: "{{ 'now'|date('Y-m-d H:i') }}"
         });
+    </script>
+    <!-- Google Maps JavaScript API v3 -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4v-bl8lRcjQV7Lu1culp3jbntnZ7NrZo&sensor=false&libraries=places&language=ro"></script>
+    <script type="text/javascript">
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        var directionsService = new google.maps.DirectionsService();
+
+        function initialize() {
+            // setting the map
+            var mapCanvas = document.getElementById('map-canvas');
+            var mapOptions = {
+                zoom: 7,
+                center: new google.maps.LatLng(46, 25)
+            };
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+
+            // autocomplete
+            var inputStartLocation = document.getElementById('eb_ridebundle_ride_startLocation');
+            var inputStopLocation = document.getElementById('eb_ridebundle_ride_stopLocation');
+            var autocompleteOptions = {
+                types: ['(cities)'],
+                componentRestrictions: {country: 'ro'}
+            };
+
+            // startLocation autocomplete
+            var autocompleteStartLocation = new google.maps.places.Autocomplete(inputStartLocation, autocompleteOptions);
+            autocompleteStartLocation.bindTo('bounds', map);
+
+            // stopLocation autocomplete
+            var autocompleteStopLocation = new google.maps.places.Autocomplete(inputStopLocation, autocompleteOptions);
+            autocompleteStopLocation.bindTo('bounds', map);
+
+            // setting InfoView and Marker objects
+            var infowindowStartLocation = new google.maps.InfoWindow();
+            var infowindowStopLocation = new google.maps.InfoWindow();
+            var markerStartLocation = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29)
+            });
+            var markerStopLocation = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29)
+            });
+
+            var startPlace;
+            var stopPlace;
+            google.maps.event.addListener(autocompleteStartLocation, 'place_changed', function() {
+                infowindowStartLocation.close();
+                markerStartLocation.setVisible(false);
+                var place = autocompleteStartLocation.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+                startPlace = place;
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);  // Why 17? Because it looks good.
+                }
+                markerStartLocation.setIcon(/** @type {google.maps.Icon} */({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+                markerStartLocation.setPosition(place.geometry.location);
+                markerStartLocation.setVisible(true);
+
+                var address = '';
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] && place.address_components[0].short_name || ''),
+                        (place.address_components[1] && place.address_components[1].short_name || ''),
+                        (place.address_components[2] && place.address_components[2].short_name || '')
+                    ].join(' ');
+                }
+
+                infowindowStartLocation.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                infowindowStartLocation.open(map, markerStartLocation);
+
+                calcRoute(startPlace.geometry.location, stopPlace.geometry.location)
+            });
+
+            google.maps.event.addListener(autocompleteStopLocation, 'place_changed', function() {
+                infowindowStopLocation.close();
+                markerStopLocation.setVisible(false);
+                var place = autocompleteStopLocation.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+                stopPlace = place;
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);  // Why 17? Because it looks good.
+                }
+                markerStopLocation.setIcon(/** @type {google.maps.Icon} */({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+                markerStopLocation.setPosition(place.geometry.location);
+                markerStopLocation.setVisible(true);
+
+                var address = '';
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] && place.address_components[0].short_name || ''),
+                        (place.address_components[1] && place.address_components[1].short_name || ''),
+                        (place.address_components[2] && place.address_components[2].short_name || '')
+                    ].join(' ');
+                }
+
+                infowindowStopLocation.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                infowindowStopLocation.open(map, markerStopLocation);
+
+                calcRoute(startPlace.geometry.location, stopPlace.geometry.location)
+            });
+
+            directionsRenderer.setMap(map);
+        }
+
+        // function that compute the route between 2 locations
+        function calcRoute(inputStartLocation, inputStopLocation) {
+            var request = {
+                origin: inputStartLocation,
+                destination: inputStopLocation,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+            directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(response);
+                }
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 {% endblock %}
