@@ -40,10 +40,10 @@
                     {{ form_widget(edit_form.hasAirConditioning) }}
                     {{ form_errors(edit_form.hasAirConditioning) }}
                 </div>
-                {{ form_rest(edit_form) }}
                 <div class="form-group">
                     {{ form_widget(edit_form.submit) }}
                 </div>
+                {{ form_rest(edit_form) }}
             </form>
 
             {{ form(delete_form) }}
@@ -58,6 +58,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <!-- smalot/bootstrap-datetimepicker - Bootstrap DateTime picker -->
     <script type="text/javascript" src="{{ asset('bundles/ebride/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         $("#eb_ridebundle_car_buildYear").datetimepicker({
