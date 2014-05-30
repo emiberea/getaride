@@ -12,7 +12,7 @@
         <div class="col-md-4">
             <h1>Ride edit</h1>
 
-            <form action="{{ path('ride_update', {'id': ride.id}) }}" {{ form_enctype(edit_form) }} method="POST" role="form">
+            <form action="{{ path('ride_update', {'id': ride.id}) }}" {{ form_enctype(edit_form) }} method="POST" id="form-ride-edit" role="form">
                 <input type="hidden" name="_method" value="PUT">
                 <div class="form-group">
                     {{ form_widget(edit_form.startDate, {attr: {placeholder: 'Start Date'}}) }}
@@ -22,6 +22,25 @@
                     {{ form_widget(edit_form.startLocation, {attr: {placeholder: 'Start Location'}}) }}
                     {{ form_errors(edit_form.startLocation) }}
                 </div>
+                <a href="#" class="btn btn-link" id="waypoint-form-group-toggler">Add waypoint</a>
+                <div class="form-group" id="waypoint-form-group" style="display: none;">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="waypoint-input" placeholder="Add waypoint" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" id="waypoint-add" type="button">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <ul class="list-group" id="ul-waypoints">
+                    {% for waypoint in waypointsArr %}
+                        <li class="list-group-item" id="li-waypoint-{{ loop.index0 }}" data-li="{{ waypoint.latLng }}">
+                            {{ waypoint.name }}
+                            <span class="glyphicon glyphicon-remove pull-right waypoint-remove"></span>
+                        </li>
+                    {% endfor %}
+                </ul>
                 <div class="form-group">
                     {{ form_widget(edit_form.stopLocation, {attr: {placeholder: 'Stop Location'}}) }}
                     {{ form_errors(edit_form.stopLocation) }}
@@ -63,8 +82,7 @@
                 Back to the list
             </a>
         </div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
+        <div class="col-md-8" id="map-canvas" style="height: 600px;"></div>
     </div>
 {% endblock %}
 
@@ -78,5 +96,299 @@
             todayBtn: true,
             startDate: "{{ 'now'|date('Y-m-d H:i') }}"
         });
+    </script>
+    <!-- Google Maps JavaScript API v3 -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4v-bl8lRcjQV7Lu1culp3jbntnZ7NrZo&sensor=false&libraries=places&language=ro"></script>
+    <script type="text/javascript">
+        var constants = {
+            'ERR_1': 'error.insert_start_stop',
+            'ERR_2': 'error.gmaps_autocomplete',
+            'ERR_3': 'error.already_waypoint',
+            'SUCCESS': 'success'
+        };
+        
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        var directionsService = new google.maps.DirectionsService();
+        var startLocationPlace = '{{ ride.startLocationLatLng }}';
+        var stopLocationPlace = '{{ ride.stopLocationLatLng }}';
+        var currentWaypointPlace;
+        var isGMapsAutocompleted = false;
+        var waypointsGMaps = [];
+        var waypointsDB = [];
+
+        function initialize() {
+            // setting the map
+            var mapCanvas = document.getElementById('map-canvas');
+            var mapOptions = {
+                zoom: 7,
+                center: new google.maps.LatLng(46, 25)
+            };
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+
+            // locations input fields & options
+            var startLocationInput = document.getElementById('eb_ridebundle_ride_startLocation');
+            var stopLocationInput = document.getElementById('eb_ridebundle_ride_stopLocation');
+            var waypointInput = document.getElementById('waypoint-input');
+            var autocompleteOptions = {
+                types: ['(cities)'],
+                componentRestrictions: {country: 'ro'}
+            };
+
+            // startLocationAutocomplete
+            var startLocationAutocomplete = new google.maps.places.Autocomplete(startLocationInput, autocompleteOptions);
+            startLocationAutocomplete.bindTo('bounds', map);
+
+            // stopLocationAutocomplete
+            var stopLocationAutocomplete = new google.maps.places.Autocomplete(stopLocationInput, autocompleteOptions);
+            stopLocationAutocomplete.bindTo('bounds', map);
+
+            // waypointAutocomplete
+            var waypointAutocomplete = new google.maps.places.Autocomplete(waypointInput, autocompleteOptions);
+            waypointAutocomplete.bindTo('bounds', map);
+
+            // setting InfoView and Marker objects
+            var startLocationInfoWindow = new google.maps.InfoWindow();
+            var stopLocationInfoWindow = new google.maps.InfoWindow();
+            var startLocationMarker = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29)
+            });
+            var stopLocationMarker = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29)
+            });
+
+            // startLocationAutocomplete - GMaps Autocomplete listener
+            google.maps.event.addListener(startLocationAutocomplete, 'place_changed', function() {
+                startLocationInfoWindow.close();
+                startLocationMarker.setVisible(false);
+                var place = startLocationAutocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+                startLocationPlace = place;
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);  // setting zoom to 17 for this place
+                }
+                startLocationMarker.setIcon(/** @type {google.maps.Icon} */({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+                startLocationMarker.setPosition(place.geometry.location);
+                startLocationMarker.setVisible(true);
+
+                var address = '';
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] && place.address_components[0].short_name || ''),
+                        (place.address_components[1] && place.address_components[1].short_name || ''),
+                        (place.address_components[2] && place.address_components[2].short_name || '')
+                    ].join(' ');
+                }
+
+                startLocationInfoWindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                startLocationInfoWindow.open(map, startLocationMarker);
+
+                if (startLocationPlace && stopLocationPlace) {
+                    calcRoute(startLocationPlace, stopLocationPlace);
+                }
+            });
+
+            // stopLocationAutocomplete - GMaps Autocomplete listener
+            google.maps.event.addListener(stopLocationAutocomplete, 'place_changed', function() {
+                stopLocationInfoWindow.close();
+                stopLocationMarker.setVisible(false);
+                var place = stopLocationAutocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+                stopLocationPlace = place;
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);  // setting zoom to 17 for this place
+                }
+                stopLocationMarker.setIcon(/** @type {google.maps.Icon} */({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+                stopLocationMarker.setPosition(place.geometry.location);
+                stopLocationMarker.setVisible(true);
+
+                var address = '';
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] && place.address_components[0].short_name || ''),
+                        (place.address_components[1] && place.address_components[1].short_name || ''),
+                        (place.address_components[2] && place.address_components[2].short_name || '')
+                    ].join(' ');
+                }
+
+                stopLocationInfoWindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                stopLocationInfoWindow.open(map, stopLocationMarker);
+
+                if (startLocationPlace && stopLocationPlace) {
+                    calcRoute(startLocationPlace, stopLocationPlace);
+                }
+            });
+
+            // waypointAutocomplete - GMaps Autocomplete listener
+            google.maps.event.addListener(waypointAutocomplete, 'place_changed', function() {
+                var place = waypointAutocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+                currentWaypointPlace = place;
+                isGMapsAutocompleted = true;
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);  // setting zoom to 17 for this place
+                }
+            });
+
+            directionsRenderer.setMap(map);
+
+            // adding the waypoints from the DB to the waypointsGMaps and waypointsDB arrays, to present them on the map
+            {% for waypoint in waypointsArr %}
+                waypointsGMaps.push({
+                    location: '{{ waypoint.latLng }}',
+                    stopover: true
+                });
+                waypointsDB.push({
+                    name: '{{ waypoint.name }}',
+                    latLng: '{{ waypoint.latLng }}'
+                });
+            {% endfor %}
+
+            calcRoute(startLocationPlace, stopLocationPlace);
+        }
+
+        // function that compute the route between 2 locations
+        function calcRoute(start, end) {
+            var origin = typeof start == 'object' ? start.geometry.location : start;
+            var destination = typeof end == 'object' ? end.geometry.location : end;
+            var request = {
+                origin: origin,
+                destination: destination,
+                waypoints: waypointsGMaps,
+                optimizeWaypoints: true,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+
+            directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(response);
+                }
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        $(document).ready(function() {
+            $("#waypoint-form-group-toggler").click(function(e) {
+                e.preventDefault();
+                $("#waypoint-form-group").toggle();
+            });
+
+            var i = 0;
+            $("#waypoint-add").click(function() {
+                var waypointInputValue = $("#waypoint-input").val();
+                var isWaypointValid = validateWaypoint();
+                isGMapsAutocompleted = false;
+                
+                if (waypointInputValue && isWaypointValid == constants.SUCCESS) {
+                    waypointsGMaps.push({
+                        location: currentWaypointPlace.geometry.location,
+                        stopover: true
+                    });
+                    waypointsDB.push({
+                        name: waypointInputValue,
+                        latLng: currentWaypointPlace.geometry.location.toString()
+                    });
+
+                    calcRoute(startLocationPlace, stopLocationPlace);
+
+                    var $li = $('<li class="list-group-item" id="li-waypoint-' + i + '" data-li="' + currentWaypointPlace.geometry.location + '">' + waypointInputValue + '<span class="glyphicon glyphicon-remove pull-right waypoint-remove"></span></li>');
+                    $("#ul-waypoints").append($li);
+                    $li.on('click', '.waypoint-remove', function() {
+                        var that = $(this);
+                        that.closest('li').remove();
+                        for (var k = 0; k < waypointsGMaps.length; k++) {
+                            if (waypointsGMaps[k].location == that.parent().attr('data-li')) {
+                                waypointsGMaps.splice(k, 1);
+                                waypointsDB.splice(k, 1);
+                                break;
+                            }
+                        }
+                        calcRoute(startLocationPlace, stopLocationPlace);
+                    });
+                    i++;
+                } else if (waypointInputValue && isWaypointValid == constants.ERR_1) {
+                    alert('Insert first start and stop locations!');
+                } else if (waypointInputValue && isWaypointValid == constants.ERR_2) {
+                    alert('Use Google Maps autocomplete!');
+                } else if (waypointInputValue && isWaypointValid == constants.ERR_3) {
+                    alert('You already entered this location!');
+                } else {
+                    alert('Complete a location!');
+                }
+            });
+
+            $(".waypoint-remove").click(function() {
+                var that = $(this);
+                that.closest('li').remove();
+                for (var k = 0; k < waypointsGMaps.length; k++) {
+                    if (waypointsGMaps[k].location == that.parent().attr('data-li')) {
+                        waypointsGMaps.splice(k, 1);
+                        waypointsDB.splice(k, 1);
+                        break;
+                    }
+                }
+                calcRoute(startLocationPlace, stopLocationPlace);
+            });
+
+            $("#form-ride-edit").submit(function() {
+                var startLocationLatLng = typeof startLocationPlace == 'object' ? startLocationPlace.geometry.location.toString() : startLocationPlace;
+                var stopLocationLatLng = typeof stopLocationPlace == 'object' ? stopLocationPlace.geometry.location.toString() : stopLocationPlace;
+                var waypointsStr = JSON.stringify(waypointsDB);
+
+                $("#eb_ridebundle_ride_startLocationLatLng").val(startLocationLatLng);
+                $("#eb_ridebundle_ride_stopLocationLatLng").val(stopLocationLatLng);
+                $("#eb_ridebundle_ride_waypointsStr").val(waypointsStr);
+            });
+        });
+
+        function validateWaypoint() {
+            if (!startLocationPlace || !stopLocationPlace) {
+                return constants.ERR_1;
+            }
+            if (isGMapsAutocompleted == false) {
+                return constants.ERR_2;
+            }
+            for (var k = 0; k < waypointsGMaps.length; k++) {
+                if (waypointsGMaps[k].location.toString() == currentWaypointPlace.geometry.location.toString()) {
+                    return constants.ERR_3;
+                }
+            }
+            return constants.SUCCESS;
+        }
     </script>
 {% endblock %}

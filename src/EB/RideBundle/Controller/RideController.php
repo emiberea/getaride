@@ -194,8 +194,10 @@ class RideController extends Controller
      */
     public function showAction($id)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Ride $ride */
         $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
@@ -205,10 +207,13 @@ class RideController extends Controller
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
+        $waypointsArr = json_decode($ride->getWaypointsStr(), true);
+
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'ride'        => $ride,
+            'ride' => $ride,
+            'waypointsArr' => $waypointsArr,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -278,8 +283,10 @@ class RideController extends Controller
      */
     public function editAction($id)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Ride $ride */
         $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
@@ -289,12 +296,15 @@ class RideController extends Controller
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
+        $waypointsArr = json_decode($ride->getWaypointsStr(), true);
+
         $editForm = $this->createEditForm($ride);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'ride'        => $ride,
-            'edit_form'   => $editForm->createView(),
+            'ride' => $ride,
+            'waypointsArr' => $waypointsArr,
+            'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
     }

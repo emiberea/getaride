@@ -33,7 +33,10 @@ class RideType extends AbstractType
                 'read_only' => true,
             ))
             ->add('startLocation')
+            ->add('startLocationLatLng', 'hidden')
+            ->add('waypointsStr', 'hidden')
             ->add('stopLocation')
+            ->add('stopLocationLatLng', 'hidden')
             ->add('emptySeatsNo', 'choice', array(
                 'choices' => array(
                     '1' => '1',

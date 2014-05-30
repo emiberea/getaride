@@ -48,9 +48,30 @@ class Ride
     /**
      * @var string
      *
+     * @ORM\Column(name="start_location_LatLng", type="text", nullable=true)
+     */
+    private $startLocationLatLng;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="waypoints_str", type="string", type="text", nullable=true)
+     */
+    private $waypointsStr;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="stop_location", type="string", length=255)
      */
     private $stopLocation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="stop_location_LatLng", type="text", nullable=true)
+     */
+    private $stopLocationLatLng;
 
     /**
      * @var integer
@@ -195,6 +216,44 @@ class Ride
     }
 
     /**
+     * @param string $startLocationLatLng
+     * @return Ride
+     */
+    public function setStartLocationLatLng($startLocationLatLng)
+    {
+        $this->startLocationLatLng = $startLocationLatLng;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStartLocationLatLng()
+    {
+        return $this->startLocationLatLng;
+    }
+
+    /**
+     * @param string $waypointsStr
+     * @return Ride
+     */
+    public function setWaypointsStr($waypointsStr)
+    {
+        $this->waypointsStr = $waypointsStr;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWaypointsStr()
+    {
+        return $this->waypointsStr;
+    }
+
+    /**
      * Set stopLocation
      *
      * @param string $stopLocation
@@ -215,6 +274,25 @@ class Ride
     public function getStopLocation()
     {
         return $this->stopLocation;
+    }
+
+    /**
+     * @param string $stopLocationLatLng
+     * @return Ride
+     */
+    public function setStopLocationLatLng($stopLocationLatLng)
+    {
+        $this->stopLocationLatLng = $stopLocationLatLng;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStopLocationLatLng()
+    {
+        return $this->stopLocationLatLng;
     }
 
     /**

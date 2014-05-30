@@ -1,48 +1,108 @@
 {% extends '::base.html.twig' %}
 
 {% block content -%}
-    <h1>Ride</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Ride</h1>
 
-    <table class="table table-hover">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ride.id }}</td>
-            </tr>
-            <tr>
-                <th>Start Date</th>
-                <td>{{ ride.startDate|date('Y-m-d H:i:s') }}</td>
-            </tr>
-            <tr>
-                <th>Start Location</th>
-                <td>{{ ride.startLocation }}</td>
-            </tr>
-            <tr>
-                <th>Stop Location</th>
-                <td>{{ ride.stopLocation }}</td>
-            </tr>
-            <tr>
-                <th>Empty Seats No</th>
-                <td>{{ ride.emptySeatsNo }}</td>
-            </tr>
-            <tr>
-                <th>Baggage Per Seat</th>
-                <td>{{ ride.baggagePerSeat }}</td>
-            </tr>
-            <tr>
-                <th>Comment</th>
-                <td>{{ ride.comment }}</td>
-            </tr>
-        </tbody>
-    </table>
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ ride.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Start Date</th>
+                        <td>{{ ride.startDate|date('Y-m-d H:i:s') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Start Location</th>
+                        <td>{{ ride.startLocation }}</td>
+                    </tr>
+                    <tr>
+                        <th>Stop Location</th>
+                        <td>{{ ride.stopLocation }}</td>
+                    </tr>
+                    <tr>
+                        <th>Empty Seats No</th>
+                        <td>{{ ride.emptySeatsNo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Baggage Per Seat</th>
+                        <td>{{ ride.baggagePerSeat }}</td>
+                    </tr>
+                    <tr>
+                        <th>Comment</th>
+                        <td>{{ ride.comment }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-    <a href="{{ path('ride') }}">
-        Back to the list
-    </a>
-    <br />
-    <a href="{{ path('ride_edit', { 'id': ride.id }) }}" class="btn btn-warning">
-        Edit
-    </a>
+            <a href="{{ path('ride') }}">
+                Back to the list
+            </a>
+            <br />
+            <a href="{{ path('ride_edit', { 'id': ride.id }) }}" class="btn btn-warning">
+                Edit
+            </a>
 
-    {{ form(delete_form) }}
+            {{ form(delete_form) }}
+        </div>
+        <div class="col-md-8" id="map-canvas" style="height: 600px;"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- Google Maps JavaScript API v3 -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4v-bl8lRcjQV7Lu1culp3jbntnZ7NrZo&sensor=false&libraries=places&language=ro"></script>
+    <script type="text/javascript">
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        var directionsService = new google.maps.DirectionsService();
+        var startLocationPlace = '{{ ride.startLocationLatLng }}';
+        var stopLocationPlace = '{{ ride.stopLocationLatLng }}';
+        var waypointsGMaps = [];
+
+        function initialize() {
+            // setting the map
+            var mapCanvas = document.getElementById('map-canvas');
+            var mapOptions = {
+                zoom: 7,
+                center: new google.maps.LatLng(46, 25)
+            };
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+
+            directionsRenderer.setMap(map);
+
+            // adding the waypoints from the DB to the waypointsGMaps array, to present them on the map
+            {% for waypoint in waypointsArr %}
+                waypointsGMaps.push({
+                    location: '{{ waypoint.latLng }}'
+                });
+            {% endfor %}
+
+            calcRoute(startLocationPlace, stopLocationPlace);
+        }
+
+        // function that compute the route between 2 locations
+        function calcRoute(start, end) {
+            var origin = typeof start == 'object' ? start.geometry.location : start;
+            var destination = typeof end == 'object' ? end.geometry.location : end;
+            var request = {
+                origin: origin,
+                destination: destination,
+                waypoints: waypointsGMaps,
+                optimizeWaypoints: true,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+
+            directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(response);
+                }
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 {% endblock %}
