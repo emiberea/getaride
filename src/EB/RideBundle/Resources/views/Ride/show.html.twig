@@ -24,6 +24,8 @@
                         <td>
                             {% for waypoint in waypointsArr %}
                                 <span class="glyphicon glyphicon-chevron-right"></span> {{ waypoint.name|split(',')[0] }}<br />
+                            {% else %}
+                                -
                             {% endfor %}
                         </td>
                     </tr>

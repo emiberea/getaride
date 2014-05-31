@@ -12,7 +12,7 @@
     <a href="{{ public_ride_url }}">
         {{ ride.startLocation }} - {{ ride.stopLocation }} ride
     </a>
-    on {% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}
+    on {% if ride.startDate %}{{ ride.startDate|date('d-m-Y H:i') }}{% endif %}
     <br />
     You can see his/her profile here: <a href="{{ rr_receiver_profile_url }}">{{ rr_receiver.username }}</a>
 {% endblock %}

@@ -186,6 +186,32 @@ class RideController extends Controller
     }
 
     /**
+     * @Route("/requested", name="ride_show_requested_rides")
+     * @Template()
+     */
+    public function showRequestedRidesAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $userId = $this->getUser()->getId();
+
+        $dql = "SELECT rr FROM EBRideBundle:RideRequest rr
+                WHERE rr.user = '$userId'";
+        $query = $em->createQuery($dql);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1),
+            10
+        );
+
+        return array(
+            'pagination' => $pagination,
+        );
+    }
+
+    /**
      * Finds and displays a Ride entity.
      *
      * @Route("/{id}", name="ride_show")
@@ -241,14 +267,17 @@ class RideController extends Controller
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
-        // get the rideRequest that belong to this ride and this attmpting user
+        // get the rideRequest that belong to this ride and this attempting user
         // added a security check in case there are more rideRequest for the same user, even if it is also checked at rideRequest creation
         $rideRequests = $em->getRepository('EBRideBundle:RideRequest')->findByRideAndUser($ride, $this->getUser());
         $rideRequest = end($rideRequests) ? end($rideRequests) : null;
 
+        $waypointsArr = json_decode($ride->getWaypointsStr(), true);
+
         return array(
             'ride' => $ride,
             'rideRequest' => $rideRequest,
+            'waypointsArr' => $waypointsArr,
         );
     }
 

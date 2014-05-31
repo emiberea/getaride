@@ -3,18 +3,8 @@
 {% block content -%}
     <div class="row">
         <div class="col-md-8">
-            <ul class="nav nav-tabs nav-justified">
-                {% set route = app.request.attributes.get('_route') %}
-                <li class="{{ route == 'ride' ? 'active' }}">
-                    <a href="{{ path('ride') }}">My Rides</a>
-                </li>
-                <li class="{{ route == 'ride_search' or route == 'ride_search_results' ? 'active' }}">
-                    <a href="{{ path('ride_search') }}">Search Rides</a>
-                </li>
-                <li class="{{ route == 'ride_attempted' ? 'active' }}">
-                    <a href="{{ path('ride_attempted') }}">Join Requested Rides</a>
-                </li>
-            </ul>
+            {% include 'EBRideBundle:Ride/Component:navbar.html.twig' %}
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Ride list - title</h3>
@@ -57,7 +47,7 @@
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="9">You have no rides yet.</td>
+                                <td colspan="6">You have no rides yet.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
