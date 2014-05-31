@@ -1,12 +1,12 @@
 <?php
 
-namespace EB\RideBundle\EventListener;
+namespace EB\MessageBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Router;
-use EB\RideBundle\Service\MailerService;
-use EB\RideBundle\Event\NotificationEvent;
-use EB\RideBundle\Event\NotificationEvents;
+use EB\MessageBundle\Service\MailerService;
+use EB\MessageBundle\Event\NotificationEvent;
+use EB\MessageBundle\Event\NotificationEvents;
 use EB\RideBundle\Entity\RideRequest;
 use EB\UserBundle\Entity\User;
 

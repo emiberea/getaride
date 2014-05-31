@@ -1,6 +1,6 @@
 <?php
 
-namespace EB\RideBundle\Service;
+namespace EB\MessageBundle\Service;
 
 class MailerService
 {

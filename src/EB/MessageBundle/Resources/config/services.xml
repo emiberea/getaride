@@ -17,4 +17,16 @@
         </service>
     </services>
     -->
+
+    <services>
+        <service id="eb_message.mailer.service" class="EB\MessageBundle\Service\MailerService">
+            <argument type="service" id="mailer" />
+            <argument type="service" id="twig" />
+        </service>
+        <service id="eb_message.notification.listener" class="EB\MessageBundle\EventListener\NotificationListener">
+            <argument type="service" id="router" />
+            <argument type="service" id="eb_message.mailer.service" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+    </services>
 </container>

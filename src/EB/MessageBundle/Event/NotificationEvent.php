@@ -1,6 +1,6 @@
 <?php
 
-namespace EB\RideBundle\Event;
+namespace EB\MessageBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
