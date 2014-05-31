@@ -30,8 +30,6 @@
                             <th>Start Location</th>
                             <th>Stop Location</th>
                             <th>Empty Seats No</th>
-                            <th>Baggage Per Seat</th>
-                            <th>Comment</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -39,16 +37,22 @@
                         {% for ride in pagination %}
                             <tr>
                                 <td><a href="{{ path('ride_show', { 'id': ride.id }) }}">{{ ride.id }}</a></td>
-                                <td>{% if ride.startDate %}{{ ride.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                <td>{% if ride.startDate %}{{ ride.startDate|date('d-m-Y H:i') }}{% endif %}</td>
                                 <td>{{ ride.startLocation }}</td>
                                 <td>{{ ride.stopLocation }}</td>
                                 <td>{{ ride.emptySeatsNo }}</td>
-                                <td>{{ ride.baggagePerSeat }}</td>
-                                <td>{{ ride.comment }}</td>
                                 <td>
-                                    <a href="{{ path('ride_show', { 'id': ride.id }) }}">show</a>
-                                    <a href="{{ path('ride_edit', { 'id': ride.id }) }}">edit</a>
-                                    <a href="{{ path('ride_show_requesting_users', { 'id': ride.id }) }}">show_req_users</a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                            Action <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="{{ path('ride_show', { 'id': ride.id }) }}">Show</a></li>
+                                            <li><a href="{{ path('ride_edit', { 'id': ride.id }) }}">Edit</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="{{ path('ride_show_requesting_users', { 'id': ride.id }) }}">Requesting Users</a></li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         {% else %}

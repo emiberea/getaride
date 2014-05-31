@@ -13,11 +13,19 @@
                     </tr>
                     <tr>
                         <th>Start Date</th>
-                        <td>{{ ride.startDate|date('Y-m-d H:i:s') }}</td>
+                        <td>{{ ride.startDate|date('d-m-Y H:i') }}</td>
                     </tr>
                     <tr>
                         <th>Start Location</th>
                         <td>{{ ride.startLocation }}</td>
+                    </tr>
+                    <tr>
+                        <th>Waypoints</th>
+                        <td>
+                            {% for waypoint in waypointsArr %}
+                                <span class="glyphicon glyphicon-chevron-right"></span> {{ waypoint.name|split(',')[0] }}<br />
+                            {% endfor %}
+                        </td>
                     </tr>
                     <tr>
                         <th>Stop Location</th>
@@ -29,7 +37,7 @@
                     </tr>
                     <tr>
                         <th>Baggage Per Seat</th>
-                        <td>{{ ride.baggagePerSeat }}</td>
+                        <td>{{ get_baggage_per_seat(ride.baggagePerSeat) }}</td>
                     </tr>
                     <tr>
                         <th>Comment</th>

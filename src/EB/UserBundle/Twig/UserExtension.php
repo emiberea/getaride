@@ -26,6 +26,7 @@ class UserExtension extends \Twig_Extension
             new \Twig_SimpleFunction('get_friend_action', array($this, 'getFriendAction')),
             new \Twig_SimpleFunction('get_ride_action', array($this, 'getRideAction')),
             new \Twig_SimpleFunction('get_accept_user_action', array($this, 'getAcceptUserAction')),
+            new \Twig_SimpleFunction('get_baggage_per_seat', array($this, 'getBaggagePerSeat')),
         );
     }
 
@@ -189,5 +190,35 @@ class UserExtension extends \Twig_Extension
         }
 
         return $result;
+    }
+
+    /**
+     * @param $baggagePerSeat
+     * @return string
+     */
+    public function getBaggagePerSeat($baggagePerSeat)
+    {
+        switch ($baggagePerSeat) {
+            case 0:
+                $baggagePerSeatoStr = 'Without baggage';
+                break;
+            case 1:
+                $baggagePerSeatoStr = 'Small';
+                break;
+            case 2:
+                $baggagePerSeatoStr = 'Medium';
+                break;
+            case 3:
+                $baggagePerSeatoStr = 'Large';
+                break;
+            case 4:
+                $baggagePerSeatoStr = 'Extra-large';
+                break;
+            default:
+                $baggagePerSeatoStr = 'Without baggage';
+                break;
+        }
+
+        return $baggagePerSeatoStr;
     }
 }
