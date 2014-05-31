@@ -1,0 +1,21 @@
+<ul class="nav nav-tabs nav-justified">
+    {% set route = app.request.attributes.get('_route') %}
+    <li class="{{ route == 'ride' ? 'active' }}">
+        <a href="{{ path('ride') }}">
+            <span class="glyphicon glyphicon-th-list"></span>
+            My rides
+        </a>
+    </li>
+    <li class="{{ route == 'ride_show_requested_rides' ? 'active' }}">
+        <a href="{{ path('ride_show_requested_rides') }}">
+            <span class="glyphicon glyphicon-th-list"></span>
+            Requested rides
+        </a>
+    </li>
+    <li class="{{ route == 'ride_search' or route == 'ride_search_results' ? 'active' }}">
+        <a href="{{ path('ride_search') }}">
+            <span class="glyphicon glyphicon-search"></span>
+            Search rides
+        </a>
+    </li>
+</ul>

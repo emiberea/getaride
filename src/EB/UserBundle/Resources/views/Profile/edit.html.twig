@@ -17,6 +17,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <!-- smalot/bootstrap-datetimepicker - Bootstrap DateTime picker -->
     <script type="text/javascript" src="{{ asset('bundles/ebride/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
         $("#fos_user_profile_form_birthDate").datetimepicker({
@@ -33,5 +34,22 @@
             minView: 2,
             endDate: "{{ 'now'|date('Y-m-d H:i') }}"
         });
+    </script>
+    <!-- Google Maps JavaScript API v3 -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4v-bl8lRcjQV7Lu1culp3jbntnZ7NrZo&sensor=false&libraries=places&language=ro"></script>
+    <script type="text/javascript">
+        function initialize() {
+            // locations input fields & options
+            var cityInput = document.getElementById('fos_user_profile_form_city');
+            var autocompleteOptions = {
+                types: ['(cities)'],
+                componentRestrictions: {country: 'ro'}
+            };
+
+            // startLocationAutocomplete & stopLocationAutocomplete
+            var cityAutocomplete = new google.maps.places.Autocomplete(cityInput, autocompleteOptions);
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 {% endblock %}

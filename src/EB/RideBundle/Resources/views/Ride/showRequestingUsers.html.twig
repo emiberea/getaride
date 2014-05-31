@@ -8,8 +8,7 @@
         <thead>
             <tr>
                 <th>Username</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
+                <th>Name</th>
                 <th>City/Town</th>
                 <th>Request Date</th>
                 <th>Actions</th>
@@ -22,17 +21,14 @@
                     <a href="{{ path('eb_user_public_profile', {'username': rideRequest.user.username}) }}">{{ rideRequest.user.username }}</a>
                 </td>
                 <td>
-                    {{ rideRequest.user.firstname }}
-                </td>
-                <td>
-                    {{ rideRequest.user.lastname }}
+                    {{ rideRequest.user.firstname }} {{ rideRequest.user.lastname }}
                 </td>
                 <td>
                     {{ rideRequest.user.city }}
                 </td>
                 <td>
                     {% if rideRequest.requestDate %}
-                        {{ rideRequest.requestDate|date('Y-m-d H:i:s') }}
+                        {{ rideRequest.requestDate|date('d-m-Y H:i') }}
                     {% endif %}
                 </td>
                 <td>
@@ -47,7 +43,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">You have no requesting user that want to join this ride.</td>
+                <td colspan="5">You have no requesting user that want to join this ride.</td>
             </tr>
         {% endfor %}
         </tbody>

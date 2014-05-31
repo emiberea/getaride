@@ -1,0 +1,72 @@
+{% extends '::base.html.twig' %}
+
+{% block content -%}
+    <div class="row">
+        <div class="col-md-8">
+            {% include 'EBRideBundle:Ride/Component:navbar.html.twig' %}
+
+            <h1>Ride - show requested</h1>
+            <h4>Rides attempted by <a href="{{ path('eb_user_public_profile', {'username': app.user.username}) }}">{{ app.user.username }} (me)</a></h4>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Offered By</th>
+                        <th>Id</th>
+                        <th>Start Date</th>
+                        <th>Start Location</th>
+                        <th>Stop Location</th>
+                        <th>Empty Seats No</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rideRequest in pagination %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('eb_user_public_profile', {'username': rideRequest.ride.user.username}) }}">{{ rideRequest.ride.user.username }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ path('ride_show_public', { 'id': rideRequest.ride.id }) }}">{{ rideRequest.ride.id }}</a>
+                            </td>
+                            <td>{% if rideRequest.ride.startDate %}{{ rideRequest.ride.startDate|date('d-m-Y H:i') }}{% endif %}</td>
+                            <td>{{ rideRequest.ride.startLocation }}</td>
+                            <td>{{ rideRequest.ride.stopLocation }}</td>
+                            <td>{{ rideRequest.ride.emptySeatsNo }}</td>
+                            <td>
+                                <span class="label {% if rideRequest.status.name == 'Requested' %}label-warning{% else %}label-success{% endif %}">
+                                    {{ rideRequest.status.name }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        Action <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="{{ path('ride_show_public', { 'id': rideRequest.ride.id }) }}">Show</a></li>
+                                        <li><a href="{{ path('ride_request_chat', { 'id': rideRequest.id }) }}">Chat</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8">You have no rides which you attempted to join.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+
+            <a href="{{ path('ride') }}">
+                Back to the list
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}

@@ -128,32 +128,6 @@ class RideRequestController extends Controller
     }
 
     /**
-     * @Route("/attempted", name="ride_attempted")
-     * @Template()
-     */
-    public function showAttemptedRidesAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $userId = $this->getUser()->getId();
-
-        $dql = "SELECT rr FROM EBRideBundle:RideRequest rr
-                WHERE rr.user = '$userId'";
-        $query = $em->createQuery($dql);
-
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $query,
-            $this->get('request')->query->get('page', 1),
-            10
-        );
-
-        return array(
-            'pagination' => $pagination,
-        );
-    }
-
-    /**
      * @Route("/{id}/chat", name="ride_request_chat")
      */
     public function chatAction($id)
