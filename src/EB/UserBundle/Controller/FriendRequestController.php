@@ -7,8 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
-use EB\MessageBundle\Event\NotificationEvent;
-use EB\MessageBundle\Event\NotificationEvents;
+use EB\CommunicationBundle\Event\NotificationEvent;
+use EB\CommunicationBundle\Event\NotificationEvents;
 use EB\UserBundle\Entity\FriendRequest;
 use EB\UserBundle\Entity\FriendRequestStatus;
 

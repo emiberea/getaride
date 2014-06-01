@@ -1,5 +1,5 @@
 # FOSMessageBundle Configuration
 fos_message:
     db_driver: orm
-    thread_class: EB\MessageBundle\Entity\Thread
-    message_class: EB\MessageBundle\Entity\Message
+    thread_class: EB\CommunicationBundle\Entity\Thread
+    message_class: EB\CommunicationBundle\Entity\Message

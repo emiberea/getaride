@@ -4,7 +4,7 @@ namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use EB\UserBundle\Entity\User;
-use FOS\MessageBundle\Model\Thread;
+use EB\CommunicationBundle\Entity\Thread;
 
 /**
  * RideRequest
@@ -61,7 +61,7 @@ class RideRequest
     /**
      * @var Thread
      *
-     * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="rideRequest")
+     * @ORM\OneToOne(targetEntity="EB\CommunicationBundle\Entity\Thread", inversedBy="rideRequest")
      */
     private $thread;
 
