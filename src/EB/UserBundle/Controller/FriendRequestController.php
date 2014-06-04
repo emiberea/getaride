@@ -7,8 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
-use EB\RideBundle\Event\NotificationEvent;
-use EB\RideBundle\Event\NotificationEvents;
+use EB\CommunicationBundle\Event\NotificationEvent;
+use EB\CommunicationBundle\Event\NotificationEvents;
 use EB\UserBundle\Entity\FriendRequest;
 use EB\UserBundle\Entity\FriendRequestStatus;
 
@@ -46,8 +46,7 @@ class FriendRequestController extends Controller
             // dispatching the FRIEND_REQUEST_SENT event, which triggers the listener to send also a mail to the receiver user of that friendRequest
             $dispatcher = $this->get('event_dispatcher');
             $dispatcher->dispatch(NotificationEvents::FRIEND_REQUEST_SENT, new NotificationEvent(array(
-                'fr_sender' => $sender,
-                'fr_receiver' => $receiver,
+                'friend_request' => $friendRequest,
             )));
 
             return new Response('sent-ok');
@@ -78,8 +77,7 @@ class FriendRequestController extends Controller
             // dispatching the FRIEND_REQUEST_ACCEPTED event, which triggers the listener to send also a mail to the receiver user of that friendRequest
             $dispatcher = $this->get('event_dispatcher');
             $dispatcher->dispatch(NotificationEvents::FRIEND_REQUEST_ACCEPTED, new NotificationEvent(array(
-                'fr_sender' => $friendRequest->getSender(),
-                'fr_receiver' => $friendRequest->getReceiver(),
+                'friend_request' => $friendRequest,
             )));
 
             return new Response('accept-ok');

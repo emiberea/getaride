@@ -1,6 +1,6 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% form_theme form 'EBUserBundle:Form:fields.html.twig' %}
+{% form_theme form 'EBRideBundle:Form:fields.html.twig' %}
 
 <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" role="form">
     <div class="form-group">

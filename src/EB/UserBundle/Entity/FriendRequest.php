@@ -3,6 +3,8 @@
 namespace EB\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use EB\CommunicationBundle\Entity\Notification;
 
 /**
  * FriendRequest
@@ -62,6 +64,19 @@ class FriendRequest
      * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\FriendRequestStatus", inversedBy="friendRequests")
      */
     private $status;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\CommunicationBundle\Entity\Notification", mappedBy="friendRequest")
+     */
+    private $notifications;
+
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+    }
 
 
     /**
@@ -186,5 +201,35 @@ class FriendRequest
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function addNotification(Notification $notification)
+    {
+        $this->notifications->add($notification);
+
+        return $this;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function removeNotification(Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
+
+        return $this;
     }
 }

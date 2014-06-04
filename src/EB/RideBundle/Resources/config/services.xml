@@ -19,14 +19,10 @@
     -->
 
     <services>
-        <service id="eb_ride.mailer.service" class="EB\RideBundle\Service\MailerService">
-            <argument type="service" id="mailer" />
-            <argument type="service" id="twig" />
-        </service>
-        <service id="eb_ride.notification.listener" class="EB\RideBundle\EventListener\NotificationListener">
-            <argument type="service" id="router" />
-            <argument type="service" id="eb_ride.mailer.service" />
-            <tag name="kernel.event_subscriber" />
+        <!-- EBRideBundle twig extension service -->
+        <service id="eb_ride.twig.eb_ride_extension" class="EB\RideBundle\Twig\RideExtension">
+            <tag name="twig.extension" />
+            <argument type="service" id="service_container" />
         </service>
     </services>
 </container>

@@ -3,8 +3,10 @@
 namespace EB\RideBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use EB\UserBundle\Entity\User;
-use FOS\MessageBundle\Model\Thread;
+use EB\CommunicationBundle\Entity\Thread;
+use EB\CommunicationBundle\Entity\Notification;
 
 /**
  * RideRequest
@@ -61,9 +63,22 @@ class RideRequest
     /**
      * @var Thread
      *
-     * @ORM\OneToOne(targetEntity="EB\MessageBundle\Entity\Thread", inversedBy="rideRequest")
+     * @ORM\OneToOne(targetEntity="EB\CommunicationBundle\Entity\Thread", inversedBy="rideRequest")
      */
     private $thread;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\CommunicationBundle\Entity\Notification", mappedBy="rideRequest")
+     */
+    private $notifications;
+
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+    }
 
 
     /**
@@ -188,5 +203,35 @@ class RideRequest
     public function getThread()
     {
         return $this->thread;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function addNotification(Notification $notification)
+    {
+        $this->notifications->add($notification);
+
+        return $this;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function removeNotification(Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
+
+        return $this;
     }
 }

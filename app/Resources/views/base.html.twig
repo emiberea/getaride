@@ -148,12 +148,21 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="{{ route == 'notification' ? 'active' }}">
+                                    <a href="{{ path('notification') }}">
+                                        <span class="glyphicon glyphicon-bell"></span>
+                                        {% set unread_notification_no = count_unread_notification(app.user) %}
+                                        {% if unread_notification_no != 0 %}
+                                            <span class="label label-danger">{{ unread_notification_no }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
                                 <li class="dropdown {{ 'fos_message' in route ? 'active' }}">
                                     <a href="{{ path('fos_message_inbox') }}" class="dropdown-toggle" data-toggle="dropdown">
                                         <span class="glyphicon glyphicon-envelope"></span>
                                         Messages
                                         {% if fos_message_nb_unread() != 0 %}
-                                            <span class="badge">{{ fos_message_nb_unread() }}</span>
+                                            <span class="label label-danger">{{ fos_message_nb_unread() }}</span>
                                         {% endif %}
                                         <b class="caret"></b>
                                     </a>

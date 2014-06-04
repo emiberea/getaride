@@ -1,5 +1,5 @@
-eb_message:
-    resource: "@EBMessageBundle/Controller/"
+eb_communication:
+    resource: "@EBCommunicationBundle/Controller/"
     type:     annotation
     prefix:   /
 

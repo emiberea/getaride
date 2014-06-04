@@ -27,9 +27,9 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 
             // application bundles
+            new EB\CommunicationBundle\EBCommunicationBundle(),
             new EB\RideBundle\EBRideBundle(),
             new EB\UserBundle\EBUserBundle(),
-            new EB\MessageBundle\EBMessageBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

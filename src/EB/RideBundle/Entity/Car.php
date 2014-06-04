@@ -67,6 +67,8 @@ class Car
     private $hasAirConditioning;
 
     /**
+     * @var User
+     *
      * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="cars")
      */
     private $user;
