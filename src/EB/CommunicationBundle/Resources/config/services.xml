@@ -25,8 +25,15 @@
         </service>
         <service id="eb_communication.notification.listener" class="EB\CommunicationBundle\EventListener\NotificationListener">
             <argument type="service" id="router" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="eb_communication.mailer.service" />
             <tag name="kernel.event_subscriber" />
+        </service>
+
+        <!-- EBCommunicationBundle twig extension service -->
+        <service id="eb_communication.twig.eb_communication_extension" class="EB\CommunicationBundle\Twig\CommunicationExtension">
+            <tag name="twig.extension" />
+            <argument type="service" id="service_container" />
         </service>
     </services>
 </container>

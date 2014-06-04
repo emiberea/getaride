@@ -46,8 +46,7 @@ class FriendRequestController extends Controller
             // dispatching the FRIEND_REQUEST_SENT event, which triggers the listener to send also a mail to the receiver user of that friendRequest
             $dispatcher = $this->get('event_dispatcher');
             $dispatcher->dispatch(NotificationEvents::FRIEND_REQUEST_SENT, new NotificationEvent(array(
-                'fr_sender' => $sender,
-                'fr_receiver' => $receiver,
+                'friend_request' => $friendRequest,
             )));
 
             return new Response('sent-ok');
@@ -78,8 +77,7 @@ class FriendRequestController extends Controller
             // dispatching the FRIEND_REQUEST_ACCEPTED event, which triggers the listener to send also a mail to the receiver user of that friendRequest
             $dispatcher = $this->get('event_dispatcher');
             $dispatcher->dispatch(NotificationEvents::FRIEND_REQUEST_ACCEPTED, new NotificationEvent(array(
-                'fr_sender' => $friendRequest->getSender(),
-                'fr_receiver' => $friendRequest->getReceiver(),
+                'friend_request' => $friendRequest,
             )));
 
             return new Response('accept-ok');

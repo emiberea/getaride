@@ -1,0 +1,115 @@
+{% extends '::base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <h1>Notifications page</h1>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>User</th>
+                        <th>Date</th>
+                        <th>Notification text</th>
+                        <th>Is read</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for notification in pagination %}
+                    <tr>
+                        <td>{{ notification.id }}</td>
+                        <td>
+                            <a href="{{ path('eb_user_public_profile', {'username': notification.initiatorUser.username}) }}">
+                                {{ notification.initiatorUser.username }}
+                            </a>
+                        </td>
+                        <td>{% if notification.date %}{{ notification.date|date('d-m-Y H:i') }}{% endif %}</td>
+                        <td>
+                            {{ print_notif_text(notification)|raw }}
+                            <a href="{{ path('notification_redirect', {'id': notification.id}) }}">here</a>
+                        </td>
+                        <td>
+                            {% if notification.isRead == false %}
+                                <span class="label label-danger not-read">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                    <span class="status-text">
+                                        NO
+                                    </span>
+                                </span>
+                            {% else %}
+                                <span class="label label-success">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                    YES
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                    Action <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    {% if notification.isRead == false %}
+                                        <li>
+                                            <a href="{{ path('notification_read', {'id': notification.id}) }}" class="action-read">Mark as read</a>
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        <a href="{{ path('notification_delete', {'id': notification.id}) }}" class="action-delete">Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6">You have no notifications.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // handling the read button click
+            $(".action-read").click(function(e) {
+                e.preventDefault();
+                var that = $(this);
+
+                $.get($(this).attr("href"), function(data) {
+                    if (data == "notification-read-ok") {
+                        that.closest("td").prev().children(".not-read").removeClass("label-danger").addClass("label-success");
+                        that.closest("td").prev().children(".not-read").children(".glyphicon").removeClass("glyphicon-remove").addClass("glyphicon-ok");
+                        that.closest("td").prev().children(".not-read").children(".status-text").html("YES");
+                        that.remove();
+                    }
+                });
+            });
+
+            // handling the delete button click
+            $(".action-delete").click(function(e) {
+                e.preventDefault();
+                var that = $(this);
+
+                $.get($(this).attr("href"), function(data) {
+                    if (data == "notification-delete-ok") {
+                        that.closest("tr").remove();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

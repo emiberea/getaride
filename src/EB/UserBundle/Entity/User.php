@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use FOS\MessageBundle\Model\ParticipantInterface;
+use EB\CommunicationBundle\Entity\Notification;
 use EB\RideBundle\Entity\Car;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideRequest;
@@ -223,6 +224,20 @@ class User extends BaseUser implements ParticipantInterface
      */
     private $friendResponses;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\CommunicationBundle\Entity\Notification", mappedBy="initiatorUser")
+     */
+    private $notificationsInitiated;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\CommunicationBundle\Entity\Notification", mappedBy="receiverUser")
+     */
+    private $notificationsReceived;
+
 
     public function __construct()
     {
@@ -232,11 +247,13 @@ class User extends BaseUser implements ParticipantInterface
         $this->rideRequests = new ArrayCollection();
         $this->friendRequests = new ArrayCollection();
         $this->friendResponses = new ArrayCollection();
+        $this->notificationsInitiated = new ArrayCollection();
+        $this->notificationsReceived = new ArrayCollection();
     }
 
     public function __toString()
     {
-        return $this->firstname . ' ' . $this->getLastname();
+        return $this->firstname . ' ' . $this->lastname;
     }
 
 
@@ -293,7 +310,7 @@ class User extends BaseUser implements ParticipantInterface
      */
     public function getFullname()
     {
-        return $this->firstname . ' ' . $this->getLastname();
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     /**
@@ -849,6 +866,66 @@ class User extends BaseUser implements ParticipantInterface
     public function removeFriendResponse(FriendRequest $friendResponse)
     {
         $this->friendResponses->removeElement($friendResponse);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotificationsInitiated()
+    {
+        return $this->notificationsInitiated;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function addNotificationInitiated(Notification $notification)
+    {
+        $this->notificationsInitiated->add($notification);
+
+        return $this;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function removeNotificationInitiated(Notification $notification)
+    {
+        $this->notificationsInitiated->removeElement($notification);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotificationsReceived()
+    {
+        return $this->notificationsReceived;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function addNotificationReceived(Notification $notification)
+    {
+        $this->notificationsReceived->add($notification);
+
+        return $this;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return $this
+     */
+    public function removeNotificationReceived(Notification $notification)
+    {
+        $this->notificationsReceived->removeElement($notification);
 
         return $this;
     }

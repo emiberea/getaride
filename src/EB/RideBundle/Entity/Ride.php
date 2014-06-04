@@ -48,7 +48,7 @@ class Ride
     /**
      * @var string
      *
-     * @ORM\Column(name="start_location_LatLng", type="text", nullable=true)
+     * @ORM\Column(name="start_location_LatLng", type="string", length=255, nullable=true)
      */
     private $startLocationLatLng;
 
@@ -69,7 +69,7 @@ class Ride
     /**
      * @var string
      *
-     * @ORM\Column(name="stop_location_LatLng", type="text", nullable=true)
+     * @ORM\Column(name="stop_location_LatLng", type="string", length=255, nullable=true)
      */
     private $stopLocationLatLng;
 
