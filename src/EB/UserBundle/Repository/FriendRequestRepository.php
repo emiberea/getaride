@@ -3,6 +3,8 @@
 namespace EB\UserBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use EB\UserBundle\Entity\FriendRequestStatus;
+use EB\UserBundle\Entity\User;
 
 /**
  * FriendRequestRepository
@@ -12,4 +14,30 @@ use Doctrine\ORM\EntityRepository;
  */
 class FriendRequestRepository extends EntityRepository
 {
+    /**
+     * @param User $user
+     * @return mixed
+     */
+    public function countAcceptedFriendRequestsByUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('fr');
+        $qb->select(
+            $qb->expr()->count('fr.id')
+        );
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->orX(
+                    $qb->expr()->eq('fr.sender', ':user'),
+                    $qb->expr()->eq('fr.receiver', ':user')
+                ),
+                $qb->expr()->eq('fr.status', ':status')
+            )
+        );
+        $qb->setParameters(array(
+            'user' => $user,
+            'status' => FriendRequestStatus::ACCEPTED,
+        ));
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

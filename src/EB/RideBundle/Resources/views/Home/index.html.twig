@@ -2,11 +2,107 @@
 
 {% block content %}
     <div class="row">
+        <div class="col-md-2"></div>
         <div class="col-md-8">
-            <h1>Welcome to the Home:index page</h1>
+            {% if app.user %}
+                <div class="well">
+                    <h2>Welcome back, {{ app.user.fullname }}</h2>
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% if app.user.googlePictureLink %}
+                                <img src="{{ app.user.googlePictureLink }}" alt="Google profile picture" class="img-responsive img-rounded" />
+                            {% elseif app.user.facebookPictureLink %}
+                                <img src="{{ app.user.facebookPictureLink }}" alt="Facebook profile picture" class="img-responsive img-rounded" />
+                            {% else %}
+                                <img src="{{ asset('bundles/ebride/images/profile_default.jpg') }}" alt="Facebook profile picture" class="img-responsive img-rounded" />
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h4>Friends #: {{ friendsNo }}</h4>
+                            <h4>My Rides #: {{ ridesNo }}</h4>
+                            <h4>Requested Rides #: {{ rideRequestsNo }}</h4>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="jumbotron">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h1>Get-a-Ride</h1>
+                        </div>
+                        <div class="col-md-5">
+                            <img src="{{ asset('bundles/ebride/images/home_logo.png') }}" alt="Get-a-Ride" class="img-responsive pull-right" />
+                        </div>
+                    </div>
+                    <p>Social ride-sharing reinvented!</p>
+                    <p>Find persons that travel to the same location as you. Save money and make new friends in the same time!</p>
+                    <p>Join our social ride-sharing network, right now!</p>
+                    <p><a href="{{ path('fos_user_registration_register') }}" class="btn btn-primary btn-lg">Register now</a></p>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h2>Advantages</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    You can meet new people, talk about your interests, you don't get bored.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    You won't have to travel alone and unhappy. Travel and socialise in the same time.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    You can save a lot of money by sharing the cost of the ride with the other passengers.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    You can avoid the crowd and don't have to wait in line for tickets.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    It's more cheap that any other way to travel. It's fun and you'll save more money for yourself.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    It's also friendly for the environment, reducing traffic congestion and the air pollution.
+                </li>
+            </ul>
         </div>
         <div class="col-md-4">
-            <p>Aside index</p>
+            <h2>Features</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-star"></span>
+                    Find rides between all the major cities and towns across the country.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-star"></span>
+                    Search for other people that have the same interests as you.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-star"></span>
+                    It is 100% social. Your can login with you favourite social network existing account.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-star"></span>
+                    Facebook and Google+ included. More to come. Soon on iOS, Android and Windows Phone.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-star"></span>
+                    You'll always find a ride between the locations you want with right people.
+                </li>
+                <li class="list-group-item">
+                    <span class="glyphicon glyphicon-star"></span>
+                    Integrated with Google Maps API, for an easier way to find the exact road you want to go on.
+                </li>
+            </ul>
         </div>
+        <div class="col-md-2"></div>
     </div>
 {% endblock %}
