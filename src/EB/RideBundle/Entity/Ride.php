@@ -5,6 +5,7 @@ namespace EB\RideBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use EB\RideBundle\Entity\Car;
+use EB\RideBundle\Entity\Rating;
 use EB\UserBundle\Entity\User;
 
 /**
@@ -116,13 +117,6 @@ class Ride
     private $user;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="RideRequest", mappedBy="ride")
-     */
-    private $rideRequests;
-
-    /**
      * @var Car
      *
      * @ORM\ManyToOne(targetEntity="Car", inversedBy="rides")
@@ -136,10 +130,25 @@ class Ride
      */
     private $rideStatus;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="RideRequest", mappedBy="ride")
+     */
+    private $rideRequests;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="ride")
+     */
+    private $ratings;
+
 
     public function __construct()
     {
         $this->rideRequests = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
 
@@ -429,36 +438,6 @@ class Ride
     }
 
     /**
-     * @return ArrayCollection
-     */
-    public function getRideRequests()
-    {
-        return $this->rideRequests;
-    }
-
-    /**
-     * @param RideRequest $rideRequest
-     * @return $this
-     */
-    public function addRideRequest(RideRequest $rideRequest)
-    {
-        $this->rideRequests->add($rideRequest);
-
-        return $this;
-    }
-
-    /**
-     * @param RideRequest $rideRequest
-     * @return $this
-     */
-    public function removeRideRequest(RideRequest $rideRequest)
-    {
-        $this->rideRequests->removeElement($rideRequest);
-
-        return $this;
-    }
-
-    /**
      * @param Car $car
      * @return $this
      */
@@ -494,5 +473,65 @@ class Ride
     public function getRideStatus()
     {
         return $this->rideStatus;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRideRequests()
+    {
+        return $this->rideRequests;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function addRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->add($rideRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function removeRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->removeElement($rideRequest);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function addRating(Rating $rating)
+    {
+        $this->ratings->add($rating);
+
+        return $this;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function removeRating(Rating $rating)
+    {
+        $this->ratings->removeElement($rating);
+
+        return $this;
     }
 }

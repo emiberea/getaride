@@ -8,6 +8,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use FOS\MessageBundle\Model\ParticipantInterface;
 use EB\CommunicationBundle\Entity\Notification;
 use EB\RideBundle\Entity\Car;
+Use EB\RideBundle\Entity\Rating;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideRequest;
 
@@ -238,6 +239,20 @@ class User extends BaseUser implements ParticipantInterface
      */
     private $notificationsReceived;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\RideBundle\Entity\Rating", mappedBy="awardingUser")
+     */
+    private $ratingsAwarded;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EB\RideBundle\Entity\Rating", mappedBy="receiverUser")
+     */
+    private $ratingsReceived;
+
 
     public function __construct()
     {
@@ -249,6 +264,8 @@ class User extends BaseUser implements ParticipantInterface
         $this->friendResponses = new ArrayCollection();
         $this->notificationsInitiated = new ArrayCollection();
         $this->notificationsReceived = new ArrayCollection();
+        $this->ratingsAwarded = new ArrayCollection();
+        $this->ratingsReceived = new ArrayCollection();
     }
 
     public function __toString()
@@ -926,6 +943,66 @@ class User extends BaseUser implements ParticipantInterface
     public function removeNotificationReceived(Notification $notification)
     {
         $this->notificationsReceived->removeElement($notification);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRatingsAwarded()
+    {
+        return $this->ratingsAwarded;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function addRatingAwarded(Rating $rating)
+    {
+        $this->ratingsAwarded->add($rating);
+
+        return $this;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function removeRatingAwarded(Rating $rating)
+    {
+        $this->ratingsAwarded->removeElement($rating);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRatingsReceived()
+    {
+        return $this->ratingsReceived;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function addRatingReceived(Rating $rating)
+    {
+        $this->ratingsReceived->add($rating);
+
+        return $this;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function removeRatingReceived(Rating $rating)
+    {
+        $this->ratingsReceived->removeElement($rating);
 
         return $this;
     }
