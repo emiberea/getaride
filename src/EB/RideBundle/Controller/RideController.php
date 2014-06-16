@@ -394,8 +394,10 @@ class RideController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Ride $ride */
         $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
@@ -404,6 +406,8 @@ class RideController extends Controller
         if (!$ride) {
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
+
+        $waypointsArr = json_decode($ride->getWaypointsStr(), true);
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($ride);
@@ -416,9 +420,10 @@ class RideController extends Controller
         }
 
         return array(
-            'ride'        => $ride,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'ride'         => $ride,
+            'waypointsArr' => $waypointsArr,
+            'edit_form'    => $editForm->createView(),
+            'delete_form'  => $deleteForm->createView(),
         );
     }
 

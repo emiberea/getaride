@@ -54,6 +54,10 @@
                     {{ form_errors(edit_form.baggagePerSeat) }}
                 </div>
                 <div class="form-group">
+                    {{ form_widget(edit_form.pricePerSeat, {attr: {placeholder: 'Price Per Seat'}}) }}
+                    {{ form_errors(edit_form.pricePerSeat) }}
+                </div>
+                <div class="form-group">
                     {{ form_widget(edit_form.comment, {attr: {placeholder: 'Comment'}}) }}
                     {{ form_errors(edit_form.comment) }}
                 </div>

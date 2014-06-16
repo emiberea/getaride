@@ -54,6 +54,7 @@ class RideType extends AbstractType
                     '4' => 'Extra-large',
                 ),
             ))
+            ->add('pricePerSeat')
             ->add('comment', 'textarea', array(
                 'required' => false,
             ))

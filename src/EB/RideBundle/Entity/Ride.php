@@ -88,6 +88,13 @@ class Ride
     private $baggagePerSeat;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="price_per_seat", type="smallint", options={"default":0})
+     */
+    private $pricePerSeat = 0;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="comment", type="string", length=255, nullable=true)
@@ -339,6 +346,25 @@ class Ride
     public function getBaggagePerSeat()
     {
         return $this->baggagePerSeat;
+    }
+
+    /**
+     * @param int $pricePerSeat
+     * @return $this
+     */
+    public function setPricePerSeat($pricePerSeat)
+    {
+        $this->pricePerSeat = $pricePerSeat;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPricePerSeat()
+    {
+        return $this->pricePerSeat;
     }
 
     /**
