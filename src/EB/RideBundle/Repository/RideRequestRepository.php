@@ -4,6 +4,7 @@ namespace EB\RideBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use EB\RideBundle\Entity\Ride;
+use EB\RideBundle\Entity\RideRequestStatus;
 use EB\UserBundle\Entity\User;
 
 /**
@@ -34,5 +35,30 @@ class RideRequestRepository extends EntityRepository
         ));
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @param $status
+     * @return mixed
+     */
+    public function countRideRequestsByUserAndStatus(User $user, $status)
+    {
+        $qb = $this->createQueryBuilder('rr');
+        $qb->select(
+            $qb->expr()->count('rr.id')
+        );
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('rr.user', ':user'),
+                $qb->expr()->eq('rr.status', ':status')
+            )
+        );
+        $qb->setParameters(array(
+            'user' => $user,
+            'status' => $status,
+        ));
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }
