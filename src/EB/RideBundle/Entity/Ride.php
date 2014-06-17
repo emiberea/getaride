@@ -137,18 +137,10 @@ class Ride
      */
     private $rideRequests;
 
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Rating", mappedBy="ride")
-     */
-    private $ratings;
-
 
     public function __construct()
     {
         $this->rideRequests = new ArrayCollection();
-        $this->ratings = new ArrayCollection();
     }
 
 
@@ -501,36 +493,6 @@ class Ride
     public function removeRideRequest(RideRequest $rideRequest)
     {
         $this->rideRequests->removeElement($rideRequest);
-
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getRatings()
-    {
-        return $this->ratings;
-    }
-
-    /**
-     * @param Rating $rating
-     * @return $this
-     */
-    public function addRating(Rating $rating)
-    {
-        $this->ratings->add($rating);
-
-        return $this;
-    }
-
-    /**
-     * @param Rating $rating
-     * @return $this
-     */
-    public function removeRating(Rating $rating)
-    {
-        $this->ratings->removeElement($rating);
 
         return $this;
     }

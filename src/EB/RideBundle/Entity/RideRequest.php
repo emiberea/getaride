@@ -40,6 +40,20 @@ class RideRequest
     private $acceptDate;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="has_driver_rating", type="boolean", options={"default":false})
+     */
+    private $hasDriverRating = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="has_passenger_rating", type="boolean", options={"default":false})
+     */
+    private $hasPassengerRating = false;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="rideRequests")
@@ -74,10 +88,18 @@ class RideRequest
      */
     private $notifications;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="rideRequest")
+     */
+    private $ratings;
+
 
     public function __construct()
     {
         $this->notifications = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
 
@@ -127,6 +149,44 @@ class RideRequest
     public function getAcceptDate()
     {
         return $this->acceptDate;
+    }
+
+    /**
+     * @param boolean $hasDriverRating
+     * @return $this
+     */
+    public function setHasDriverRating($hasDriverRating)
+    {
+        $this->hasDriverRating = $hasDriverRating;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasDriverRating()
+    {
+        return $this->hasDriverRating;
+    }
+
+    /**
+     * @param boolean $hasPassengerRating
+     * @return $this
+     */
+    public function setHasPassengerRating($hasPassengerRating)
+    {
+        $this->hasPassengerRating = $hasPassengerRating;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getHasPassengerRating()
+    {
+        return $this->hasPassengerRating;
     }
 
     /**
@@ -231,6 +291,36 @@ class RideRequest
     public function removeNotification(Notification $notification)
     {
         $this->notifications->removeElement($notification);
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRatings()
+    {
+        return $this->ratings;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function addRating(Rating $rating)
+    {
+        $this->ratings->add($rating);
+
+        return $this;
+    }
+
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
+    public function removeRating(Rating $rating)
+    {
+        $this->ratings->removeElement($rating);
 
         return $this;
     }

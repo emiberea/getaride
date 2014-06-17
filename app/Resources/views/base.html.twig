@@ -106,23 +106,53 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="{{ route == 'home_rules' ? 'active' }}">
-                                    <a href="{{ path('home_rules') }}">
-                                        <span class="glyphicon glyphicon-list-alt"></span>
-                                        Rules
+                                <li class="dropdown {{ 'rating' in route ? 'active' }}">
+                                    <a href="{{ path('rating_awarded') }}" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-stats"></span>
+                                        Ratings
+                                        <b class="caret"></b>
                                     </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="{{ path('rating_awarded') }}">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                                Awarded Ratings
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('rating_received' )}}">
+                                                <span class="glyphicon glyphicon-th-list"></span>
+                                                Received Ratings
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li class="{{ route == 'home_contact' ? 'active' }}">
-                                    <a href="{{ path('home_contact') }}">
-                                        <span class="glyphicon glyphicon-globe"></span>
-                                        Contact
-                                    </a>
-                                </li>
-                                <li class="{{ route == 'home_about' ? 'active' }}">
-                                    <a href="{{ path('home_about') }}">
+                                <li class="dropdown {{ 'home' in route and route != 'home_index' ? 'active' }}">
+                                    <a href="{{ path('home_about') }}" class="dropdown-toggle" data-toggle="dropdown">
                                         <span class="glyphicon glyphicon-info-sign"></span>
-                                        About
+                                        About us
+                                        <b class="caret"></b>
                                     </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="{{ route == 'home_rules' ? 'active' }}">
+                                            <a href="{{ path('home_rules') }}">
+                                                <span class="glyphicon glyphicon-list-alt"></span>
+                                                Rules
+                                            </a>
+                                        </li>
+                                        <li class="{{ route == 'home_contact' ? 'active' }}">
+                                            <a href="{{ path('home_contact') }}">
+                                                <span class="glyphicon glyphicon-globe"></span>
+                                                Contact
+                                            </a>
+                                        </li>
+                                        <li class="{{ route == 'home_about' ? 'active' }}">
+                                            <a href="{{ path('home_about') }}">
+                                                <span class="glyphicon glyphicon-info-sign"></span>
+                                                About
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">

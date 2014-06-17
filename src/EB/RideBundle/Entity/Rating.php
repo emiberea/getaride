@@ -26,37 +26,44 @@ class Rating
     /**
      * @var integer
      *
-     * @ORM\Column(name="punctuality_mark", type="smallint")
+     * @ORM\Column(name="punctuality_score", type="smallint")
      */
-    private $punctualityMark;
+    private $punctualityScore;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="agreement_mark", type="smallint")
+     * @ORM\Column(name="agreement_score", type="smallint")
      */
-    private $agreementMark;
+    private $agreementScore;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="driving_mark", type="smallint")
+     * @ORM\Column(name="driving_score", type="smallint")
      */
-    private $drivingMark;
+    private $drivingScore;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="sociability_mark", type="smallint")
+     * @ORM\Column(name="sociability_score", type="smallint")
      */
-    private $sociabilityMark;
+    private $sociabilityScore;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="music_mark", type="smallint")
+     * @ORM\Column(name="music_score", type="smallint")
      */
-    private $musicMark;
+    private $musicScore;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="total_score", type="decimal", precision=5, scale=2)
+     */
+    private $totalScore;
 
     /**
      * @var string
@@ -64,6 +71,13 @@ class Rating
      * @ORM\Column(name="comment", type="string", length=255, nullable=true)
      */
     private $comment;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
 
     /**
      * @var User
@@ -80,11 +94,11 @@ class Rating
     private $receiverUser;
 
     /**
-     * @var Ride
+     * @var RideRequest
      *
-     * @ORM\ManyToOne(targetEntity="Ride", inversedBy="ratings")
+     * @ORM\ManyToOne(targetEntity="RideRequest", inversedBy="ratings")
      */
-    private $ride;
+    private $rideRequest;
 
 
     /**
@@ -98,12 +112,12 @@ class Rating
     }
 
     /**
-     * @param int $punctualityMark
+     * @param int $punctualityScore
      * @return $this
      */
-    public function setPunctualityMark($punctualityMark)
+    public function setPunctualityScore($punctualityScore)
     {
-        $this->punctualityMark = $punctualityMark;
+        $this->punctualityScore = $punctualityScore;
 
         return $this;
     }
@@ -111,18 +125,18 @@ class Rating
     /**
      * @return int
      */
-    public function getPunctualityMark()
+    public function getPunctualityScore()
     {
-        return $this->punctualityMark;
+        return $this->punctualityScore;
     }
 
     /**
-     * @param int $agreementMark
+     * @param int $agreementScore
      * @return $this
      */
-    public function setAgreementMark($agreementMark)
+    public function setAgreementScore($agreementScore)
     {
-        $this->agreementMark = $agreementMark;
+        $this->agreementScore = $agreementScore;
 
         return $this;
     }
@@ -130,18 +144,18 @@ class Rating
     /**
      * @return int
      */
-    public function getAgreementMark()
+    public function getAgreementScore()
     {
-        return $this->agreementMark;
+        return $this->agreementScore;
     }
 
     /**
-     * @param int $drivingMark
+     * @param int $drivingScore
      * @return $this
      */
-    public function setDrivingMark($drivingMark)
+    public function setDrivingScore($drivingScore)
     {
-        $this->drivingMark = $drivingMark;
+        $this->drivingScore = $drivingScore;
 
         return $this;
     }
@@ -149,18 +163,18 @@ class Rating
     /**
      * @return int
      */
-    public function getDrivingMark()
+    public function getDrivingScore()
     {
-        return $this->drivingMark;
+        return $this->drivingScore;
     }
 
     /**
-     * @param int $sociabilityMark
+     * @param int $sociabilityScore
      * @return $this
      */
-    public function setSociabilityMark($sociabilityMark)
+    public function setSociabilityScore($sociabilityScore)
     {
-        $this->sociabilityMark = $sociabilityMark;
+        $this->sociabilityScore = $sociabilityScore;
 
         return $this;
     }
@@ -168,18 +182,18 @@ class Rating
     /**
      * @return int
      */
-    public function getSociabilityMark()
+    public function getSociabilityScore()
     {
-        return $this->sociabilityMark;
+        return $this->sociabilityScore;
     }
 
     /**
-     * @param int $musicMark
+     * @param int $musicScore
      * @return $this
      */
-    public function setMusicMark($musicMark)
+    public function setMusicScore($musicScore)
     {
-        $this->musicMark = $musicMark;
+        $this->musicScore = $musicScore;
 
         return $this;
     }
@@ -187,16 +201,33 @@ class Rating
     /**
      * @return int
      */
-    public function getMusicMark()
+    public function getMusicScore()
     {
-        return $this->musicMark;
+        return $this->musicScore;
     }
 
     /**
-     * Set comment
-     *
+     * @param float $totalScore
+     * @return $this
+     */
+    public function setTotalScore($totalScore)
+    {
+        $this->totalScore = $totalScore;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalScore()
+    {
+        return $this->totalScore;
+    }
+
+    /**
      * @param string $comment
-     * @return Ride
+     * @return $this
      */
     public function setComment($comment)
     {
@@ -206,13 +237,30 @@ class Rating
     }
 
     /**
-     * Get comment
-     *
      * @return string
      */
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return $this
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 
     /**
@@ -254,21 +302,21 @@ class Rating
     }
 
     /**
-     * @param Ride $ride
+     * @param RideRequest $rideRequest
      * @return $this
      */
-    public function setRide($ride)
+    public function setRideRequest($rideRequest)
     {
-        $this->ride = $ride;
+        $this->rideRequest = $rideRequest;
 
         return $this;
     }
 
     /**
-     * @return Ride
+     * @return RideRequest
      */
-    public function getRide()
+    public function getRideRequest()
     {
-        return $this->ride;
+        return $this->rideRequest;
     }
 }

@@ -19,6 +19,8 @@
     -->
 
     <services>
+        <service id="eb_ride.ride.service" class="EB\RideBundle\Service\RideService">
+        </service>
         <!-- EBRideBundle twig extension service -->
         <service id="eb_ride.twig.eb_ride_extension" class="EB\RideBundle\Twig\RideExtension">
             <tag name="twig.extension" />

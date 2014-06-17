@@ -196,7 +196,8 @@ class RideController extends Controller
         $userId = $this->getUser()->getId();
 
         $dql = "SELECT rr FROM EBRideBundle:RideRequest rr
-                WHERE rr.user = '$userId'";
+                WHERE rr.user = '$userId'
+                ORDER BY rr.id DESC";
         $query = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');

@@ -53,14 +53,16 @@
                 </tbody>
             </table>
 
-            {% set ride_action = get_ride_action(app.user, ride) %}
-            <a href="{{ ride_action.route }}" class="btn {{ ride_action.btn_style }}">
-                {{ ride_action.text }}
-            </a>
-            {% if rideRequest is not null %}
-                <a href="{{ path('ride_request_chat', {'id': rideRequest.id}) }}" class="btn btn-default">
-                    Chat
+            {% if app.user != ride.user %}
+                {% set ride_action = get_ride_action(app.user, ride) %}
+                <a href="{{ ride_action.route }}" class="btn {{ ride_action.btn_style }}">
+                    {{ ride_action.text }}
                 </a>
+                {% if rideRequest is not null %}
+                    <a href="{{ path('ride_request_chat', {'id': rideRequest.id}) }}" class="btn btn-default">
+                        Chat
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
         <div class="col-md-8" id="map-canvas" style="height: 600px;"></div>
