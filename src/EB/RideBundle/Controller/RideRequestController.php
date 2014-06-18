@@ -192,13 +192,14 @@ class RideRequestController extends Controller
 
             if ($request->isMethod('POST')) {
                 if ($form->isValid()) {
-                    // setting the totalScore for the $rating
-                    $scoreArr = array();
-                    $scoreArr['punctualityScore'] = $form->get('punctualityScore')->getData();
-                    $scoreArr['agreementScore']   = $form->get('agreementScore')->getData();
-                    $scoreArr['drivingScore']     = $form->get('drivingScore')->getData();
-                    $scoreArr['sociabilityScore'] = $form->get('sociabilityScore')->getData();
-                    $scoreArr['musicScore']       = $form->get('musicScore')->getData();
+                    // setting the totalScore for the rating
+                    $scoreArr = array(
+                        'punctualityScore' => $form->get('punctualityScore')->getData(),
+                        'agreementScore'   => $form->get('agreementScore')->getData(),
+                        'drivingScore'     => $form->get('drivingScore')->getData(),
+                        'sociabilityScore' => $form->get('sociabilityScore')->getData(),
+                        'musicScore'       => $form->get('musicScore')->getData(),
+                    );
                     $totalScore = $this->get('eb_ride.ride.service')->computeAverage($scoreArr);
 
                     $rating->setTotalScore($totalScore);
@@ -214,12 +215,21 @@ class RideRequestController extends Controller
                     $em->persist($rating);
                     $em->flush();
 
+                    // dispatching the RATING_AWARDED event, which triggers the listener to send a notification to the user that will receive the rating
+                    $dispatcher = $this->get('event_dispatcher');
+                    $dispatcher->dispatch(NotificationEvents::RATING_AWARDED, new NotificationEvent(array(
+                        'ride_request' => $rideRequest,
+                        'awarding_user' => $this->getUser(),
+                        'receiver_user' => $rideRequest->getUser(),
+                    )));
+
                     return $this->redirect($this->generateUrl('rating_awarded'));
                 }
             }
 
             return array(
                 'rideRequest' => $rideRequest,
+                'receiver_user' => $rideRequest->getUser(),
                 'form' => $form->createView(),
             );
         } elseif ($this->getUser() == $rideRequest->getUser()) {
@@ -249,13 +259,14 @@ class RideRequestController extends Controller
 
             if ($request->isMethod('POST')) {
                 if ($form->isValid()) {
-                    // setting the totalScore for the $rating
-                    $scoreArr = array();
-                    $scoreArr['punctualityScore'] = $form->get('punctualityScore')->getData();
-                    $scoreArr['agreementScore']   = $form->get('agreementScore')->getData();
-                    $scoreArr['drivingScore']     = $form->get('drivingScore')->getData();
-                    $scoreArr['sociabilityScore'] = $form->get('sociabilityScore')->getData();
-                    $scoreArr['musicScore']       = $form->get('musicScore')->getData();
+                    // setting the totalScore for the rating
+                    $scoreArr = array(
+                        'punctualityScore' => $form->get('punctualityScore')->getData(),
+                        'agreementScore'   => $form->get('agreementScore')->getData(),
+                        'drivingScore'     => $form->get('drivingScore')->getData(),
+                        'sociabilityScore' => $form->get('sociabilityScore')->getData(),
+                        'musicScore'       => $form->get('musicScore')->getData(),
+                    );
                     $totalScore = $this->get('eb_ride.ride.service')->computeAverage($scoreArr);
 
                     $rating->setTotalScore($totalScore);
@@ -271,12 +282,21 @@ class RideRequestController extends Controller
                     $em->persist($rating);
                     $em->flush();
 
+                    // dispatching the RATING_AWARDED event, which triggers the listener to send a notification to the user that will receive the rating
+                    $dispatcher = $this->get('event_dispatcher');
+                    $dispatcher->dispatch(NotificationEvents::RATING_AWARDED, new NotificationEvent(array(
+                        'ride_request' => $rideRequest,
+                        'awarding_user' => $this->getUser(),
+                        'receiver_user' => $rideRequest->getRide()->getUser(),
+                    )));
+
                     return $this->redirect($this->generateUrl('rating_awarded'));
                 }
             }
 
             return array(
                 'rideRequest' => $rideRequest,
+                'receiver_user' => $rideRequest->getRide()->getUser(),
                 'form' => $form->createView(),
             );
         } else {

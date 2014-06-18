@@ -49,6 +49,10 @@
                         <th>Comment</th>
                         <td>{{ ride.comment }}</td>
                     </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td><span class="label {{ get_ride_status_label(ride.rideStatus.id) }}">{{ ride.rideStatus.name }}</span></td>
+                    </tr>
                 </tbody>
             </table>
 

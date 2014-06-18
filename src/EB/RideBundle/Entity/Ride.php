@@ -105,9 +105,37 @@ class Ride
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_public", type="boolean")
+     * @ORM\Column(name="is_public", type="boolean", options={"default":false})
      */
-    private $isPublic;
+    private $isPublic = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_available", type="boolean", options={"default":false})
+     */
+    private $wasAvailable = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_canceled", type="boolean", options={"default":false})
+     */
+    private $wasCanceled = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_closed", type="boolean", options={"default":false})
+     */
+    private $wasClosed = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_finished", type="boolean", options={"default":false})
+     */
+    private $wasFinished = false;
 
     /**
      * @var User
@@ -408,6 +436,82 @@ class Ride
     public function getIsPublic()
     {
         return $this->isPublic;
+    }
+
+    /**
+     * @param boolean $wasAvailable
+     * @return $this
+     */
+    public function setWasAvailable($wasAvailable)
+    {
+        $this->wasAvailable = $wasAvailable;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasAvailable()
+    {
+        return $this->wasAvailable;
+    }
+
+    /**
+     * @param boolean $wasCanceled
+     * @return $this
+     */
+    public function setWasCanceled($wasCanceled)
+    {
+        $this->wasCanceled = $wasCanceled;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasCanceled()
+    {
+        return $this->wasCanceled;
+    }
+
+    /**
+     * @param boolean $wasClosed
+     * @return $this
+     */
+    public function setWasClosed($wasClosed)
+    {
+        $this->wasClosed = $wasClosed;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasClosed()
+    {
+        return $this->wasClosed;
+    }
+
+    /**
+     * @param boolean $wasFinished
+     * @return $this
+     */
+    public function setWasFinished($wasFinished)
+    {
+        $this->wasFinished = $wasFinished;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasFinished()
+    {
+        return $this->wasFinished;
     }
 
     /**

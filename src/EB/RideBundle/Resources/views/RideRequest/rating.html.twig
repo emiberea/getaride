@@ -4,9 +4,11 @@
 
 {% block content -%}
     <div class="row">
+        <div class="col-md-4"></div>
         <div class="col-md-4">
-            <h1>Rating edit</h1>
-
+            <h1>Award rating</h1>
+            <h4>Award to: <b>{{ receiver_user.fullname }}</b> (<a href="{{ path('eb_user_public_profile', {'username': receiver_user.username}) }}">{{ receiver_user.username }}</a>)</h4>
+            <h5>For ride: <a href="{{ path('ride_show_public', {'id': rideRequest.ride.id}) }}">{{ rideRequest.ride.startLocation|split(',')[0] }} - {{ rideRequest.ride.stopLocation|split(',')[0] }}</a> on {% if rideRequest.ride.startDate %}{{ rideRequest.ride.startDate|date('d-m-Y H:i') }}{% endif %}</h5>
             <form action="{{ path('ride_request_rating', {'id': rideRequest.id}) }}" {{ form_enctype(form) }} method="POST" role="form">
                 <div class="form-group">
                     {{ form_label(form.punctualityScore) }}
@@ -48,6 +50,6 @@
                 Back to the list
             </a>
         </div>
-        <div class="col-md-8"></div>
+        <div class="col-md-4"></div>
     </div>
 {% endblock %}

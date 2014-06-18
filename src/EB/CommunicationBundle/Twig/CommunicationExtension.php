@@ -72,6 +72,32 @@ class CommunicationExtension extends \Twig_Extension
                     $notification->getRideRequest()->getRide()->getStartDate()->format('d-m-Y H:i')
                 );
                 break;
+            case Notification::TYPE_RIDE_CANCELED:
+                $notifText = sprintf("<b>%s</b> canceled his <b>%s</b> - <b>%s</b> ride on <b>%s</b>. You can view the ride details ",
+                    $notification->getInitiatorUser()->getFullname(),
+                    explode(',', $notification->getRideRequest()->getRide()->getStartLocation())[0],
+                    explode(',', $notification->getRideRequest()->getRide()->getStopLocation())[0],
+                    $notification->getRideRequest()->getRide()->getStartDate()->format('d-m-Y H:i')
+                );
+                break;
+            case Notification::TYPE_RIDE_CLOSED:
+                $notifText = sprintf("The <b>%s</b> - <b>%s</b> ride from <b>%s</b> which you had travel with <b>%s</b> is over. You can give <b>%s</b> a rating for his service <a href=\"%s\">here</a>. You also can review the ride details ",
+                    explode(',', $notification->getRideRequest()->getRide()->getStartLocation())[0],
+                    explode(',', $notification->getRideRequest()->getRide()->getStopLocation())[0],
+                    $notification->getRideRequest()->getRide()->getStartDate()->format('d-m-Y H:i'),
+                    $notification->getInitiatorUser()->getFullname(),
+                    $notification->getInitiatorUser()->getFullname(),
+                    $notification->getRedirectUrl2()
+                );
+                break;
+            case Notification::TYPE_RATING_AWARDED:
+                $notifText = sprintf("<b>%s</b> has awarded you a rating score for your service on the <b>%s</b> - <b>%s</b> ride on <b>%s</b>. You can view your ratings ",
+                    $notification->getInitiatorUser()->getFullname(),
+                    explode(',', $notification->getRideRequest()->getRide()->getStartLocation())[0],
+                    explode(',', $notification->getRideRequest()->getRide()->getStopLocation())[0],
+                    $notification->getRideRequest()->getRide()->getStartDate()->format('d-m-Y H:i')
+                );
+                break;
             default:
                 throw new \Exception('Could not find notification with type: ' . $notification->getType());
         }

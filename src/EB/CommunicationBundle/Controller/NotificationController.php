@@ -71,7 +71,7 @@ class NotificationController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($notification->getRedirectUrl());
+        return $this->redirect($notification->getRedirectUrl1());
     }
 
     /**
