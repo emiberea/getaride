@@ -54,6 +54,10 @@
                     {{ form_errors(edit_form.baggagePerSeat) }}
                 </div>
                 <div class="form-group">
+                    {{ form_widget(edit_form.pricePerSeat, {attr: {placeholder: 'Price Per Seat'}}) }}
+                    {{ form_errors(edit_form.pricePerSeat) }}
+                </div>
+                <div class="form-group">
                     {{ form_widget(edit_form.comment, {attr: {placeholder: 'Comment'}}) }}
                     {{ form_errors(edit_form.comment) }}
                 </div>
@@ -67,6 +71,7 @@
                     {{ form_errors(edit_form.car) }}
                 </div>
                 <div class="form-group">
+                    <h5>Current status: <span class="label {{ get_ride_status_label(ride.rideStatus.id) }}">{{ ride.rideStatus.name }}</span></h5>
                     {{ form_widget(edit_form.rideStatus) }}
                     {{ form_errors(edit_form.rideStatus) }}
                 </div>

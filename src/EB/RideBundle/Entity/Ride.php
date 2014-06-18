@@ -5,6 +5,7 @@ namespace EB\RideBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use EB\RideBundle\Entity\Car;
+use EB\RideBundle\Entity\Rating;
 use EB\UserBundle\Entity\User;
 
 /**
@@ -88,6 +89,13 @@ class Ride
     private $baggagePerSeat;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="price_per_seat", type="smallint", options={"default":0})
+     */
+    private $pricePerSeat = 0;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="comment", type="string", length=255, nullable=true)
@@ -97,9 +105,37 @@ class Ride
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_public", type="boolean")
+     * @ORM\Column(name="is_public", type="boolean", options={"default":false})
      */
-    private $isPublic;
+    private $isPublic = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_available", type="boolean", options={"default":false})
+     */
+    private $wasAvailable = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_canceled", type="boolean", options={"default":false})
+     */
+    private $wasCanceled = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_closed", type="boolean", options={"default":false})
+     */
+    private $wasClosed = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="was_finished", type="boolean", options={"default":false})
+     */
+    private $wasFinished = false;
 
     /**
      * @var User
@@ -107,13 +143,6 @@ class Ride
      * @ORM\ManyToOne(targetEntity="EB\UserBundle\Entity\User", inversedBy="rides")
      */
     private $user;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="RideRequest", mappedBy="ride")
-     */
-    private $rideRequests;
 
     /**
      * @var Car
@@ -128,6 +157,13 @@ class Ride
      * @ORM\ManyToOne(targetEntity="RideStatus", inversedBy="rides")
      */
     private $rideStatus;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="RideRequest", mappedBy="ride")
+     */
+    private $rideRequests;
 
 
     public function __construct()
@@ -342,6 +378,25 @@ class Ride
     }
 
     /**
+     * @param int $pricePerSeat
+     * @return $this
+     */
+    public function setPricePerSeat($pricePerSeat)
+    {
+        $this->pricePerSeat = $pricePerSeat;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPricePerSeat()
+    {
+        return $this->pricePerSeat;
+    }
+
+    /**
      * Set comment
      *
      * @param string $comment
@@ -384,6 +439,82 @@ class Ride
     }
 
     /**
+     * @param boolean $wasAvailable
+     * @return $this
+     */
+    public function setWasAvailable($wasAvailable)
+    {
+        $this->wasAvailable = $wasAvailable;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasAvailable()
+    {
+        return $this->wasAvailable;
+    }
+
+    /**
+     * @param boolean $wasCanceled
+     * @return $this
+     */
+    public function setWasCanceled($wasCanceled)
+    {
+        $this->wasCanceled = $wasCanceled;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasCanceled()
+    {
+        return $this->wasCanceled;
+    }
+
+    /**
+     * @param boolean $wasClosed
+     * @return $this
+     */
+    public function setWasClosed($wasClosed)
+    {
+        $this->wasClosed = $wasClosed;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasClosed()
+    {
+        return $this->wasClosed;
+    }
+
+    /**
+     * @param boolean $wasFinished
+     * @return $this
+     */
+    public function setWasFinished($wasFinished)
+    {
+        $this->wasFinished = $wasFinished;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getWasFinished()
+    {
+        return $this->wasFinished;
+    }
+
+    /**
      * @param User $user
      * @return $this
      */
@@ -400,36 +531,6 @@ class Ride
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getRideRequests()
-    {
-        return $this->rideRequests;
-    }
-
-    /**
-     * @param RideRequest $rideRequest
-     * @return $this
-     */
-    public function addRideRequest(RideRequest $rideRequest)
-    {
-        $this->rideRequests->add($rideRequest);
-
-        return $this;
-    }
-
-    /**
-     * @param RideRequest $rideRequest
-     * @return $this
-     */
-    public function removeRideRequest(RideRequest $rideRequest)
-    {
-        $this->rideRequests->removeElement($rideRequest);
-
-        return $this;
     }
 
     /**
@@ -468,5 +569,35 @@ class Ride
     public function getRideStatus()
     {
         return $this->rideStatus;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRideRequests()
+    {
+        return $this->rideRequests;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function addRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->add($rideRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param RideRequest $rideRequest
+     * @return $this
+     */
+    public function removeRideRequest(RideRequest $rideRequest)
+    {
+        $this->rideRequests->removeElement($rideRequest);
+
+        return $this;
     }
 }

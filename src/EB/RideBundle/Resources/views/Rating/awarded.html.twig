@@ -1,0 +1,70 @@
+{% extends '::base.html.twig' %}
+
+{% block content -%}
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <ul class="nav nav-tabs nav-justified">
+                {% set route = app.request.attributes.get('_route') %}
+                <li class="{{ route == 'rating_awarded' ? 'active' }}">
+                    <a href="{{ path('rating_awarded') }}">
+                        <span class="glyphicon glyphicon-th-list"></span>
+                        Awarded Ratings
+                    </a>
+                </li>
+                <li class="{{ route == 'rating_received' ? 'active' }}">
+                    <a href="{{ path('rating_received') }}">
+                        <span class="glyphicon glyphicon-th-list"></span>
+                        Received Ratings
+                    </a>
+                </li>
+            </ul>
+            <h1>Awarded Ratings</h1>
+            <ul class="list-group">
+                {% for rating in pagination %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p><b>Punctuality Score:</b><span class="pull-right">{{ rating.punctualityScore }}</span></p>
+                                <p><b>Agreement Score:</b><span class="pull-right">{{ rating.agreementScore }}</span></p>
+                                <p><b>Driving Score:</b><span class="pull-right">{{ rating.drivingScore }}</span></p>
+                                <p><b>Sociability Score:</b><span class="pull-right">{{ rating.sociabilityScore }}</span></p>
+                                <p><b>Music Score:</b><span class="pull-right">{{ rating.musicScore }}</span></p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <h4>Total score:</h4>
+                                <span class="text-lg">{{ rating.totalScore }}</span><br />
+                                <p><b>Awarded on:</b> {% if rating.date %}{{ rating.date|date('d-m-Y H:i') }}{% endif %}</p>
+                            </div>
+                            <div class="col-md-5">
+                                <p>
+                                    <b>Awarded to:</b>
+                                    {{ rating.receiverUser.fullname }} (<a href="{{ path('eb_user_public_profile', {'username': rating.receiverUser.username}) }}">{{ rating.receiverUser.username }}</a>)
+                                </p>
+                                <p>
+                                    <b>Ride:</b>
+                                    <a href="{{ path('ride_show_public', {'id': rating.rideRequest.ride.id}) }}">{{ rating.rideRequest.ride.startLocation|split(',')[0] }} - {{ rating.rideRequest.ride.stopLocation|split(',')[0] }}</a> on {% if rating.rideRequest.ride.startDate %}<b>{{ rating.rideRequest.ride.startDate|date('d-m-Y H:i') }}</b>{% endif %}
+                                </p>
+                                <p><b>Comment:</b></p>
+                                <p>
+                                    {% if rating.comment|length < 100 %}
+                                        {{ rating.comment }}
+                                    {% else %}
+                                        {{ rating.comment|slice(0, 100) }}...
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="list-group-item text-center">
+                        You have not awarded any ratings yet.
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

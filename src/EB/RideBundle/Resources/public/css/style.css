@@ -29,3 +29,7 @@ footer {
     text-align: center;
     font-size: 12px;
 }
+
+.text-lg {
+    font-size: 65px;
+}

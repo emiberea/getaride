@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
+use EB\CommunicationBundle\Event\NotificationEvent;
+use EB\CommunicationBundle\Event\NotificationEvents;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideStatus;
 use EB\RideBundle\Form\RideType;
@@ -70,6 +72,9 @@ class RideController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $ride->setUser($this->getUser());
+            if ($ride->getRideStatus()->getId() == RideStatus::AVAILABLE && $ride->getWasAvailable() == false) {
+                $ride->setWasAvailable(true);
+            }
 
             $em->persist($ride);
             $em->flush();
@@ -196,7 +201,8 @@ class RideController extends Controller
         $userId = $this->getUser()->getId();
 
         $dql = "SELECT rr FROM EBRideBundle:RideRequest rr
-                WHERE rr.user = '$userId'";
+                WHERE rr.user = '$userId'
+                ORDER BY rr.id DESC";
         $query = $em->createQuery($dql);
 
         $paginator = $this->get('knp_paginator');
@@ -352,11 +358,15 @@ class RideController extends Controller
                 $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::DRAFT),
                 $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::AVAILABLE),
             );
-        } elseif ($ride->getRideStatus()->getId() == RideStatus::AVAILABLE || $ride->getRideStatus()->getId() == RideStatus::CANCELED) {
+        } elseif ($ride->getRideStatus()->getId() == RideStatus::AVAILABLE) {
             $rideStatuses = array(
                 $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::AVAILABLE),
                 $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::CANCELED),
                 $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::CLOSED),
+            );
+        } elseif ($ride->getRideStatus()->getId() == RideStatus::CANCELED) {
+            $rideStatuses = array(
+                $this->getDoctrine()->getManager()->getRepository('EBRideBundle:RideStatus')->find(RideStatus::CANCELED),
             );
         } elseif ($ride->getRideStatus()->getId() == RideStatus::CLOSED || $ride->getRideStatus()->getId() == RideStatus::FINISH_FAIL || $ride->getRideStatus()->getId() == RideStatus::FINISH_SUCCESS) {
             $rideStatuses = array(
@@ -394,8 +404,10 @@ class RideController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
+        /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Ride $ride */
         $ride = $em->getRepository('EBRideBundle:Ride')->findOneBy(array(
             'id' => $id,
             'user' => $this->getUser(),
@@ -405,20 +417,79 @@ class RideController extends Controller
             throw $this->createNotFoundException('Unable to find Ride entity.');
         }
 
+        $waypointsArr = json_decode($ride->getWaypointsStr(), true);
+
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($ride);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+             if ($ride->getRideStatus()->getId() == RideStatus::AVAILABLE && $ride->getWasAvailable() == false) {
+                 $ride->setWasAvailable(true);
+                 $em->flush();
 
-            return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+                 return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+             } elseif ($ride->getRideStatus()->getId() == RideStatus::CANCELED && $ride->getWasCanceled() == false) {
+                // setting the isCanceled flag to true, to prevent sending notifications multiple times, if the user reedits the status to CANCELED
+                $ride->setWasCanceled(true);
+                $em->flush();
+
+                // dispatching the RIDE_CANCELED event, which triggers the listener to send a notification to all the requesting users that created rideRequests for this ride
+                $dispatcher = $this->get('event_dispatcher');
+                $dispatcher->dispatch(NotificationEvents::RIDE_CANCELED, new NotificationEvent(array(
+                    'ride' => $ride,
+                )));
+
+                return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+            } elseif ($ride->getRideStatus()->getId() == RideStatus::CLOSED && $ride->getWasClosed() == false) {
+                if ($ride->getStartDate() > new \DateTime()) {
+                    $this->get('session')->getFlashBag()->add(
+                        'error',
+                        sprintf('You can not mark the ride as CLOSED if it is scheduled to take place in the future, at %s. You can just change the start date.',
+                            $ride->getStartDate()->format('d-m-Y H:i')
+                        )
+                    );
+                    return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+                }
+
+                // setting the isClosed flag to true, to prevent sending notifications multiple times, if the user reedits the status to CLOSED
+                $ride->setWasClosed(true);
+                $em->flush();
+
+                // dispatching the RIDE_CLOSED event, which triggers the listener to send a notification to the user that created the ride
+                // and the users that have the rideRequest accepted and invite them to give a rating to each other
+                $dispatcher = $this->get('event_dispatcher');
+                $dispatcher->dispatch(NotificationEvents::RIDE_CLOSED, new NotificationEvent(array(
+                    'ride' => $ride,
+                )));
+
+                return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+            } elseif (($ride->getRideStatus()->getId() == RideStatus::FINISH_FAIL || $ride->getRideStatus()->getId() == RideStatus::FINISH_SUCCESS)
+                && $ride->getWasFinished() == false) {
+
+                $ride->setWasFinished(true);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+            } elseif ($ride->getRideStatus()->getId() == RideStatus::DRAFT) {
+                 $em->flush();
+                 return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+            } else {
+                $this->get('session')->getFlashBag()->add(
+                    'error',
+                    sprintf('You can not edit the ride details and mark it with %s status!',
+                        $ride->getRideStatus()->getName()
+                    )
+                );
+                return $this->redirect($this->generateUrl('ride_edit', array('id' => $id)));
+            }
         }
 
         return array(
-            'ride'        => $ride,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'ride'         => $ride,
+            'waypointsArr' => $waypointsArr,
+            'edit_form'    => $editForm->createView(),
+            'delete_form'  => $deleteForm->createView(),
         );
     }
 

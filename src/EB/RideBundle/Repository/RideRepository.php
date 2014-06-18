@@ -91,4 +91,22 @@ class RideRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getByAvailableStatusAndExpireStartDate()
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->innerJoin('r.rideStatus', 'rs');
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq('rs.id', RideStatus::AVAILABLE),
+                $qb->expr()->lte('r.startDate', ':expireDate')
+            )
+        );
+
+        $qb->setParameters(array(
+            'expireDate' => (new \DateTime())->sub(new \DateInterval('PT24H')),
+        ));
+
+        return $qb->getQuery()->getResult();
+    }
 }

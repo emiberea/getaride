@@ -2,6 +2,7 @@
 
 {% block content -%}
     <div class="row">
+        <div class="col-md-2"></div>
         <div class="col-md-8">
             {% include 'EBRideBundle:Ride/Component:navbar.html.twig' %}
 
@@ -49,6 +50,15 @@
                                         <li><a href="{{ path('ride_request_chat', { 'id': rideRequest.id }) }}">Chat</a></li>
                                     </ul>
                                 </div>
+                                {% if rideRequest.status == 'Accepted'
+                                    and (rideRequest.ride.rideStatus == 'Closed' or rideRequest.ride.rideStatus == 'Finish Fail' or rideRequest.ride.rideStatus == 'Finish Success')
+                                    and rideRequest.hasPassengerRating == false
+                                %}
+                                    <a href="{{ path('ride_request_rating', {'id': rideRequest.id}) }}" class="btn btn-default btn-xs">
+                                        <span class="glyphicon glyphicon-stats"></span>
+                                        Rating
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% else %}
@@ -67,6 +77,6 @@
                 Back to the list
             </a>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-2"></div>
     </div>
 {% endblock %}

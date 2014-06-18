@@ -39,6 +39,15 @@
                     <a href="{{ path('ride_request_chat', {'id': rideRequest.id}) }}" class="btn btn-default">
                         Chat
                     </a>
+                    {% if rideRequest.status == 'Accepted'
+                        and (rideRequest.ride.rideStatus == 'Closed' or rideRequest.ride.rideStatus == 'Finish Fail' or rideRequest.ride.rideStatus == 'Finish Success')
+                        and rideRequest.hasDriverRating == false
+                    %}
+                        <a href="{{ path('ride_request_rating', {'id': rideRequest.id}) }}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-stats"></span>
+                            Give Rating
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

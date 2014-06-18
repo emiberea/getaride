@@ -5,14 +5,17 @@ namespace EB\RideBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManager;
 use EB\CommunicationBundle\Event\NotificationEvent;
 use EB\CommunicationBundle\Event\NotificationEvents;
+use EB\RideBundle\Entity\Rating;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideRequest;
 use EB\RideBundle\Entity\RideRequestStatus;
 use EB\UserBundle\Entity\User;
+use EB\RideBundle\Form\RatingType;
 
 /**
  * RideRequest controller.
@@ -44,7 +47,6 @@ class RideRequestController extends Controller
                     'error',
                     'You already created a request for this ride!'
                 );
-
                 return $this->redirect($this->generateUrl('ride_show_public', array(
                     'id' => $rideId,
                 )));
@@ -141,5 +143,164 @@ class RideRequestController extends Controller
         return $this->redirect($this->generateUrl('fos_message_thread_view', array(
             'threadId' => $rideRequest->getThread()->getId(),
         )));
+    }
+
+    /**
+     * @Route("/{id}/rating", name="ride_request_rating")
+     * @Template()
+     */
+    public function ratingAction(Request $request, $id)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var RideRequest $rideRequest */
+        $rideRequest = $em->getRepository('EBRideBundle:RideRequest')->findOneBy(array(
+            'id' => $id,
+        ));
+        // check if the rideRequest exists
+        if (!$rideRequest) {
+            throw $this->createNotFoundException('Unable to find RideRequest entity.');
+        }
+
+        if ($this->getUser() == $rideRequest->getRide()->getUser()) {
+            // case the logged user is the one that created the ride
+
+            // check if the user that created the ride has already given the rating to the user that created this rideRequest
+            $rating = $em->getRepository('EBRideBundle:Rating')->findOneBy(array(
+                'awardingUser' => $this->getUser(),
+                'receiverUser' => $rideRequest->getUser(),
+                'rideRequest' => $rideRequest,
+            ));
+            // check if the rating was already given
+            if ($rating || $rideRequest->getStatus()->getId() == RideRequestStatus::REQUESTED) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    'You can not give a rating score to this user!'
+                );
+                return $this->redirect($this->generateUrl('ride_show_requesting_users', array(
+                    'id' => $rideRequest->getRide()->getId()
+                )));
+            }
+
+            // creating the new rating and save it to the DB
+            /** @var Rating $rating */
+            $rating = new Rating();
+
+            $form = $this->createForm(new RatingType(), $rating);
+            $form->handleRequest($request);
+
+            if ($request->isMethod('POST')) {
+                if ($form->isValid()) {
+                    // setting the totalScore for the rating
+                    $scoreArr = array(
+                        'punctualityScore' => $form->get('punctualityScore')->getData(),
+                        'agreementScore'   => $form->get('agreementScore')->getData(),
+                        'drivingScore'     => $form->get('drivingScore')->getData(),
+                        'sociabilityScore' => $form->get('sociabilityScore')->getData(),
+                        'musicScore'       => $form->get('musicScore')->getData(),
+                    );
+                    $totalScore = $this->get('eb_ride.ride.service')->computeAverage($scoreArr);
+
+                    $rating->setTotalScore($totalScore);
+                    $rating->setDate(new \DateTime());
+                    $rating->setAwardingUser($this->getUser());
+                    $rating->setReceiverUser($rideRequest->getUser());
+                    $rating->setRideRequest($rideRequest);
+
+                    // setting the rideRequest as having the rating from the user that created the Ride
+                    $rideRequest->setHasDriverRating(true);
+
+                    $em->persist($rideRequest);
+                    $em->persist($rating);
+                    $em->flush();
+
+                    // dispatching the RATING_AWARDED event, which triggers the listener to send a notification to the user that will receive the rating
+                    $dispatcher = $this->get('event_dispatcher');
+                    $dispatcher->dispatch(NotificationEvents::RATING_AWARDED, new NotificationEvent(array(
+                        'ride_request' => $rideRequest,
+                        'awarding_user' => $this->getUser(),
+                        'receiver_user' => $rideRequest->getUser(),
+                    )));
+
+                    return $this->redirect($this->generateUrl('rating_awarded'));
+                }
+            }
+
+            return array(
+                'rideRequest' => $rideRequest,
+                'receiver_user' => $rideRequest->getUser(),
+                'form' => $form->createView(),
+            );
+        } elseif ($this->getUser() == $rideRequest->getUser()) {
+            // case the logged user is the one that created the rideRequest
+
+            // check if the user that created the rideRequest has already given the rating to the user that created this ride
+            $rating = $em->getRepository('EBRideBundle:Rating')->findOneBy(array(
+                'awardingUser' => $this->getUser(),
+                'receiverUser' => $rideRequest->getRide()->getUser(),
+                'rideRequest' => $rideRequest,
+            ));
+            // check if the rating was already given
+            if ($rating || $rideRequest->getStatus()->getId() == RideRequestStatus::REQUESTED) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    'You can not give a rating score to this user!'
+                );
+                return $this->redirect($this->generateUrl('ride_show_requested_rides'));
+            }
+
+            // creating the new rating and save it to the DB
+            /** @var Rating $rating */
+            $rating = new Rating();
+
+            $form = $this->createForm(new RatingType(), $rating);
+            $form->handleRequest($request);
+
+            if ($request->isMethod('POST')) {
+                if ($form->isValid()) {
+                    // setting the totalScore for the rating
+                    $scoreArr = array(
+                        'punctualityScore' => $form->get('punctualityScore')->getData(),
+                        'agreementScore'   => $form->get('agreementScore')->getData(),
+                        'drivingScore'     => $form->get('drivingScore')->getData(),
+                        'sociabilityScore' => $form->get('sociabilityScore')->getData(),
+                        'musicScore'       => $form->get('musicScore')->getData(),
+                    );
+                    $totalScore = $this->get('eb_ride.ride.service')->computeAverage($scoreArr);
+
+                    $rating->setTotalScore($totalScore);
+                    $rating->setDate(new \DateTime());
+                    $rating->setAwardingUser($this->getUser());
+                    $rating->setReceiverUser($rideRequest->getRide()->getUser());
+                    $rating->setRideRequest($rideRequest);
+
+                    // setting the rideRequest as having the rating from the user that created the rideRequest
+                    $rideRequest->setHasPassengerRating(true);
+
+                    $em->persist($rideRequest);
+                    $em->persist($rating);
+                    $em->flush();
+
+                    // dispatching the RATING_AWARDED event, which triggers the listener to send a notification to the user that will receive the rating
+                    $dispatcher = $this->get('event_dispatcher');
+                    $dispatcher->dispatch(NotificationEvents::RATING_AWARDED, new NotificationEvent(array(
+                        'ride_request' => $rideRequest,
+                        'awarding_user' => $this->getUser(),
+                        'receiver_user' => $rideRequest->getRide()->getUser(),
+                    )));
+
+                    return $this->redirect($this->generateUrl('rating_awarded'));
+                }
+            }
+
+            return array(
+                'rideRequest' => $rideRequest,
+                'receiver_user' => $rideRequest->getRide()->getUser(),
+                'form' => $form->createView(),
+            );
+        } else {
+            throw $this->createNotFoundException('Not Found. Wrong URL.');
+        }
     }
 }

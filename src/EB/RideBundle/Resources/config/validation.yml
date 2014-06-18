@@ -26,6 +26,15 @@ EB\RideBundle\Entity\Ride:
             - NotBlank: { message: 'Select the number of empty seats' }
         baggagePerSeat:
             - NotBlank: { message: 'Select the quantity of baggage allowed per person' }
+        pricePerSeat:
+            - NotBlank: { message: 'Insert the price per seat for this ride' }
+            - Type:
+                type: numeric
+            - Range:
+                min: 0
+                max: 100
+                minMessage: You cannot charge negative amounts of money
+                maxMessage: You cannot charge more that 100 RON
         car:
             - NotBlank: { message: 'Select a car' }
         rideStatus:

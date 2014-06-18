@@ -1,0 +1,55 @@
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'EBRideBundle:Form:fields.html.twig' %}
+
+{% block content -%}
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <h1>Award rating</h1>
+            <h4>Award to: <b>{{ receiver_user.fullname }}</b> (<a href="{{ path('eb_user_public_profile', {'username': receiver_user.username}) }}">{{ receiver_user.username }}</a>)</h4>
+            <h5>For ride: <a href="{{ path('ride_show_public', {'id': rideRequest.ride.id}) }}">{{ rideRequest.ride.startLocation|split(',')[0] }} - {{ rideRequest.ride.stopLocation|split(',')[0] }}</a> on {% if rideRequest.ride.startDate %}{{ rideRequest.ride.startDate|date('d-m-Y H:i') }}{% endif %}</h5>
+            <form action="{{ path('ride_request_rating', {'id': rideRequest.id}) }}" {{ form_enctype(form) }} method="POST" role="form">
+                <div class="form-group">
+                    {{ form_label(form.punctualityScore) }}
+                    {{ form_widget(form.punctualityScore, {attr: {placeholder: 'Punctuality Score'}}) }}
+                    {{ form_errors(form.punctualityScore) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.agreementScore) }}
+                    {{ form_widget(form.agreementScore, {attr: {placeholder: 'Aggrement Score'}}) }}
+                    {{ form_errors(form.agreementScore) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.drivingScore) }}
+                    {{ form_widget(form.drivingScore, {attr: {placeholder: 'Driving Score'}}) }}
+                    {{ form_errors(form.drivingScore) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.sociabilityScore) }}
+                    {{ form_widget(form.sociabilityScore, {attr: {placeholder: 'Sociability Score'}}) }}
+                    {{ form_errors(form.sociabilityScore) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.musicScore) }}
+                    {{ form_widget(form.musicScore, {attr: {placeholder: 'Music Score'}}) }}
+                    {{ form_errors(form.musicScore) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.comment) }}
+                    {{ form_widget(form.comment, {attr: {placeholder: 'Comment'}}) }}
+                    {{ form_errors(form.comment) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.submit, {attr: {class: 'btn btn-success'}, label: 'Create'}) }}
+                </div>
+                {{ form_rest(form) }}
+            </form>
+
+            <a href="{{ path('ride') }}">
+                Back to the list
+            </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+{% endblock %}

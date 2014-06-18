@@ -22,6 +22,11 @@ class Notification
     // TYPE_RIDE_REQUEST
     const TYPE_RIDE_REQUEST_SENT     = 4;
     const TYPE_RIDE_REQUEST_ACCEPTED = 5;
+    // TYPE_RIDE
+    const TYPE_RIDE_CANCELED = 6;
+    const TYPE_RIDE_CLOSED   = 7;
+    // TYPE_RATING
+    const TYPE_RATING_AWARDED = 8;
 
     /**
      * @var integer
@@ -49,9 +54,16 @@ class Notification
     /**
      * @var string
      *
-     * @ORM\Column(name="redirect_url", type="string", length=255, nullable=true)
+     * @ORM\Column(name="redirect_url_1", type="string", length=255, nullable=true)
      */
-    private $redirectUrl;
+    private $redirectUrl1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="redirect_url_2", type="string", length=255, nullable=true)
+     */
+    private $redirectUrl2;
 
     /**
      * @var integer
@@ -138,12 +150,12 @@ class Notification
     }
 
     /**
-     * @param string $redirectUrl
+     * @param string $redirectUrl1
      * @return $this
      */
-    public function setRedirectUrl($redirectUrl)
+    public function setRedirectUrl1($redirectUrl1)
     {
-        $this->redirectUrl = $redirectUrl;
+        $this->redirectUrl1 = $redirectUrl1;
 
         return $this;
     }
@@ -151,9 +163,28 @@ class Notification
     /**
      * @return string
      */
-    public function getRedirectUrl()
+    public function getRedirectUrl1()
     {
-        return $this->redirectUrl;
+        return $this->redirectUrl1;
+    }
+
+    /**
+     * @param string $redirectUrl2
+     * @return $this
+     */
+    public function setRedirectUrl2($redirectUrl2)
+    {
+        $this->redirectUrl2 = $redirectUrl2;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirectUrl2()
+    {
+        return $this->redirectUrl2;
     }
 
     /**

@@ -5,12 +5,15 @@ namespace EB\CommunicationBundle\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Router;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use EB\CommunicationBundle\Entity\Notification;
 use EB\CommunicationBundle\Event\NotificationEvent;
 use EB\CommunicationBundle\Event\NotificationEvents;
 use EB\CommunicationBundle\Service\MailerService;
-use EB\RideBundle\Entity\RideRequest;
 use EB\UserBundle\Entity\FriendRequest;
+use EB\RideBundle\Entity\Ride;
+use EB\RideBundle\Entity\RideRequest;
+use EB\RideBundle\Entity\RideRequestStatus;
 use EB\UserBundle\Entity\User;
 
 class NotificationListener implements EventSubscriberInterface
@@ -41,6 +44,11 @@ class NotificationListener implements EventSubscriberInterface
             // RIDE_REQUEST
             NotificationEvents::RIDE_REQUEST_SENT     => 'onRideRequestSent',
             NotificationEvents::RIDE_REQUEST_ACCEPTED => 'onRideRequestAccepted',
+            // RIDE_REQUEST
+            NotificationEvents::RIDE_CANCELED => 'onRideCanceled',
+            NotificationEvents::RIDE_CLOSED   => 'onRideClosed',
+            // RATING
+            NotificationEvents::RATING_AWARDED => 'onRatingAwarded',
         );
     }
 
@@ -62,7 +70,7 @@ class NotificationListener implements EventSubscriberInterface
         $notification = new Notification();
         $notification->setIsRead(false);
         $notification->setDate(new \DateTime());
-        $notification->setRedirectUrl($frSenderProfileUrl);
+        $notification->setRedirectUrl1($frSenderProfileUrl);
         $notification->setType(Notification::TYPE_FRIEND_REQUEST_SENT);
         $notification->setInitiatorUser($frSender);
         $notification->setReceiverUser($frReceiver);
@@ -101,7 +109,7 @@ class NotificationListener implements EventSubscriberInterface
         $notification = new Notification();
         $notification->setIsRead(false);
         $notification->setDate(new \DateTime());
-        $notification->setRedirectUrl($frReceiverProfileUrl);
+        $notification->setRedirectUrl1($frReceiverProfileUrl);
         $notification->setType(Notification::TYPE_FRIEND_REQUEST_ACCEPTED);
         $notification->setInitiatorUser($frReceiver);
         $notification->setReceiverUser($frSender);
@@ -141,7 +149,7 @@ class NotificationListener implements EventSubscriberInterface
         $notification = new Notification();
         $notification->setIsRead(false);
         $notification->setDate(new \DateTime());
-        $notification->setRedirectUrl($requestingUsersUrl);
+        $notification->setRedirectUrl1($requestingUsersUrl);
         $notification->setType(Notification::TYPE_RIDE_REQUEST_SENT);
         $notification->setInitiatorUser($rrSender);
         $notification->setReceiverUser($rrReceiver);
@@ -185,7 +193,7 @@ class NotificationListener implements EventSubscriberInterface
         $notification = new Notification();
         $notification->setIsRead(false);
         $notification->setDate(new \DateTime());
-        $notification->setRedirectUrl($publicRideUrl);
+        $notification->setRedirectUrl1($publicRideUrl);
         $notification->setType(Notification::TYPE_RIDE_REQUEST_ACCEPTED);
         $notification->setInitiatorUser($rrReceiver);
         $notification->setReceiverUser($rrSender);
@@ -206,5 +214,108 @@ class NotificationListener implements EventSubscriberInterface
         );
 
         $this->mailer->sendEmail($to, $templatePath, $options);
+    }
+
+    public function onRideCanceled(NotificationEvent $event)
+    {
+        /** @var Ride $ride */
+        $ride = $event->get('ride');
+
+        // URLs
+        $publicRideUrl = $this->router->generate('ride_show_public', array('id' => $ride->getId()), true);
+
+        /** @var ArrayCollection|RideRequest[] $rideRequests */
+        $rideRequests = $ride->getRideRequests();
+        foreach ($rideRequests as $rideRequest) {
+            if ($rideRequest->getStatus()->getId() == RideRequestStatus::ACCEPTED) {
+                // creating notification and save it to the DB
+                $notification = new Notification();
+                $notification->setIsRead(false);
+                $notification->setDate(new \DateTime());
+                $notification->setRedirectUrl1($publicRideUrl);
+                $notification->setType(Notification::TYPE_RIDE_CANCELED);
+                $notification->setInitiatorUser($ride->getUser());
+                $notification->setReceiverUser($rideRequest->getUser());
+                $notification->setRideRequest($rideRequest);
+
+                $this->em->persist($notification);
+            }
+        }
+
+        $this->em->flush();
+    }
+
+    public function onRideClosed(NotificationEvent $event)
+    {
+        /** @var Ride $ride */
+        $ride = $event->get('ride');
+
+        // URLs
+        $publicRideUrl = $this->router->generate('ride_show_public', array('id' => $ride->getId()), true);
+
+        /** @var ArrayCollection|RideRequest[] $rideRequests */
+        $rideRequests = $ride->getRideRequests();
+        foreach ($rideRequests as $rideRequest) {
+            if ($rideRequest->getStatus()->getId() == RideRequestStatus::ACCEPTED) {
+                // creating notifications for the driver and the passenger and save them to the DB
+                // notify the them that the ride is closer (over) and that they could give a rating score to each other
+                $driverNotification = new Notification();
+                $driverNotification->setIsRead(false);
+                $driverNotification->setDate(new \DateTime());
+                $driverNotification->setRedirectUrl1($publicRideUrl);
+                $driverNotification->setRedirectUrl2(
+                    $this->router->generate('ride_request_rating', array('id' => $rideRequest->getId()), true)
+                );
+                $driverNotification->setType(Notification::TYPE_RIDE_CLOSED);
+                $driverNotification->setInitiatorUser($rideRequest->getUser());
+                $driverNotification->setReceiverUser($ride->getUser());
+                $driverNotification->setRideRequest($rideRequest);
+
+                $passengerNotification = new Notification();
+                $passengerNotification->setIsRead(false);
+                $passengerNotification->setDate(new \DateTime());
+                $passengerNotification->setRedirectUrl1($publicRideUrl);
+                $passengerNotification->setRedirectUrl2(
+                    $this->router->generate('ride_request_rating', array('id' => $rideRequest->getId()), true)
+                );
+                $passengerNotification->setType(Notification::TYPE_RIDE_CLOSED);
+                $passengerNotification->setInitiatorUser($ride->getUser());
+                $passengerNotification->setReceiverUser($rideRequest->getUser());
+                $passengerNotification->setRideRequest($rideRequest);
+
+                $this->em->persist($driverNotification);
+                $this->em->persist($passengerNotification);
+            }
+        }
+
+        $this->em->flush();
+    }
+
+    public function onRatingAwarded(NotificationEvent $event)
+    {
+        // the rideRequest and the 2 users: awardingUser, that awards the rating and receiverUser, that receives the rating
+        /** @var RideRequest $rideRequest */
+        $rideRequest = $event->get('ride_request');
+        /** @var User $awardingUser */
+        $awardingUser = $event->get('awarding_user');
+        /** @var User $receiverUser */
+        $receiverUser = $event->get('receiver_user');
+
+        // URLs
+        $receivedRatingUrl = $this->router->generate('rating_received', array(), true);
+
+        // creating notification and save it to the DB
+        // notify the user that he has received a rating and that he can view it
+        $notification = new Notification();
+        $notification->setIsRead(false);
+        $notification->setDate(new \DateTime());
+        $notification->setRedirectUrl1($receivedRatingUrl);
+        $notification->setType(Notification::TYPE_RATING_AWARDED);
+        $notification->setInitiatorUser($awardingUser);
+        $notification->setReceiverUser($receiverUser);
+        $notification->setRideRequest($rideRequest);
+
+        $this->em->persist($notification);
+        $this->em->flush();
     }
 }

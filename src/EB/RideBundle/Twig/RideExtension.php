@@ -7,6 +7,7 @@ use EB\UserBundle\Entity\User;
 use EB\RideBundle\Entity\Ride;
 use EB\RideBundle\Entity\RideRequest;
 use EB\RideBundle\Entity\RideRequestStatus;
+use EB\RideBundle\Entity\RideStatus;
 
 class RideExtension extends \Twig_Extension
 {
@@ -24,6 +25,7 @@ class RideExtension extends \Twig_Extension
             new \Twig_SimpleFunction('get_ride_action', array($this, 'getRideAction')),
             new \Twig_SimpleFunction('get_accept_user_action', array($this, 'getAcceptUserAction')),
             new \Twig_SimpleFunction('get_baggage_per_seat', array($this, 'getBaggagePerSeat')),
+            new \Twig_SimpleFunction('get_ride_status_label', array($this, 'getRideStatusLabel')),
         );
     }
 
@@ -134,5 +136,38 @@ class RideExtension extends \Twig_Extension
         }
 
         return $baggagePerSeatoStr;
+    }
+
+    /**
+     * @param $rideStatusId
+     * @return string
+     */
+    public function getRideStatusLabel($rideStatusId)
+    {
+        switch ($rideStatusId) {
+            case RideStatus::DRAFT:
+                $rideStatusLabel = 'label-default';
+                break;
+            case RideStatus::AVAILABLE:
+                $rideStatusLabel = 'label-info';
+                break;
+            case RideStatus::CANCELED:
+                $rideStatusLabel = 'label-warning';
+                break;
+            case RideStatus::CLOSED:
+                $rideStatusLabel = 'label-primary';
+                break;
+            case RideStatus::FINISH_FAIL:
+                $rideStatusLabel = 'label-danger';
+                break;
+            case RideStatus::FINISH_SUCCESS:
+                $rideStatusLabel = 'label-success';
+                break;
+            default:
+                $rideStatusLabel = 'label-default';
+                break;
+        }
+
+        return $rideStatusLabel;
     }
 }

@@ -43,20 +43,30 @@
                         <td>{{ get_baggage_per_seat(ride.baggagePerSeat) }}</td>
                     </tr>
                     <tr>
+                        <th>Price Per Seat</th>
+                        <td>{{ ride.pricePerSeat }} RON</td>
+                    </tr>
+                    <tr>
                         <th>Comment</th>
                         <td>{{ ride.comment }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td><span class="label {{ get_ride_status_label(ride.rideStatus.id) }}">{{ ride.rideStatus.name }}</span></td>
                     </tr>
                 </tbody>
             </table>
 
-            {% set ride_action = get_ride_action(app.user, ride) %}
-            <a href="{{ ride_action.route }}" class="btn {{ ride_action.btn_style }}">
-                {{ ride_action.text }}
-            </a>
-            {% if rideRequest is not null %}
-                <a href="{{ path('ride_request_chat', {'id': rideRequest.id}) }}" class="btn btn-default">
-                    Chat
+            {% if app.user != ride.user %}
+                {% set ride_action = get_ride_action(app.user, ride) %}
+                <a href="{{ ride_action.route }}" class="btn {{ ride_action.btn_style }}">
+                    {{ ride_action.text }}
                 </a>
+                {% if rideRequest is not null %}
+                    <a href="{{ path('ride_request_chat', {'id': rideRequest.id}) }}" class="btn btn-default">
+                        Chat
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
         <div class="col-md-8" id="map-canvas" style="height: 600px;"></div>
