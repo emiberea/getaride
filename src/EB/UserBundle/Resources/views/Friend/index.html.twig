@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="row">
+        <div class="col-md-2"></div>
         <div class="col-md-8">
             <ul class="nav nav-tabs nav-justified">
                 {% set route = app.request.attributes.get('_route') %}
@@ -17,9 +18,10 @@
                 <thead>
                     <tr>
                         <th>Username</th>
-                        <th>Firstname</th>
-                        <th>Lastname</th>
-                        <th>Actions</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Town/City</th>
+                        <th>Is driver</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,24 +30,25 @@
                             <td>
                                 <a href="{{ path('eb_user_public_profile', {'username': friend.username}) }}">{{ friend.username }}</a>
                             </td>
+                            <td>{{ friend.firstname }}</td>
+                            <td>{{ friend.lastname }}</td>
+                            <td>{{ friend.city }}</td>
                             <td>
-                                {{ friend.firstname }}
-                            </td>
-                            <td>
-                                {{ friend.lastname }}
-                            </td>
-                            <td>
-                                {{ 'Unfriend' }}
+                                {% if friend.isDriver %}
+                                    <span class="glyphicon glyphicon-ok"></span> Yes
+                                {% else %}
+                                    <span class="glyphicon glyphicon-remove"></span> No
+                                {% endif %}
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="4">You have no friends yet.</td>
+                            <td colspan="5">You have no friends yet.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div class="col-md-4"></div>
+        <div class="col-md-2"></div>
     </div>
 {% endblock %}
