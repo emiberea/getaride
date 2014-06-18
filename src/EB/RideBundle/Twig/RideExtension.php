@@ -138,6 +138,10 @@ class RideExtension extends \Twig_Extension
         return $baggagePerSeatoStr;
     }
 
+    /**
+     * @param $rideStatusId
+     * @return string
+     */
     public function getRideStatusLabel($rideStatusId)
     {
         switch ($rideStatusId) {
@@ -160,7 +164,7 @@ class RideExtension extends \Twig_Extension
                 $rideStatusLabel = 'label-success';
                 break;
             default:
-                $rideStatusLabel = 'Without baggage';
+                $rideStatusLabel = 'label-default';
                 break;
         }
 

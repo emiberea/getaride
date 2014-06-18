@@ -12,7 +12,7 @@
         <div class="col-md-4">
             <h1>Ride edit</h1>
 
-            <form action="{{ path('ride_update', {'id': ride.id}) }}" {{ form_enctype(edit_form) }} method="POST" id="form-ride-edit" role="form" novalidate>
+            <form action="{{ path('ride_update', {'id': ride.id}) }}" {{ form_enctype(edit_form) }} method="POST" id="form-ride-edit" role="form">
                 <input type="hidden" name="_method" value="PUT">
                 <div class="form-group">
                     {{ form_widget(edit_form.startDate, {attr: {placeholder: 'Start Date'}}) }}
