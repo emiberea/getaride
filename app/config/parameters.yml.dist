@@ -14,4 +14,4 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    domain_dev:        http://getaride.l
+    domain_dev:        http://getaride.l/app_dev.php
