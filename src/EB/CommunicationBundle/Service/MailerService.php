@@ -16,7 +16,7 @@ class MailerService
         $this->twig = $twig;
     }
 
-    public function sendEmail($recipient, $templateName, array $options = null)
+    public function sendEmail($recipient, $templateName, array $options = array())
     {
         /** @var \Twig_Template $template */
         $template = $this->twig->loadTemplate($templateName);
