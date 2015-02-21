@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CarType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -25,7 +25,7 @@ class CarType extends AbstractType
             ->add('hasAirConditioning')
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

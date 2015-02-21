@@ -8,9 +8,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\ArrayCollection;
-use EB\CommunicationBundle\Event\NotificationEvent;
-use EB\CommunicationBundle\Event\NotificationEvents;
+use EB\CommunicationBundle\Entity\Notification;
 use EB\RideBundle\Entity\Ride;
+use EB\RideBundle\Entity\RideRequest;
 use EB\RideBundle\Entity\RideStatus;
 
 class RideCommand extends ContainerAwareCommand
@@ -44,12 +44,44 @@ class RideCommand extends ContainerAwareCommand
             $ride->setRideStatus($rideStatusClosed);
             $em->persist($ride);
 
-            // dispatching the RIDE_CLOSED event, which triggers the listener to send a notification to the user that created the ride
-            // and the users that have the rideRequest accepted and invite them to give a rating to each other
-            $dispatcher = $this->getContainer()->get('event_dispatcher');
-            $dispatcher->dispatch(NotificationEvents::RIDE_CLOSED, new NotificationEvent(array(
-                'ride' => $ride,
-            )));
+            // URLs
+            $devDomain = $this->getContainer()->getParameter('domain.dev');
+            $publicRideUrl = $devDomain . $this->getContainer()->get('router')->generate('ride_show_public', array('id' => $ride->getId()));
+
+            /** @var ArrayCollection|RideRequest[] $rideRequests */
+            $rideRequests = $ride->getRideRequests();
+            foreach ($rideRequests as $rideRequest) {
+                if ($rideRequest->getStatus()->getId() == RideRequestStatus::ACCEPTED) {
+                    // creating notifications for the driver and the passenger and save them to the DB
+                    // notify the them that the ride is closer (over) and that they could give a rating score to each other
+                    $driverNotification = new Notification();
+                    $driverNotification->setIsRead(false);
+                    $driverNotification->setDate(new \DateTime());
+                    $driverNotification->setRedirectUrl1($publicRideUrl);
+                    $driverNotification->setRedirectUrl2(
+                        $devDomain . $this->getContainer()->get('router')->generate('ride_request_rating', array('id' => $rideRequest->getId()))
+                    );
+                    $driverNotification->setType(Notification::TYPE_RIDE_CLOSED);
+                    $driverNotification->setInitiatorUser($rideRequest->getUser());
+                    $driverNotification->setReceiverUser($ride->getUser());
+                    $driverNotification->setRideRequest($rideRequest);
+
+                    $passengerNotification = new Notification();
+                    $passengerNotification->setIsRead(false);
+                    $passengerNotification->setDate(new \DateTime());
+                    $passengerNotification->setRedirectUrl1($publicRideUrl);
+                    $passengerNotification->setRedirectUrl2(
+                        $devDomain . $this->getContainer()->get('router')->generate('ride_request_rating', array('id' => $rideRequest->getId()))
+                    );
+                    $passengerNotification->setType(Notification::TYPE_RIDE_CLOSED);
+                    $passengerNotification->setInitiatorUser($ride->getUser());
+                    $passengerNotification->setReceiverUser($rideRequest->getUser());
+                    $passengerNotification->setRideRequest($rideRequest);
+
+                    $em->persist($driverNotification);
+                    $em->persist($passengerNotification);
+                }
+            }
         }
 
         $em->flush();
