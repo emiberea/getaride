@@ -2,8 +2,10 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: bundles/fos_message.yml }
+    - { resource: bundles/fos_rest.yml }
     - { resource: bundles/fos_user.yml }
     - { resource: bundles/hwi_oauth.yml }
+    - { resource: bundles/jms_serializer.yml }
     - { resource: bundles/knp_paginator.yml }
 
 framework:
@@ -71,6 +73,10 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# SensioFrameworkExtraBundle Configuration
+sensio_framework_extra:
+    view: { annotations: false }
 
 parameters:
     domain.dev: "%domain_dev%"
