@@ -1,0 +1,16 @@
+# FOSRestBundle Configuration
+fos_rest:
+    format_listener:
+        rules:
+            - prefer_extension: false
+    view:
+        view_response_listener: true
+        formats:
+            json: true
+            xml: true
+#        templating_formats:
+#            html: true
+#        force_redirects:
+#            html: true
+#        failed_validation: HTTP_BAD_REQUEST
+#        default_engine: twig
